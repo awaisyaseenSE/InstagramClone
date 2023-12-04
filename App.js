@@ -6,7 +6,7 @@ export default function App() {
   return (
     <ScreenComponent>
       <View>
-        <Text>App</Text>
+        <Text>Instagram Clone App</Text>
       </View>
     </ScreenComponent>
   );
