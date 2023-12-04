@@ -5486,6 +5486,11 @@ react-native-fast-image@^8.6.3:
   resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.6.3.tgz#6edc3f9190092a909d636d93eecbcc54a8822255"
   integrity sha512-Sdw4ESidXCXOmQ9EcYguNY2swyoWmx53kym2zRsvi+VeFCHEdkO+WG1DK+6W81juot40bbfLNhkc63QnWtesNg==
 
+react-native-image-picker@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-7.0.3.tgz#3d0ab6965a6150e724e3c66cac8fe397097e26e7"
+  integrity sha512-mFbu8AzZ8tysO7xHsQ+TmxYYJYaBCL66s4AujjgCBEAyTufm2nhjhVOw2uq1zvMDVtGoyekzCJfH3JqVmXK/3w==
+
 react-native@0.72.7:
   version "0.72.7"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.72.7.tgz#5bf5b6e6a7ff2239e1d634ddc17c71d5a31927db"
