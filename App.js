@@ -8,7 +8,7 @@ export default function App() {
   return (
     <ScreenComponent>
       <View>
-        <Text>App file is not complete</Text>
+        <Text>App file is not complete now</Text>
       </View>
     </ScreenComponent>
   );
