@@ -1,15 +1,13 @@
 import 'react-native-gesture-handler';
-import {View, Text, SafeAreaView, Button} from 'react-native';
+import {View, Text} from 'react-native';
 import React from 'react';
-import ScreenComponent from './app/components/ScreenComponent';
-import colors from './app/styles/colors';
+import LoginScreen from './app/screens/LoginScreen';
+import SignUpScreen from './app/screens/CreateAccount/SignUpScreen';
 
 export default function App() {
   return (
-    <ScreenComponent>
-      <View>
-        <Text>App file is not complete now</Text>
-      </View>
-    </ScreenComponent>
+    <>
+      <SignUpScreen />
+    </>
   );
 }
