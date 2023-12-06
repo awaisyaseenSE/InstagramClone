@@ -14,11 +14,13 @@ import colors from '../../styles/colors';
 import TopSignUpCompo from './components/TopSignUpCompo';
 import GetUserNameComponent from './components/GetUserNameComponent';
 import GetUserPasswordComponent from './components/GetUserPasswordComponent';
+import GetUserDateOfBirthCompo from './components/GetUserDateOfBirthCompo';
 
 export default function SignUpScreen() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
   const [loading, setLoading] = useState(false);
   const handleBackScreens = () => {
     if (selectedIndex == 0) {
@@ -29,6 +31,9 @@ export default function SignUpScreen() {
       setSelectedIndex(selectedIndex - 1);
     }
   };
+  // if (dateOfBirth !== '') {
+  //   console.log(dateOfBirth);
+  // }
   return (
     <>
       <ScreenComponent>
@@ -49,6 +54,16 @@ export default function SignUpScreen() {
               <GetUserPasswordComponent
                 password={password}
                 setPassword={setPassword}
+                selectedIndex={selectedIndex}
+                setSelectedIndex={setSelectedIndex}
+                loading={loading}
+                setLoading={setLoading}
+              />
+            )}
+            {selectedIndex == 2 && (
+              <GetUserDateOfBirthCompo
+                dateOfBirth={dateOfBirth}
+                setDateOfBirth={setDateOfBirth}
                 selectedIndex={selectedIndex}
                 setSelectedIndex={setSelectedIndex}
                 loading={loading}
