@@ -51,7 +51,10 @@ export default function ForgotPasswordScreen() {
     <>
       <ScreenComponent style={{backgroundColor: colors.white}}>
         <View style={mystyles.container}>
-          <TopSignUpCompo onPress={() => navigation.goBack()} />
+          <TopSignUpCompo
+            onPress={() => navigation.goBack()}
+            style={{paddingVertical: 0}}
+          />
           <View>
             <Text style={[styles.heading, {marginBottom: 8}]}>
               Reset password of your account

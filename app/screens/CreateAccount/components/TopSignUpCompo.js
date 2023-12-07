@@ -2,12 +2,13 @@ import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 import colors from '../../../styles/colors';
 
-const TopSignUpCompo = ({onPress}) => {
+const TopSignUpCompo = ({onPress, style}) => {
   return (
     <View
       style={{
         flexDirection: 'row',
         paddingVertical: 10,
+        ...style,
       }}>
       <TouchableOpacity
         style={styles.backIconMainContainer}
