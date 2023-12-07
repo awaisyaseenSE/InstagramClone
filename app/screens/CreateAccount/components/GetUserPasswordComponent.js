@@ -11,7 +11,7 @@ import React, {useState} from 'react';
 import colors from '../../../styles/colors';
 import TextInputSignUpCompo from './TextInputSignUpCompo';
 import ButtonComponent from './ButtonComponent';
-
+import styles from '../CommonSignUpStyle';
 const GetUserPasswordComponent = ({
   password = '',
   setPassword,
@@ -72,26 +72,5 @@ const GetUserPasswordComponent = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  heading: {
-    fontSize: 22,
-    color: colors.black,
-    fontWeight: '700',
-    marginBottom: 12,
-    marginTop: 8,
-  },
-  errorText: {
-    fontSize: 12,
-    color: colors.red,
-    marginTop: 6,
-    paddingLeft: 6,
-  },
-  descText: {
-    fontSize: 14,
-    color: colors.black,
-    marginBottom: 14,
-  },
-});
 
 export default GetUserPasswordComponent;

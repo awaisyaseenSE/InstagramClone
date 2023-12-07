@@ -1,39 +1,37 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  Image,
-  Alert,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import ScreenComponent from '../../components/ScreenComponent';
 import auth from '@react-native-firebase/auth';
+import {useNavigation} from '@react-navigation/native';
 import colors from '../../styles/colors';
 import TopSignUpCompo from './components/TopSignUpCompo';
 import GetUserNameComponent from './components/GetUserNameComponent';
 import GetUserPasswordComponent from './components/GetUserPasswordComponent';
 import GetUserDateOfBirthCompo from './components/GetUserDateOfBirthCompo';
+import navigationStrings from '../../navigation/navigationStrings';
+import GetUserEmailOrPhoneCompo from './components/GetUserEmailOrPhoneCompo';
 
 export default function SignUpScreen() {
+  const navigation = useNavigation();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isEmailSignIn, setIsEmailSignIn] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [isCreated, setIsCreated] = useState(false);
   const handleBackScreens = () => {
     if (selectedIndex == 0) {
-      return null;
+      navigation.navigate(navigationStrings.LOGIN_SCREEN);
     } else if (selectedIndex == 10) {
       return null;
     } else {
       setSelectedIndex(selectedIndex - 1);
     }
   };
-  // if (dateOfBirth !== '') {
-  //   console.log(dateOfBirth);
-  // }
+
   return (
     <>
       <ScreenComponent>
@@ -70,9 +68,28 @@ export default function SignUpScreen() {
                 setLoading={setLoading}
               />
             )}
+            {selectedIndex == 3 && (
+              <GetUserEmailOrPhoneCompo
+                email={email}
+                setEmail={setEmail}
+                phoneNumber={phoneNumber}
+                setPhoneNumber={setPhoneNumber}
+                password={password}
+                selectedIndex={selectedIndex}
+                setSelectedIndex={setSelectedIndex}
+                isEmailSignIn={isEmailSignIn}
+                setIsEmailSignIn={setIsEmailSignIn}
+                setIsCreated={setIsCreated}
+                fullName={fullName}
+                dateOfBirth={dateOfBirth}
+              />
+            )}
           </View>
           <View style={styles.footer}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate(navigationStrings.LOGIN_SCREEN)
+              }>
               <Text style={styles.footerText}>Already have an account?</Text>
             </TouchableOpacity>
           </View>

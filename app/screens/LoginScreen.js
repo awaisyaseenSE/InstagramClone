@@ -6,17 +6,119 @@ import {
   Image,
   TextInput,
   Dimensions,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import ScreenComponent from '../components/ScreenComponent';
 import colors from '../styles/colors';
+import {useNavigation} from '@react-navigation/native';
+import navigationStrings from '../navigation/navigationStrings';
+import useAuth from '../auth/useAuth';
+import auth from '@react-native-firebase/auth';
 
 export default function LoginScreen() {
   const screenWidth = Dimensions.get('window').width;
   const screenHeight = Dimensions.get('window').height;
+  const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [isShowPassword, setIsShowPassword] = useState(true);
+  const [passwordError, setPasswordError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showEmailVerify, setShowEmailVerify] = useState(false);
+  const {user, setUser, logout} = useAuth();
+
+  const validateEmail = email => {
+    let pattern =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return pattern.test(String(email).toLowerCase());
+  };
+
+  const EmailVerifyCheck = async result => {
+    try {
+      if (result.user.emailVerified) {
+        setEmail('');
+        setPassword('');
+        setLoading(false);
+        setUser(auth().currentUser);
+        setShowEmailVerify(false);
+      } else {
+        setShowEmailVerify(true);
+        await auth().currentUser.sendEmailVerification();
+        setLoading(false);
+        logout();
+        Alert.alert('Please Verify Your Email to Login!');
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log('error in verify user email in login: : ', error);
+    }
+  };
+
+  const handleLogin = () => {
+    setEmailError('');
+    setPasswordError('');
+    let emailValid = false;
+
+    if (email === '') {
+      setEmailError('Email is required!');
+    } else {
+      if (!validateEmail(email)) {
+        setEmailError('Email is invalid!');
+        emailValid = false;
+      } else {
+        setEmailError('');
+        emailValid = true;
+      }
+    }
+
+    if (password === '') {
+      setPasswordError('Password is required!');
+    } else if (password.length < 6) {
+      setPasswordError('Password is invalid!');
+    } else {
+      if (emailValid && password.length > 5) {
+        setLoading(true);
+        auth()
+          .signInWithEmailAndPassword(email, password)
+          .then(result => {
+            EmailVerifyCheck(result);
+            // setUser(auth().currentUser);
+          })
+          .catch(error => {
+            setLoading(false);
+
+            if (error.code === 'auth/user-not-found') {
+              setEmailError('Invalid Email please check your email');
+              setLoading(false);
+            }
+            if (error.code === 'auth/invalid-email') {
+              setEmailError('Email is invalid!');
+              setLoading(false);
+            }
+            if (error.code === 'auth/wrong-password') {
+              setPasswordError('Password is invalid!');
+              setLoading(false);
+            }
+
+            if (error.code === 'auth/internal-error') {
+              setLoading(false);
+              Alert.alert('Please enter valid email and password!');
+              // setErr(
+              //   'please try again later make sure to enter correct email and password',
+              // );
+            }
+            console.log('Error while Login: ', error);
+          });
+      }
+    }
+  };
+
   return (
     <>
-      <ScreenComponent>
+      <ScreenComponent style={{backgroundColor: colors.white}}>
         <View style={styles.container}>
           <TouchableOpacity style={{paddingHorizontal: 20}}>
             <Image
@@ -29,8 +131,51 @@ export default function LoginScreen() {
             <View style={{flex: 0.3}} />
             <Image source={require('../assets/logo.png')} style={styles.logo} />
             <View style={styles.inputContainer}>
-              <TextInput style={[styles.input]} placeholder="Email" />
-              <TextInput style={[styles.input]} placeholder="Password" />
+              {showEmailVerify && (
+                <Text
+                  style={[
+                    styles.errorText,
+                    {marginBottom: 6, alignSelf: 'center'},
+                  ]}>
+                  Please Verify Your Email to Login!
+                </Text>
+              )}
+              <TextInput
+                style={[styles.input]}
+                placeholder="Email"
+                value={email}
+                onChangeText={text => setEmail(text)}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+              {emailError !== '' && (
+                <Text style={styles.errorText}>{emailError}</Text>
+              )}
+              <View style={styles.passwordInputContainer}>
+                <TextInput
+                  style={styles.passwordInput}
+                  placeholder="Password"
+                  value={password}
+                  onChangeText={text => setPassword(text)}
+                  secureTextEntry={isShowPassword}
+                />
+                {password.length > 0 ? (
+                  <TouchableOpacity
+                    onPress={() => setIsShowPassword(!isShowPassword)}>
+                    <Image
+                      source={
+                        isShowPassword
+                          ? require('../assets/view.png')
+                          : require('../assets/hide.png')
+                      }
+                      style={styles.showHideIcon}
+                    />
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+              {passwordError !== '' && (
+                <Text style={styles.errorText}>{passwordError}</Text>
+              )}
             </View>
             <View style={styles.fogotPassContainer}>
               <TouchableOpacity>
@@ -38,8 +183,14 @@ export default function LoginScreen() {
               </TouchableOpacity>
             </View>
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.buttonStyle}>
-                <Text style={styles.buttonText}>Login</Text>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={handleLogin}>
+                {loading ? (
+                  <ActivityIndicator color={colors.white} size={22} />
+                ) : (
+                  <Text style={styles.buttonText}>Login</Text>
+                )}
               </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -59,7 +210,10 @@ export default function LoginScreen() {
               <Text style={styles.createAccountText}>
                 Don’t have an account?
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate(navigationStrings.SIGN_UP_SCREEN)
+                }>
                 <Text style={styles.signUpText}>Sign up</Text>
               </TouchableOpacity>
             </View>
@@ -111,7 +265,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingHorizontal: 14,
     paddingVertical: 8,
-    marginBottom: 12,
+    // marginBottom: 12,
     fontSize: 14,
     color: colors.lightBlack,
   },
@@ -124,7 +278,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'flex-end',
     paddingHorizontal: 20,
-    marginTop: 10,
+    marginTop: 14,
   },
   forgotText: {
     fontSize: 12,
@@ -191,5 +345,33 @@ const styles = StyleSheet.create({
     color: colors.skyBlue,
     fontWeight: '500',
     marginLeft: 6,
+  },
+  errorText: {
+    color: 'red',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 20,
+    marginTop: 4,
+  },
+  passwordInputContainer: {
+    width: '90%',
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: colors.borderColor,
+    borderWidth: 1,
+    borderColor: colors.borderColor,
+    height: 36,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    marginTop: 12,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingRight: 6,
+  },
+  showHideIcon: {
+    width: 18,
+    height: 18,
+    resizeMode: 'contain',
+    tintColor: colors.lightBlack,
   },
 });

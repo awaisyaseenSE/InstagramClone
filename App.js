@@ -1,13 +1,11 @@
 import 'react-native-gesture-handler';
-import {View, Text} from 'react-native';
 import React from 'react';
-import LoginScreen from './app/screens/LoginScreen';
-import SignUpScreen from './app/screens/CreateAccount/SignUpScreen';
+import MainNavigator from './app/navigation/MainNavigator';
 
 export default function App() {
   return (
     <>
-      <SignUpScreen />
+      <MainNavigator />
     </>
   );
 }

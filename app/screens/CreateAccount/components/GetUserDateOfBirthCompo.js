@@ -12,6 +12,7 @@ import colors from '../../../styles/colors';
 import TextInputSignUpCompo from './TextInputSignUpCompo';
 import ButtonComponent from './ButtonComponent';
 import ShowDateBirthComopent from './ShowDateBirthComopent';
+import styles from '../CommonSignUpStyle';
 
 const GetUserDateOfBirthCompo = ({
   dateOfBirth,
@@ -25,15 +26,15 @@ const GetUserDateOfBirthCompo = ({
   const [dateOfBirthErrorText, setDateOfBirthErrorText] = useState('');
 
   const handleNextScreen = () => {
-    //   if (fullName == '') {
-    //     setFullNameError(true);
-    //     setFullNameErrorText('Full Name is required!');
-    //     return null;
-    //   } else {
-    //     setFullNameError(false);
-    //     setFullNameErrorText('');
-    //   }
-    //   setSelectedIndex(selectedIndex + 1);
+    if (dateOfBirth == '') {
+      setDateOfBirthError(true);
+      setDateOfBirthErrorText('Please Select Date of birth!');
+      return null;
+    } else {
+      setDateOfBirthError(false);
+      setDateOfBirthErrorText('');
+    }
+    setSelectedIndex(selectedIndex + 1);
   };
   return (
     <View>
@@ -48,32 +49,14 @@ const GetUserDateOfBirthCompo = ({
         dateOfBirth={dateOfBirth}
         setDateOfBirth={setDateOfBirth}
       />
+      {dateOfBirthError ? (
+        <Text style={styles.errorText}>{dateOfBirthErrorText}</Text>
+      ) : null}
       <View style={{marginTop: 20}}>
         <ButtonComponent title="Next" onPress={handleNextScreen} />
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  heading: {
-    fontSize: 22,
-    color: colors.black,
-    fontWeight: '700',
-    marginBottom: 18,
-    marginTop: 8,
-  },
-  errorText: {
-    fontSize: 12,
-    color: colors.red,
-    marginTop: 6,
-    paddingLeft: 6,
-  },
-  descText: {
-    fontSize: 14,
-    color: colors.black,
-    marginBottom: 14,
-  },
-});
 
 export default GetUserDateOfBirthCompo;

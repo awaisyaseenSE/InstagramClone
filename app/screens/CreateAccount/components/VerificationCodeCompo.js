@@ -1,19 +1,11 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
+import {View, Text} from 'react-native';
 import React, {useState} from 'react';
 import colors from '../../../styles/colors';
 import TextInputSignUpCompo from './TextInputSignUpCompo';
 import ButtonComponent from './ButtonComponent';
 import styles from '../CommonSignUpStyle';
 
-const GetUserNameComponent = ({
+const VerificationCodeCompo = ({
   fullName,
   setFullName,
   selectedIndex,
@@ -63,4 +55,4 @@ const GetUserNameComponent = ({
   );
 };
 
-export default GetUserNameComponent;
+export default VerificationCodeCompo;

@@ -2,7 +2,7 @@ export default {
   white: '#FFFFFF',
   skyBlue: '#3797EF',
   lightBlack: '#262626',
-  gray: 'rgba(0, 0, 0, 0.4)',
+  gray: 'rgba(0, 0, 0, 0.2)',
   black: '#060606',
   borderColor: '#A5A5A533',
   inputColor: '#FAFAFA',
