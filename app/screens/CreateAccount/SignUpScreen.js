@@ -11,6 +11,7 @@ import GetUserDateOfBirthCompo from './components/GetUserDateOfBirthCompo';
 import navigationStrings from '../../navigation/navigationStrings';
 import GetUserEmailOrPhoneCompo from './components/GetUserEmailOrPhoneCompo';
 import {useTheme} from '../../themes/ThemeContext';
+import fontFamily from '../../styles/fontFamily';
 
 export default function SignUpScreen() {
   const navigation = useNavigation();
@@ -113,6 +114,6 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 14,
     color: colors.blue,
-    fontWeight: '500',
+    fontFamily: fontFamily.semiBold,
   },
 });

@@ -8,6 +8,7 @@ import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import AuthStyles from '../styles/AuthStyles';
 import {useTheme} from '../themes/ThemeContext';
+import fontFamily from '../styles/fontFamily';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
@@ -112,6 +113,6 @@ const mystyles = StyleSheet.create({
     // alignSelf: 'center',
     marginBottom: 8,
     color: 'seagreen',
-    fontWeight: '600',
+    fontFamily: fontFamily.semiBold,
   },
 });

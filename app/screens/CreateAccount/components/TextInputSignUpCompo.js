@@ -9,6 +9,7 @@ import {
 import React from 'react';
 import colors from '../../../styles/colors';
 import {useTheme} from '../../../themes/ThemeContext';
+import fontFamily from '../../../styles/fontFamily';
 
 const TextInputSignUpCompo = ({
   label = '',
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
   labelStyle: {
     fontSize: 14,
     color: colors.signUpBordercolor,
-    fontWeight: '500',
+    fontFamily: fontFamily.medium,
   },
   clearIconStyle: {
     width: 14,

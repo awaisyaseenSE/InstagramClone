@@ -5,6 +5,7 @@ import colors from '../../styles/colors';
 import ButtonComponent from './components/ButtonComponent';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
+import fontFamily from '../../styles/fontFamily';
 
 export default function SuccessfullyCreateAccountScreen() {
   const navigation = useNavigation();
@@ -57,12 +58,12 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 18,
     color: colors.black,
-    fontWeight: '700',
+    fontFamily: fontFamily.semiBold,
   },
   decText: {
     fontSize: 14,
     color: colors.lightBlack,
-    fontWeight: '500',
+    fontFamily: fontFamily.medium,
     textAlign: 'center',
     marginTop: 8,
   },

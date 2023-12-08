@@ -11,6 +11,7 @@ import colors from '../../../styles/colors';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import {useTheme} from '../../../themes/ThemeContext';
+import fontFamily from '../../../styles/fontFamily';
 
 const ShowDateBirthComopent = ({
   label = '',
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
   labelStyle: {
     fontSize: 14,
     color: colors.signUpBordercolor,
-    fontWeight: '500',
+    fontFamily: fontFamily.medium,
   },
   datePickerIcon: {
     width: 24,

@@ -1,11 +1,12 @@
 import {StyleSheet} from 'react-native';
 import colors from '../../styles/colors';
+import fontFamily from '../../styles/fontFamily';
 
 const styles = StyleSheet.create({
   heading: {
     fontSize: 22,
     color: colors.black,
-    fontWeight: '700',
+    fontFamily: fontFamily.semiBold,
     marginBottom: 18,
     marginTop: 8,
   },
@@ -14,11 +15,13 @@ const styles = StyleSheet.create({
     color: colors.red,
     marginTop: 6,
     paddingLeft: 6,
+    fontFamily: fontFamily.medium,
   },
   descText: {
     fontSize: 14,
     color: colors.black,
     marginBottom: 14,
+    fontFamily: fontFamily.medium,
   },
 });
 

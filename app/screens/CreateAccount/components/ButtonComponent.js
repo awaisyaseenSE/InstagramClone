@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import colors from '../../../styles/colors';
+import fontFamily from '../../../styles/fontFamily';
 
 const ButtonComponent = ({
   title = '',
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 14,
     color: colors.white,
-    fontWeight: '600',
+    fontFamily: fontFamily.medium,
   },
 });
 

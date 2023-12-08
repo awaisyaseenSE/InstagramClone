@@ -18,6 +18,7 @@ import useAuth from '../auth/useAuth';
 import auth from '@react-native-firebase/auth';
 import {useTheme} from '../themes/ThemeContext';
 import ButtonComponent from './CreateAccount/components/ButtonComponent';
+import fontFamily from '../styles/fontFamily';
 
 export default function LoginScreen() {
   const {theme, toggleTheme} = useTheme();
@@ -239,11 +240,12 @@ export default function LoginScreen() {
               <Text style={[styles.buttonText, {color: theme.text}]}>
                 Instagram оr Facebook
               </Text>
-              <ButtonComponent
-                title="Toggle Theme"
-                style={{width: 100, height: 30, borderRadius: 6}}
+              <TouchableOpacity
+                style={styles.toggleThemeButton}
                 onPress={toggleTheme}
-              />
+                activeOpacity={0.8}>
+                <Text style={{color: 'white'}}>Toggle Theme</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -307,7 +309,7 @@ const styles = StyleSheet.create({
   forgotText: {
     fontSize: 12,
     color: colors.blue,
-    fontWeight: '500',
+    fontFamily: fontFamily.semiBold,
   },
   buttonStyle: {
     width: '90%',
@@ -335,7 +337,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.skyBlue,
     marginLeft: 12,
-    fontWeight: '700',
+    fontFamily: fontFamily.semiBold,
   },
   lineStyle: {
     height: 1,
@@ -353,7 +355,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.gray,
     marginHorizontal: 12,
-    fontWeight: '700',
+    fontFamily: fontFamily.semiBold,
   },
   createAccontContainer: {
     flexDirection: 'row',
@@ -362,13 +364,13 @@ const styles = StyleSheet.create({
   createAccountText: {
     fontSize: 14,
     color: colors.gray,
-    fontWeight: '500',
+    fontFamily: fontFamily.medium,
   },
   signUpText: {
     fontSize: 14,
     color: colors.skyBlue,
-    fontWeight: '500',
     marginLeft: 6,
+    fontFamily: fontFamily.semiBold,
   },
   errorText: {
     color: 'red',
@@ -397,5 +399,12 @@ const styles = StyleSheet.create({
     height: 18,
     resizeMode: 'contain',
     tintColor: colors.lightBlack,
+  },
+  toggleThemeButton: {
+    backgroundColor: colors.blue,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    alignItems: 'center',
+    borderRadius: 6,
   },
 });
