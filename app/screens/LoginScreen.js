@@ -16,8 +16,11 @@ import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../navigation/navigationStrings';
 import useAuth from '../auth/useAuth';
 import auth from '@react-native-firebase/auth';
+import {useTheme} from '../themes/ThemeContext';
+import ButtonComponent from './CreateAccount/components/ButtonComponent';
 
 export default function LoginScreen() {
+  const {theme, toggleTheme} = useTheme();
   const screenWidth = Dimensions.get('window').width;
   const screenHeight = Dimensions.get('window').height;
   const navigation = useNavigation();
@@ -118,46 +121,47 @@ export default function LoginScreen() {
 
   return (
     <>
-      <ScreenComponent style={{backgroundColor: colors.white}}>
-        <View style={styles.container}>
-          <TouchableOpacity style={{paddingHorizontal: 20}}>
-            <Image
-              style={styles.iconBack}
-              source={require('../assets/ic_back.png')}
-            />
-          </TouchableOpacity>
-
+      <ScreenComponent style={{backgroundColor: theme.loginBackground}}>
+        <View
+          style={[styles.container, {backgroundColor: theme.loginBackground}]}>
           <View style={styles.mainContainer}>
             <View style={{flex: 0.3}} />
-            <Image source={require('../assets/logo.png')} style={styles.logo} />
+            <Image
+              source={require('../assets/logo.png')}
+              style={[styles.logo, {tintColor: theme.text}]}
+            />
             <View style={styles.inputContainer}>
               {showEmailVerify && (
                 <Text
                   style={[
                     styles.errorText,
-                    {marginBottom: 6, alignSelf: 'center'},
+                    {marginBottom: 6, alignSelf: 'center', color: theme.red},
                   ]}>
                   Please Verify Your Email to Login!
                 </Text>
               )}
               <TextInput
-                style={[styles.input]}
+                style={[styles.input, {color: theme.text}]}
                 placeholder="Email"
                 value={email}
                 onChangeText={text => setEmail(text)}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                placeholderTextColor={theme.gray}
               />
               {emailError !== '' && (
-                <Text style={styles.errorText}>{emailError}</Text>
+                <Text style={[styles.errorText, {color: theme.red}]}>
+                  {emailError}
+                </Text>
               )}
               <View style={styles.passwordInputContainer}>
                 <TextInput
-                  style={styles.passwordInput}
+                  style={[styles.passwordInput, {color: theme.text}]}
                   placeholder="Password"
                   value={password}
                   onChangeText={text => setPassword(text)}
                   secureTextEntry={isShowPassword}
+                  placeholderTextColor={theme.gray}
                 />
                 {password.length > 0 ? (
                   <TouchableOpacity
@@ -174,7 +178,9 @@ export default function LoginScreen() {
                 ) : null}
               </View>
               {passwordError !== '' && (
-                <Text style={styles.errorText}>{passwordError}</Text>
+                <Text style={[styles.errorText, {color: theme.red}]}>
+                  {passwordError}
+                </Text>
               )}
             </View>
             <View style={styles.fogotPassContainer}>
@@ -205,12 +211,13 @@ export default function LoginScreen() {
               <Text style={styles.facebookText}>Log in with Facebook</Text>
             </TouchableOpacity>
             <View style={styles.OrTextContainer}>
-              <View style={styles.lineStyle} />
-              <Text style={styles.orText}>OR</Text>
-              <View style={styles.lineStyle} />
+              <View style={[styles.lineStyle, {backgroundColor: theme.gray}]} />
+              <Text style={[styles.orText, {color: theme.gray}]}>OR</Text>
+              <View style={[styles.lineStyle, {backgroundColor: theme.gray}]} />
             </View>
             <View style={styles.createAccontContainer}>
-              <Text style={styles.createAccountText}>
+              <Text
+                style={[styles.createAccountText, {color: theme.lightText}]}>
                 Don’t have an account?
               </Text>
               <TouchableOpacity
@@ -222,8 +229,22 @@ export default function LoginScreen() {
             </View>
           </View>
 
-          <View style={styles.footer}>
-            <Text>Instagram оr Facebook</Text>
+          <View style={[styles.footer, {borderTopColor: theme.gray}]}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+              }}>
+              <Text style={[styles.buttonText, {color: theme.text}]}>
+                Instagram оr Facebook
+              </Text>
+              <ButtonComponent
+                title="Toggle Theme"
+                style={{width: 100, height: 30, borderRadius: 6}}
+                onPress={toggleTheme}
+              />
+            </View>
           </View>
         </View>
       </ScreenComponent>
@@ -250,7 +271,7 @@ const styles = StyleSheet.create({
     flex: 0.1,
     borderTopWidth: 1.2,
     borderColor: colors.gray,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'center',
     borderTopColor: colors.borderColor,
   },
@@ -285,14 +306,14 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     fontSize: 12,
-    color: colors.skyBlue,
+    color: colors.blue,
     fontWeight: '500',
   },
   buttonStyle: {
     width: '90%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.skyBlue,
+    backgroundColor: colors.blue,
     height: 44,
     borderRadius: 6,
   },

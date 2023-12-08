@@ -1,8 +1,9 @@
 import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
-import colors from '../../../styles/colors';
+import {useTheme} from '../../../themes/ThemeContext';
 
 const TopSignUpCompo = ({onPress, style}) => {
+  const {theme} = useTheme();
   return (
     <View
       style={{
@@ -16,7 +17,7 @@ const TopSignUpCompo = ({onPress, style}) => {
         activeOpacity={0.6}>
         <Image
           source={require('../../../assets/back.png')}
-          style={styles.backIcon}
+          style={[styles.backIcon, {tintColor: theme.text}]}
         />
       </TouchableOpacity>
     </View>

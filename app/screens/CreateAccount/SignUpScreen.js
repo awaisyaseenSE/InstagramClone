@@ -10,6 +10,7 @@ import GetUserPasswordComponent from './components/GetUserPasswordComponent';
 import GetUserDateOfBirthCompo from './components/GetUserDateOfBirthCompo';
 import navigationStrings from '../../navigation/navigationStrings';
 import GetUserEmailOrPhoneCompo from './components/GetUserEmailOrPhoneCompo';
+import {useTheme} from '../../themes/ThemeContext';
 
 export default function SignUpScreen() {
   const navigation = useNavigation();
@@ -22,6 +23,7 @@ export default function SignUpScreen() {
   const [isEmailSignIn, setIsEmailSignIn] = useState(true);
   const [loading, setLoading] = useState(false);
   const [isCreated, setIsCreated] = useState(false);
+  const {theme} = useTheme();
   const handleBackScreens = () => {
     if (selectedIndex == 0) {
       navigation.navigate(navigationStrings.LOGIN_SCREEN);
@@ -34,8 +36,8 @@ export default function SignUpScreen() {
 
   return (
     <>
-      <ScreenComponent>
-        <View style={{backgroundColor: colors.bg, flex: 1}}>
+      <ScreenComponent style={{backgroundColor: theme.loginBackground}}>
+        <View style={{backgroundColor: theme.loginBackground, flex: 1}}>
           <View style={styles.container}>
             <TopSignUpCompo onPress={handleBackScreens} />
             {selectedIndex == 0 && (

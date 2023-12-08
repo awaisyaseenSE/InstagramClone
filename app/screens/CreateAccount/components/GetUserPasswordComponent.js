@@ -11,7 +11,8 @@ import React, {useState} from 'react';
 import colors from '../../../styles/colors';
 import TextInputSignUpCompo from './TextInputSignUpCompo';
 import ButtonComponent from './ButtonComponent';
-import styles from '../CommonSignUpStyle';
+import {useTheme} from '../../../themes/ThemeContext';
+import AuthStyles from '../../../styles/AuthStyles';
 const GetUserPasswordComponent = ({
   password = '',
   setPassword,
@@ -23,6 +24,8 @@ const GetUserPasswordComponent = ({
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorText, setPasswordErrorText] = useState('');
   const [showEye, setShowEye] = useState(true);
+  const {theme} = useTheme();
+  const styles = AuthStyles(theme);
   const handleNextScreen = () => {
     if (password == '') {
       setPasswordError(true);

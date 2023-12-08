@@ -4,11 +4,12 @@ import auth from '@react-native-firebase/auth';
 import colors from '../../../styles/colors';
 import TextInputSignUpCompo from './TextInputSignUpCompo';
 import ButtonComponent from './ButtonComponent';
-import styles from '../CommonSignUpStyle';
 import useAuth from '../../../auth/useAuth';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../../navigation/navigationStrings';
 import firestore from '@react-native-firebase/firestore';
+import AuthStyles from '../../../styles/AuthStyles';
+import {useTheme} from '../../../themes/ThemeContext';
 
 const GetUserEmailOrPhoneCompo = ({
   email = '',
@@ -31,6 +32,8 @@ const GetUserEmailOrPhoneCompo = ({
   const [loading, setLoading] = useState(false);
   const {logout} = useAuth();
   const navigation = useNavigation();
+  const {theme} = useTheme();
+  const styles = AuthStyles(theme);
 
   const validateEmail = email => {
     let pattern =
@@ -238,22 +241,22 @@ const GetUserEmailOrPhoneCompo = ({
           <ButtonComponent
             title="Sign up with mobile number"
             style={{
-              backgroundColor: colors.bg,
+              backgroundColor: theme.loginBackground,
               borderWidth: 1,
-              borderColor: colors.gray,
+              borderColor: theme.light,
             }}
-            textStyle={{color: colors.black}}
+            textStyle={{color: theme.text}}
             onPress={handleSignUpMethodChange}
           />
         ) : (
           <ButtonComponent
             title="Sign up with email address"
             style={{
-              backgroundColor: colors.bg,
+              backgroundColor: theme.loginBackground,
               borderWidth: 1,
-              borderColor: colors.gray,
+              borderColor: theme.light,
             }}
-            textStyle={{color: colors.black}}
+            textStyle={{color: theme.text}}
             onPress={handleSignUpMethodChange}
           />
         )}

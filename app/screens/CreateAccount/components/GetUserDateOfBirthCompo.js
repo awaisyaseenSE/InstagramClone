@@ -12,7 +12,8 @@ import colors from '../../../styles/colors';
 import TextInputSignUpCompo from './TextInputSignUpCompo';
 import ButtonComponent from './ButtonComponent';
 import ShowDateBirthComopent from './ShowDateBirthComopent';
-import styles from '../CommonSignUpStyle';
+import {useTheme} from '../../../themes/ThemeContext';
+import AuthStyles from '../../../styles/AuthStyles';
 
 const GetUserDateOfBirthCompo = ({
   dateOfBirth,
@@ -24,6 +25,8 @@ const GetUserDateOfBirthCompo = ({
 }) => {
   const [dateOfBirthError, setDateOfBirthError] = useState(false);
   const [dateOfBirthErrorText, setDateOfBirthErrorText] = useState('');
+  const {theme} = useTheme();
+  const styles = AuthStyles(theme);
 
   const handleNextScreen = () => {
     if (dateOfBirth == '') {

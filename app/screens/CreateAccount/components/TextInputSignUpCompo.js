@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import colors from '../../../styles/colors';
+import {useTheme} from '../../../themes/ThemeContext';
 
 const TextInputSignUpCompo = ({
   label = '',
@@ -21,12 +22,17 @@ const TextInputSignUpCompo = ({
   onPressSecure,
   ...props
 }) => {
+  const {theme} = useTheme();
   return (
-    <View style={styles.inputContainer}>
+    <View
+      style={[
+        styles.inputContainer,
+        {borderColor: theme.light, backgroundColor: theme.authInputColor},
+      ]}>
       <View style={{flex: 1}}>
         <Text style={styles.labelStyle}>{label}</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, {color: theme.text}]}
           value={value}
           placeholder={placeholder}
           onChangeText={onChangeText}
@@ -37,7 +43,10 @@ const TextInputSignUpCompo = ({
       <View style={styles.inputMainContainer}>
         {clearIcon !== null ? (
           <TouchableOpacity onPress={onPressClear}>
-            <Image source={clearIcon} style={styles.clearIconStyle} />
+            <Image
+              source={clearIcon}
+              style={[styles.clearIconStyle, {tintColor: theme.text}]}
+            />
           </TouchableOpacity>
         ) : null}
         {eyeShow ? (

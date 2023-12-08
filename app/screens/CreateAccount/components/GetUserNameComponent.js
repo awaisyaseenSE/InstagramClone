@@ -11,7 +11,9 @@ import React, {useState} from 'react';
 import colors from '../../../styles/colors';
 import TextInputSignUpCompo from './TextInputSignUpCompo';
 import ButtonComponent from './ButtonComponent';
-import styles from '../CommonSignUpStyle';
+// import styles from '../CommonSignUpStyle';
+import AuthStyles from '../../../styles/AuthStyles';
+import {useTheme} from '../../../themes/ThemeContext';
 
 const GetUserNameComponent = ({
   fullName,
@@ -23,6 +25,8 @@ const GetUserNameComponent = ({
 }) => {
   const [fullNameError, setFullNameError] = useState(false);
   const [fullNameErrorText, setFullNameErrorText] = useState('');
+  const {theme} = useTheme();
+  const styles = AuthStyles(theme);
 
   const handleNextScreen = () => {
     if (fullName == '') {

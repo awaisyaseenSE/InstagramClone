@@ -10,12 +10,14 @@ import React, {useState} from 'react';
 import colors from '../../../styles/colors';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
+import {useTheme} from '../../../themes/ThemeContext';
 
 const ShowDateBirthComopent = ({
   label = '',
   dateOfBirth = '',
   setDateOfBirth,
 }) => {
+  const {theme} = useTheme();
   const [openDateModal, setOpenDateModal] = useState(false);
   const [calulatedAge, setCalulatedAge] = useState(0);
   const toggleOpenDateModal = () => {
@@ -38,26 +40,35 @@ const ShowDateBirthComopent = ({
     }
   };
   return (
-    <View style={styles.inputContainer}>
+    <View
+      style={[
+        styles.inputContainer,
+        {backgroundColor: theme.authInputColor, borderColor: theme.light},
+      ]}>
       <View style={{flex: 1}}>
-        <Text style={styles.labelStyle}>
+        <Text style={[styles.labelStyle, {color: theme.gray}]}>
           {label} ({calulatedAge} year old)
         </Text>
         <TouchableOpacity
           onPress={toggleOpenDateModal}
           style={styles.datePickerContainer}>
-          {dateOfBirth == '' && <Text>Select Date of Birth</Text>}
-          <TextInput
-            editable={false}
-            value={
-              dateOfBirth !== ''
-                ? moment(dateOfBirth).format('LL')
-                : dateOfBirth
-            }
-          />
+          {dateOfBirth == '' && (
+            <Text style={{color: theme.light}}>Select Date of Birth</Text>
+          )}
+          {dateOfBirth !== '' && (
+            <TextInput
+              editable={false}
+              value={
+                dateOfBirth !== ''
+                  ? moment(dateOfBirth).format('LL')
+                  : dateOfBirth
+              }
+              style={{color: theme.text}}
+            />
+          )}
           <Image
             source={require('../../../assets/ic_datepicker.png')}
-            style={styles.datePickerIcon}
+            style={[styles.datePickerIcon, {tintColor: theme.text}]}
           />
         </TouchableOpacity>
         <DatePicker

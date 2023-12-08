@@ -1,13 +1,13 @@
 import {View, Text, StyleSheet, Image, Alert} from 'react-native';
 import React, {useState} from 'react';
 import ScreenComponent from '../components/ScreenComponent';
-import colors from '../styles/colors';
-import styles from './CreateAccount/CommonSignUpStyle';
 import ButtonComponent from './CreateAccount/components/ButtonComponent';
 import TextInputSignUpCompo from './CreateAccount/components/TextInputSignUpCompo';
 import TopSignUpCompo from './CreateAccount/components/TopSignUpCompo';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
+import AuthStyles from '../styles/AuthStyles';
+import {useTheme} from '../themes/ThemeContext';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
@@ -15,6 +15,8 @@ export default function ForgotPasswordScreen() {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [isResetPasswordSend, setIsResetPasswordSend] = useState(false);
+  const {theme} = useTheme();
+  const styles = AuthStyles(theme);
 
   const validateEmail = email => {
     let pattern =
@@ -49,8 +51,12 @@ export default function ForgotPasswordScreen() {
 
   return (
     <>
-      <ScreenComponent style={{backgroundColor: colors.white}}>
-        <View style={mystyles.container}>
+      <ScreenComponent style={{backgroundColor: theme.loginBackground}}>
+        <View
+          style={[
+            mystyles.container,
+            {backgroundColor: theme.loginBackground},
+          ]}>
           <TopSignUpCompo
             onPress={() => navigation.goBack()}
             style={{paddingVertical: 0}}
