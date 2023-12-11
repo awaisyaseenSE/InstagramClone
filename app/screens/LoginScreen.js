@@ -173,7 +173,7 @@ export default function LoginScreen() {
                           ? require('../assets/view.png')
                           : require('../assets/hide.png')
                       }
-                      style={styles.showHideIcon}
+                      style={[styles.showHideIcon, {tintColor: theme.light}]}
                     />
                   </TouchableOpacity>
                 ) : null}
@@ -393,6 +393,7 @@ const styles = StyleSheet.create({
   passwordInput: {
     flex: 1,
     paddingRight: 6,
+    paddingVertical: 3,
   },
   showHideIcon: {
     width: 18,

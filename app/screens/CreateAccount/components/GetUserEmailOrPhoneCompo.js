@@ -41,7 +41,10 @@ const GetUserEmailOrPhoneCompo = ({
     return pattern.test(String(email).toLowerCase());
   };
   const validatePhoneNumber = phone => {
-    return /^\+?\d{10,14}$/.test(phone);
+    // return /^\+?\d{10,14}$/.test(phone);
+    return /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(
+      phone,
+    );
   };
 
   const sendVerificationLink = async result => {
@@ -121,8 +124,60 @@ const GetUserEmailOrPhoneCompo = ({
       setIsCreated(false);
     }
   };
+  const loginWithPhone = async phone => {
+    try {
+      setLoading(true);
+      let response = await auth().signInWithPhoneNumber(phone);
+      console.log(response);
+      // console.log('===============confirm=====================');
+      // console.log(response.verificationId);
+      // console.log('===============confirm=====================');
+      setLoading(false);
+      // navigation.navigate('OtpVerify', {
+      //   response: response.verificationId,
+      // });
+      // props.navigation.navigate("OtpVerify", { phone: response })
+    } catch (error) {
+      setLoading(false);
+      if (error.code === 'auth/invalid-phone-number') {
+        setLoading(false);
+        setPhoneNumberError(true);
+        setPhoneNumberErrorText(
+          'Invalid phone number format. Please enter a valid phone number with country code format.',
+        );
+      } else if (error.code === 'auth/network-request-failed') {
+        setLoading(false);
+        setPhoneNumberError(true);
+        setPhoneNumberErrorText('Please Check your internet connection!');
+      } else if (error.code === 'auth/operation-not-allowed') {
+        setLoading(false);
+        setPhoneNumberError(true);
+        setPhoneNumberErrorText(
+          'Please try again later now sign in with phone is not available!',
+        );
+      } else if (error.code === 'auth/missing-client-identifier') {
+        setLoading(false);
+        console.log('error while login with phone number: ', error);
+        setPhoneNumberError(true);
+        setPhoneNumberErrorText(
+          'Please try again later now sign in with phone is not available!',
+        );
+      } else {
+        setLoading(false);
+        console.error('Error logging in with phone number:', error);
+      }
+    }
+  };
+
   const handlePhoneNumberSignUp = () => {
-    Alert.alert(' handle Phone SignUp');
+    const isPlus = phoneNumber.startsWith('+');
+    let finalPhoneNo = '';
+    if (isPlus) {
+      finalPhoneNo = phoneNumber;
+    } else {
+      finalPhoneNo = '+' + phoneNumber;
+    }
+    loginWithPhone(finalPhoneNo);
   };
 
   const handleNextScreen = () => {
