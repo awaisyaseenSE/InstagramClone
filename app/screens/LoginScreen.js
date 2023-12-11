@@ -106,6 +106,10 @@ export default function LoginScreen() {
               setPasswordError('Password is invalid!');
               setLoading(false);
             }
+            if (error.code === 'auth/invalid-credential') {
+              setLoading(false);
+              Alert.alert('Please enter valid email and password!');
+            }
 
             if (error.code === 'auth/internal-error') {
               setLoading(false);

@@ -9,6 +9,10 @@ export const lightTheme = {
   red: '#ff0000',
   authInputColor: '#FAFAFA',
   light: 'rgba(0,0,0,0.4)',
+  bottonTabBg: '#FAFAFA',
+  bottonTabIconColor: '#060606',
+  bottonTabBorderColor: 'rgba(0,0,0,0.25)',
+  storyBg: '#C90083',
 };
 
 export const darkTheme = {
@@ -22,4 +26,8 @@ export const darkTheme = {
   red: '#ff4d6d',
   authInputColor: '#1C2A34',
   light: '#FAF9F6',
+  bottonTabBg: '#121212',
+  bottonTabIconColor: '#FAF9F6',
+  bottonTabBorderColor: '#262626',
+  storyBg: '#C90083',
 };

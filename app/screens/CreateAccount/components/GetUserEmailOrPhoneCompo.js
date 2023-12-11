@@ -162,6 +162,13 @@ const GetUserEmailOrPhoneCompo = ({
         setPhoneNumberErrorText(
           'Please try again later now sign in with phone is not available!',
         );
+      } else if (error.code === 'auth/app-not-authorized') {
+        setLoading(false);
+        console.log('error while login with phone number: ', error);
+        setPhoneNumberError(true);
+        setPhoneNumberErrorText(
+          'Please try again later now sign in with phone is not available!',
+        );
       } else {
         setLoading(false);
         console.error('Error logging in with phone number:', error);
