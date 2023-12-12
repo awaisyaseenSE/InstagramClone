@@ -28,7 +28,9 @@ const TabRoutes = () => {
         {/* <View style={{flex: 1}}> */}
         {selectedScreen === 0 && <Home />}
         {selectedScreen === 1 && <SearchScreen />}
-        {selectedScreen === 2 && <GalleryScreen />}
+        {selectedScreen === 2 && (
+          <GalleryScreen switchToScreen={switchToScreen} />
+        )}
         {selectedScreen === 3 && <NotificationScreen />}
         {selectedScreen === 4 && <ProfileScreen />}
         {/* </View> */}

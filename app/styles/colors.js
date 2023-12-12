@@ -11,4 +11,5 @@ export default {
   signUpInput: '#FFFFFF',
   signUpBordercolor: '#737982',
   red: 'red',
+  galleryPickImageBg: '#EFEFEF',
 };
