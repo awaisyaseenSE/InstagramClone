@@ -8,6 +8,7 @@ import SearchScreen from '../screens/SearchScreen';
 import CreatePostScreen from '../screens/CreatePost/CreatePostScreen';
 import NotificationScreen from '../screens/Notification/NotificationScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
+import GalleryScreen from '../screens/CreatePost/GalleryScreen';
 
 const TabRoutes = () => {
   const {theme} = useTheme();
@@ -27,7 +28,7 @@ const TabRoutes = () => {
         {/* <View style={{flex: 1}}> */}
         {selectedScreen === 0 && <Home />}
         {selectedScreen === 1 && <SearchScreen />}
-        {selectedScreen === 2 && <CreatePostScreen />}
+        {selectedScreen === 2 && <GalleryScreen />}
         {selectedScreen === 3 && <NotificationScreen />}
         {selectedScreen === 4 && <ProfileScreen />}
         {/* </View> */}
