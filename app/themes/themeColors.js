@@ -13,6 +13,8 @@ export const lightTheme = {
   bottonTabIconColor: '#060606',
   bottonTabBorderColor: 'rgba(0,0,0,0.25)',
   storyBg: '#C90083',
+  placeholderColor: '#C6C6C6',
+  postCaption: '#262626',
 };
 
 export const darkTheme = {
@@ -30,4 +32,6 @@ export const darkTheme = {
   bottonTabIconColor: '#FAF9F6',
   bottonTabBorderColor: '#262626',
   storyBg: '#C90083',
+  placeholderColor: '#C8C8C8',
+  postCaption: '#F9F9F9',
 };

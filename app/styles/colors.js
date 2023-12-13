@@ -12,4 +12,5 @@ export default {
   signUpBordercolor: '#737982',
   red: 'red',
   galleryPickImageBg: '#EFEFEF',
+  lightBlackTwo: '#808080',
 };
