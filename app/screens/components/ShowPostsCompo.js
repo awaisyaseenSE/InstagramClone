@@ -164,7 +164,7 @@ const ShowPostsCompo = ({item, allUrls}) => {
                     backgroundColor:
                       currentPhotoIndex === index + 1
                         ? colors.blue
-                        : theme.light,
+                        : theme.paginationColor,
                     borderRadius: 3,
                     marginRight: 3,
                   }}

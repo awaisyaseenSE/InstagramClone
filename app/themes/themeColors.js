@@ -15,6 +15,7 @@ export const lightTheme = {
   storyBg: '#C90083',
   placeholderColor: '#C6C6C6',
   postCaption: '#262626',
+  paginationColor: 'rgba(0,0,0,0.2)',
 };
 
 export const darkTheme = {
@@ -34,4 +35,5 @@ export const darkTheme = {
   storyBg: '#C90083',
   placeholderColor: '#C8C8C8',
   postCaption: '#F9F9F9',
+  paginationColor: 'rgba(255,255,255,.2)',
 };
