@@ -74,6 +74,13 @@ const ShowPostStyle = theme => {
       backgroundColor: '#121212',
       opacity: 8,
     },
+    postFistContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+    },
   });
   return styles;
 };

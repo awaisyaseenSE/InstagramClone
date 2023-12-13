@@ -48,6 +48,7 @@ export default function Home() {
         style={{
           backgroundColor: theme.bottonTabBg,
           paddingTop: Platform.OS === 'android' ? 0 : 0,
+          flex: 1,
         }}
         statusBarBg={theme.bottonTabBg}>
         <TopHomeCompo />

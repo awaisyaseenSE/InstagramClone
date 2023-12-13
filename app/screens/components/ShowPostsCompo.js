@@ -13,6 +13,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import ShowPostStyle from '../style/ShowPostStyle';
 import colors from '../../styles/colors';
+import LikeComponent from './LikeComponent';
 
 const ShowPostsCompo = ({item, allUrls}) => {
   const {theme} = useTheme();
@@ -39,15 +40,8 @@ const ShowPostsCompo = ({item, allUrls}) => {
 
   return (
     <>
-      <View style={{}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: 14,
-            paddingVertical: 12,
-          }}>
+      <View>
+        <View style={styles.postFistContainer}>
           <View
             style={{
               flexDirection: 'row',
@@ -134,12 +128,13 @@ const ShowPostsCompo = ({item, allUrls}) => {
             justifyContent: 'space-between',
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <TouchableOpacity style={styles.postIconsContainer}>
+            {/* <TouchableOpacity style={styles.postIconsContainer}>
               <Image
                 source={require('../../assets/tab_heart.png')}
                 style={styles.postIconsStyle}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            <LikeComponent postId={item.id} />
             <TouchableOpacity style={styles.postIconsContainer}>
               <Image
                 source={require('../../assets/comment.png')}
@@ -191,7 +186,10 @@ const ShowPostsCompo = ({item, allUrls}) => {
           </View>
         </View>
         <View style={styles.captionContainer}>
-          <Text style={styles.captionText}>{item.caption}</Text>
+          <Text style={styles.captionText}>{item.likes.length} Likes</Text>
+          <Text style={styles.captionText} numberOfLines={3}>
+            {item.caption}
+          </Text>
         </View>
       </View>
     </>
