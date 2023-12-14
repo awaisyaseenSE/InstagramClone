@@ -16,6 +16,9 @@ export const lightTheme = {
   placeholderColor: '#C6C6C6',
   postCaption: '#262626',
   paginationColor: 'rgba(0,0,0,0.2)',
+  commentBg: '#FFFFFF',
+  commentIconColor: '#9F9F9F',
+  commentGrayText: '#6B6B6B',
 };
 
 export const darkTheme = {
@@ -36,4 +39,7 @@ export const darkTheme = {
   placeholderColor: '#C8C8C8',
   postCaption: '#F9F9F9',
   paginationColor: 'rgba(255,255,255,.2)',
+  commentBg: '#262626',
+  commentIconColor: '#929292',
+  commentGrayText: '#A1A1A1',
 };

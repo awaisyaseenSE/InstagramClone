@@ -5,6 +5,8 @@ import {
   Image,
   FlatList,
   Dimensions,
+  Alert,
+  Modal,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
@@ -14,13 +16,16 @@ import firestore from '@react-native-firebase/firestore';
 import ShowPostStyle from '../style/ShowPostStyle';
 import colors from '../../styles/colors';
 import LikeComponent from './LikeComponent';
+import CommentCompo from './CommentModal';
 
 const ShowPostsCompo = ({item, allUrls}) => {
   const {theme} = useTheme();
   const styles = ShowPostStyle(theme);
   const [postUserData, setPostUserData] = useState(null);
   const screenWidth = Dimensions.get('screen').width;
+  const screenHeight = Dimensions.get('screen').height;
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(1);
+  const [showComment, setShowComment] = useState(false);
 
   useEffect(() => {
     firestore()
@@ -128,14 +133,10 @@ const ShowPostsCompo = ({item, allUrls}) => {
             justifyContent: 'space-between',
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            {/* <TouchableOpacity style={styles.postIconsContainer}>
-              <Image
-                source={require('../../assets/tab_heart.png')}
-                style={styles.postIconsStyle}
-              />
-            </TouchableOpacity> */}
             <LikeComponent postId={item.id} />
-            <TouchableOpacity style={styles.postIconsContainer}>
+            <TouchableOpacity
+              style={styles.postIconsContainer}
+              onPress={() => setShowComment(!showComment)}>
               <Image
                 source={require('../../assets/comment.png')}
                 style={[styles.postIconsStyle, {marginHorizontal: 8}]}
@@ -192,6 +193,13 @@ const ShowPostsCompo = ({item, allUrls}) => {
           </Text>
         </View>
       </View>
+      {showComment && (
+        <CommentCompo
+          showComment={showComment}
+          setShowComment={setShowComment}
+          postId={item.id}
+        />
+      )}
     </>
   );
 };
