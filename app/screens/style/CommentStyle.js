@@ -85,6 +85,31 @@ const CommentStyle = theme => {
       color: theme.text,
       fontSize: 14,
     },
+    commentsContainer: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+    },
+    heartIcon: {
+      width: 14,
+      height: 14,
+      resizeMode: 'contain',
+      tintColor: theme.commentIconColor,
+    },
+    likeCounterText: {
+      fontSize: 12,
+      color: theme.commentGrayText,
+      fontFamily: fontFamily.regular,
+    },
+    userNameStyle: {
+      fontSize: 12,
+      color: theme.text,
+      fontFamily: fontFamily.regular,
+    },
+    commentTextStyle: {
+      fontSize: 10,
+      color: theme.text,
+      fontFamily: fontFamily.regular,
+    },
   });
   return styles;
 };

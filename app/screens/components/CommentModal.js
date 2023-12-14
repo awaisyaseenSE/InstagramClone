@@ -13,7 +13,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
 import colors from '../../styles/colors';
 import CommentStyle from '../style/CommentStyle';
@@ -22,17 +22,37 @@ import PostData from '../../dummyData/PostData';
 import ScreenComponent from '../../components/ScreenComponent';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import ShowCommentsCompo from './ShowCommentsCompo';
 
 const CommentModal = ({showComment, setShowComment, postId}) => {
   const {theme} = useTheme();
   const styles = CommentStyle(theme);
   const [comment, setComment] = useState('');
   const [laoding, setLoading] = useState(false);
+  const [commentData, setCommentData] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = firestore()
+      .collection('posts')
+      .doc(postId)
+      .collection('comments')
+      .orderBy('time', 'desc')
+      .onSnapshot(snapshot => {
+        const newMessages = snapshot.docs.map(doc => ({
+          ...doc.data(),
+          commentId: doc.id,
+          time: doc.data().time.toDate(),
+        }));
+
+        setCommentData(newMessages);
+        setLoading(false);
+      });
+    return () => unsubscribe();
+  }, []);
 
   const handleAddComment = async () => {
     try {
       setLoading(true);
-      console.log('before adding comment');
       const newComment = {
         text: comment,
         time: new Date(),
@@ -55,9 +75,8 @@ const CommentModal = ({showComment, setShowComment, postId}) => {
         .add(newComment)
         .then(() => {
           setLoading(false);
-          console.log('commend is added');
         })
-        .catch(er => console.log('er: ', er));
+        .catch(er => console.log('Error in adding comment: ', er));
     } catch (error) {
       setLoading(false);
       console.log('Error while Adding Comment on Post: ', error);
@@ -77,7 +96,9 @@ const CommentModal = ({showComment, setShowComment, postId}) => {
           <View style={styles.container}>
             <View style={styles.mainContainer}>
               <View style={styles.headerContainer}>
-                <Text style={styles.commentHeading}>Comments</Text>
+                <Text style={styles.commentHeading}>
+                  Comments ({commentData.length})
+                </Text>
                 <TouchableOpacity
                   style={styles.closeIconContainer}
                   onPress={() => setShowComment(!showComment)}>
@@ -88,29 +109,13 @@ const CommentModal = ({showComment, setShowComment, postId}) => {
                 </TouchableOpacity>
               </View>
               <View style={{flex: 1}}>
-                <View style={{flex: 1, paddingHorizontal: 20}}>
+                <View
+                  style={{flex: 1, paddingHorizontal: 20, paddingVertical: 8}}>
                   <FlatList
-                    data={PostData}
-                    renderItem={({item}) => {
-                      return (
-                        <View style={{marginVertical: 12}}>
-                          <Text style={{fontSize: 14, color: theme.text}}>
-                            {item.address}
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              color: theme.text,
-                              marginVertical: 12,
-                            }}>
-                            {item.id}
-                          </Text>
-                          <Text style={{fontSize: 14, color: theme.text}}>
-                            {item.userName}
-                          </Text>
-                        </View>
-                      );
-                    }}
+                    data={commentData}
+                    showsVerticalScrollIndicator={false}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item}) => <ShowCommentsCompo item={item} />}
                   />
                 </View>
                 <View style={styles.addCommentContainer}>

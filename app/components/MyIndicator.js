@@ -2,7 +2,12 @@ import React from 'react';
 import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import colors from '../styles/colors';
 
-export default function MyIndicator({visible, style, color = colors.blue}) {
+export default function MyIndicator({
+  visible,
+  style,
+  color = colors.blue,
+  size = 14,
+}) {
   if (!visible) {
     return null;
   }
@@ -10,15 +15,16 @@ export default function MyIndicator({visible, style, color = colors.blue}) {
     <View
       style={[
         styles.container,
-        style,
+
         {
           opacity: 0.6,
           backgroundColor: colors.white,
         },
+        style,
       ]}>
       <ActivityIndicator
         style={{width: 100, height: 100}}
-        size="large"
+        size={size}
         color={color}
       />
     </View>
