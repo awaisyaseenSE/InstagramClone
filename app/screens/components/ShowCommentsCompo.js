@@ -24,7 +24,8 @@ const ShowCommentsCompo = ({item}) => {
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
     if (seconds < 60) {
-      return `${seconds} seconds ago`;
+      return `now`;
+      // return `${seconds} seconds ago`;
     } else if (minutes < 60) {
       return `${minutes} min ago`;
     } else if (hours < 24) {
@@ -101,7 +102,7 @@ const ShowCommentsCompo = ({item}) => {
       <View style={styles.commentsContainer}>
         <FastImage
           source={{
-            uri: 'https://imgv3.fotor.com/images/gallery/Realistic-Male-Profile-Picture.jpg',
+            uri: userData?.imageUrl,
           }}
           style={styles.profileImageStyle}
         />

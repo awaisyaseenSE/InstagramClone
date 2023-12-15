@@ -9,11 +9,14 @@ import CreatePostScreen from '../screens/CreatePost/CreatePostScreen';
 import NotificationScreen from '../screens/Notification/NotificationScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
 import GalleryScreen from '../screens/CreatePost/GalleryScreen';
+import auth from '@react-native-firebase/auth';
+import FastImage from 'react-native-fast-image';
 
 const TabRoutes = () => {
   const {theme} = useTheme();
   const styles = BottomTabStyle(theme);
   const [selectedScreen, setSelectedScreen] = useState(0);
+  const userProfilePic = auth().currentUser.photoURL;
   const switchToScreen = screenIndex => {
     setSelectedScreen(screenIndex);
   };
@@ -87,11 +90,20 @@ const TabRoutes = () => {
 
         <TouchableOpacity
           onPress={() => switchToScreen(4)}
-          style={styles.iconContainer}>
-          <Image
-            source={require('../assets/user.png')}
-            style={styles.iconStyle}
-          />
+          style={[styles.iconContainer]}>
+          {userProfilePic !== null &&
+          userProfilePic !== undefined &&
+          userProfilePic !== '' ? (
+            <FastImage
+              source={{uri: userProfilePic}}
+              style={styles.userProfilePicStyle}
+            />
+          ) : (
+            <Image
+              source={require('../assets/user.png')}
+              style={styles.iconStyle}
+            />
+          )}
         </TouchableOpacity>
       </View>
     </>

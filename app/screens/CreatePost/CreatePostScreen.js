@@ -62,7 +62,6 @@ export default function CreatePostScreen({route}) {
           const imageRef = storage().ref(`postImages/${postId}.jpg`);
           await imageRef.putFile(image);
           const downloadURL = await imageRef.getDownloadURL();
-          console.log(downloadURL);
           allUrls.push(downloadURL);
           setMediaUrls(prevData => [...prevData, downloadURL]);
         }),

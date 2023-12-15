@@ -27,6 +27,11 @@ const BottomTabStyle = theme => {
       paddingHorizontal: 18,
       paddingVertical: 5,
     },
+    userProfilePicStyle: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+    },
   });
   return styles;
 };

@@ -60,14 +60,7 @@ const CommentModal = ({showComment, setShowComment, postId}) => {
         postId,
         likes: [],
       };
-
-      // Update the local state to immediately display the new comment
-      //   setCommnents([...comments, newComment]);
-      //   setCLength(clength + 1);
       setComment('');
-      //   handleTextInputBlur();
-
-      // Add the comment to Firestore
       await firestore()
         .collection('posts')
         .doc(postId)
@@ -121,7 +114,7 @@ const CommentModal = ({showComment, setShowComment, postId}) => {
                 <View style={styles.addCommentContainer}>
                   <FastImage
                     source={{
-                      uri: 'https://imgv3.fotor.com/images/gallery/Realistic-Male-Profile-Picture.jpg',
+                      uri: auth().currentUser?.photoURL,
                     }}
                     style={styles.profileImageStyle}
                   />

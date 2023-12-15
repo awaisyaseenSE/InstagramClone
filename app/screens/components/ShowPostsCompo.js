@@ -28,19 +28,29 @@ const ShowPostsCompo = ({item, allUrls}) => {
   const [showComment, setShowComment] = useState(false);
 
   useEffect(() => {
-    firestore()
+    const unsubscribe = firestore()
       .collection('users')
       .doc(item.userUid)
-      .get()
-      .then(res => {
-        setPostUserData(res.data());
-      })
-      .catch(err => {
-        console.log(
-          'error in getting user data in home where show posts: ',
-          err,
-        );
+      .onSnapshot(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          var doc = documentSnapshot.data();
+          setPostUserData(doc);
+        }
       });
+    return () => unsubscribe();
+    // firestore()
+    //   .collection('users')
+    //   .doc(item.userUid)
+    //   .get()
+    //   .then(res => {
+    //     setPostUserData(res.data());
+    //   })
+    //   .catch(err => {
+    //     console.log(
+    //       'error in getting user data in home where show posts: ',
+    //       err,
+    //     );
+    //   });
   }, []);
 
   return (
@@ -53,9 +63,9 @@ const ShowPostsCompo = ({item, allUrls}) => {
               alignItems: 'center',
             }}>
             <TouchableOpacity>
-              <Image
+              <FastImage
                 source={{
-                  uri: 'https://imgv3.fotor.com/images/gallery/Realistic-Male-Profile-Picture.jpg',
+                  uri: postUserData?.imageUrl,
                 }}
                 style={styles.UserimgStyle}
               />
