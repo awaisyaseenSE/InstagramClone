@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
 import CommentStyle from '../style/CommentStyle';
@@ -7,13 +7,21 @@ import FastImage from 'react-native-fast-image';
 import MyIndicator from '../../components/MyIndicator';
 import fontFamily from '../../styles/fontFamily';
 import auth from '@react-native-firebase/auth';
+import ShowReplyCompo from './ShowReplyCompo';
 
-const ShowCommentsCompo = ({item}) => {
+const ShowCommentsCompo = ({
+  item,
+  setShowReply,
+  setReplyToUserName,
+  setReplyCommentId,
+}) => {
   const {theme} = useTheme();
   const styles = CommentStyle(theme);
   const [userData, setUserData] = useState(null);
   const [laoding, setLoading] = useState(false);
   const loggedUser = auth().currentUser.uid;
+  const [replyData, setReplyData] = useState([]);
+  const [showReplyData, setShowReplyData] = useState(false);
 
   function formateTime() {
     const postTime = item.time;
@@ -66,11 +74,35 @@ const ShowCommentsCompo = ({item}) => {
       );
     }
   };
+
   useEffect(() => {
     isMoundted = true;
     getUserData();
+    getReplyData();
     return () => (isMoundted = false);
   }, []);
+
+  const getReplyData = () => {
+    try {
+      firestore()
+        .collection('posts')
+        .doc(item.postId)
+        .collection('comments')
+        .doc(item.commentId)
+        .collection('reply')
+        .orderBy('time', 'desc')
+        .onSnapshot(snap => {
+          const allreplies = snap.docs.map(doc => ({
+            ...doc.data(),
+            replyId: doc.id,
+            time: doc.data().time.toDate(),
+          }));
+          setReplyData(allreplies);
+        });
+    } catch (error) {
+      console.log('error while getting reply data of comments: ', error);
+    }
+  };
 
   const handleLike = async () => {
     const postRef = firestore()
@@ -95,6 +127,12 @@ const ShowCommentsCompo = ({item}) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleReplyComment = () => {
+    setReplyToUserName(userData?.fullName);
+    setReplyCommentId(item.commentId);
+    setShowReply(true);
   };
 
   return (
@@ -124,12 +162,50 @@ const ShowCommentsCompo = ({item}) => {
           <Text style={[styles.commentTextStyle, {fontSize: 11}]}>
             {item.text} hi i am from pakistan punjab where are you from
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleReplyComment}>
             <Text
               style={[styles.commentTextStyle, {color: theme.commentGrayText}]}>
               Reply
             </Text>
           </TouchableOpacity>
+          {replyData.length > 0 && (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  height: 1,
+                  backgroundColor: theme.commentGrayText,
+                  width: 20,
+                  marginRight: 6,
+                }}
+              />
+              <TouchableOpacity
+                style={{paddingVertical: 4}}
+                onPress={() => setShowReplyData(!showReplyData)}>
+                <Text style={{color: theme.commentGrayText, fontSize: 10}}>
+                  View {replyData.length}
+                  {replyData.length > 1 ? ' replies' : ' reply'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {showReplyData && (
+            <FlatList
+              data={replyData}
+              renderItem={({item}) => (
+                <ShowReplyCompo
+                  data={item}
+                  postId={item.postId}
+                  commentId={item.commentId}
+                />
+              )}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          )}
         </View>
         <View
           style={{

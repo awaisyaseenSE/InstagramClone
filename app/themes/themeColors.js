@@ -20,6 +20,9 @@ export const lightTheme = {
   commentIconColor: '#9F9F9F',
   commentGrayText: '#6B6B6B',
   lightbgColor: '#9E9E9E',
+  replyCommentBg: '#EFEFEF',
+  replyCommentText: '#6B6B6B',
+  replyCommentIconColor: '#010101',
 };
 
 export const darkTheme = {
@@ -44,4 +47,7 @@ export const darkTheme = {
   commentIconColor: '#929292',
   commentGrayText: '#A1A1A1',
   lightbgColor: '#D7DCDF',
+  replyCommentBg: '#363636',
+  replyCommentText: '#CDD2D6',
+  replyCommentIconColor: '#E7E7E7',
 };

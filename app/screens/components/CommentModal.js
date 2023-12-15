@@ -30,6 +30,10 @@ const CommentModal = ({showComment, setShowComment, postId}) => {
   const [comment, setComment] = useState('');
   const [laoding, setLoading] = useState(false);
   const [commentData, setCommentData] = useState([]);
+  const [showReply, setShowReply] = useState(false);
+  const [replyToUserName, setReplyToUserName] = useState('');
+  const [sendShow, setSendShow] = useState(false);
+  const [replyCommentId, setReplyCommentId] = useState('');
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -50,7 +54,7 @@ const CommentModal = ({showComment, setShowComment, postId}) => {
     return () => unsubscribe();
   }, []);
 
-  const handleAddComment = async () => {
+  const handleAddReplyOnComment = async () => {
     try {
       setLoading(true);
       const newComment = {
@@ -59,21 +63,60 @@ const CommentModal = ({showComment, setShowComment, postId}) => {
         userId: auth().currentUser.uid,
         postId,
         likes: [],
+        replyCommentId,
       };
       setComment('');
       await firestore()
         .collection('posts')
         .doc(postId)
         .collection('comments')
+        .doc(replyCommentId)
+        .collection('reply')
         .add(newComment)
         .then(() => {
           setLoading(false);
+          setShowReply(false);
+          setSendShow(false);
         })
-        .catch(er => console.log('Error in adding comment: ', er));
+        .catch(er => console.log('Error in adding reply on comment: ', er));
     } catch (error) {
       setLoading(false);
-      console.log('Error while Adding Comment on Post: ', error);
+      console.log('Error while Adding reply on Comment on Post: ', error);
     }
+  };
+  const handleAddComment = async () => {
+    if (showReply) {
+      handleAddReplyOnComment();
+    } else {
+      try {
+        setLoading(true);
+        const newComment = {
+          text: comment,
+          time: new Date(),
+          userId: auth().currentUser.uid,
+          postId,
+          likes: [],
+        };
+        setComment('');
+        await firestore()
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .add(newComment)
+          .then(() => {
+            setLoading(false);
+          })
+          .catch(er => console.log('Error in adding comment: ', er));
+      } catch (error) {
+        setLoading(false);
+        console.log('Error while Adding Comment on Post: ', error);
+      }
+    }
+  };
+
+  const handleCloseCommentReply = () => {
+    setReplyToUserName('');
+    setShowReply(false);
   };
 
   return (
@@ -108,9 +151,34 @@ const CommentModal = ({showComment, setShowComment, postId}) => {
                     data={commentData}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({item}) => <ShowCommentsCompo item={item} />}
+                    renderItem={({item}) => (
+                      <ShowCommentsCompo
+                        item={item}
+                        setShowReply={setShowReply}
+                        setReplyToUserName={setReplyToUserName}
+                        setReplyCommentId={setReplyCommentId}
+                      />
+                    )}
                   />
                 </View>
+                {showReply && (
+                  <View style={styles.replyContainer}>
+                    <Text style={styles.replyText}>
+                      Replying to {replyToUserName}
+                    </Text>
+                    <TouchableOpacity
+                      style={{
+                        paddingHorizontal: 8,
+                        paddingVertical: 8,
+                      }}
+                      onPress={handleCloseCommentReply}>
+                      <Image
+                        source={require('../../assets/close.png')}
+                        style={styles.replyCloseIcon}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
                 <View style={styles.addCommentContainer}>
                   <FastImage
                     source={{
@@ -123,20 +191,29 @@ const CommentModal = ({showComment, setShowComment, postId}) => {
                     placeholder="Add a comment..."
                     placeholderTextColor={theme.placeholderColor}
                     value={comment}
-                    onChangeText={text => setComment(text)}
+                    onChangeText={text => {
+                      setComment(text);
+                      if (text.trim().length) {
+                        setSendShow(true);
+                      } else {
+                        setSendShow(false);
+                      }
+                    }}
                   />
-                  <TouchableOpacity
-                    style={styles.addCommentIconContainer}
-                    onPress={handleAddComment}>
-                    {laoding ? (
-                      <ActivityIndicator size={14} color={'white'} />
-                    ) : (
-                      <Image
-                        source={require('../../assets/up-arrow.png')}
-                        style={styles.addCommentIcon}
-                      />
-                    )}
-                  </TouchableOpacity>
+                  {sendShow && (
+                    <TouchableOpacity
+                      style={styles.addCommentIconContainer}
+                      onPress={handleAddComment}>
+                      {laoding ? (
+                        <ActivityIndicator size={14} color={'white'} />
+                      ) : (
+                        <Image
+                          source={require('../../assets/up-arrow.png')}
+                          style={styles.addCommentIcon}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             </View>

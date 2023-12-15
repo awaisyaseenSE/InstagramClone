@@ -110,6 +110,25 @@ const CommentStyle = theme => {
       color: theme.text,
       fontFamily: fontFamily.regular,
     },
+    replyContainer: {
+      backgroundColor: theme.replyCommentBg,
+      paddingVertical: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 14,
+    },
+    replyText: {
+      color: theme.replyCommentText,
+      paddingHorizontal: 8,
+      paddingVertical: 8,
+    },
+    replyCloseIcon: {
+      width: 10,
+      height: 10,
+      resizeMode: 'contain',
+      tintColor: theme.replyCommentIconColor,
+    },
   });
   return styles;
 };
