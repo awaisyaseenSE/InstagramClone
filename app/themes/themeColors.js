@@ -19,6 +19,7 @@ export const lightTheme = {
   commentBg: '#FFFFFF',
   commentIconColor: '#9F9F9F',
   commentGrayText: '#6B6B6B',
+  lightbgColor: '#9E9E9E',
 };
 
 export const darkTheme = {
@@ -42,4 +43,5 @@ export const darkTheme = {
   commentBg: '#262626',
   commentIconColor: '#929292',
   commentGrayText: '#A1A1A1',
+  lightbgColor: '#D7DCDF',
 };

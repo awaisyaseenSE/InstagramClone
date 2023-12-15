@@ -4,6 +4,7 @@ import ButtonComponent from '../CreateAccount/components/ButtonComponent';
 import useAuth from '../../auth/useAuth';
 import auth from '@react-native-firebase/auth';
 import colors from '../../styles/colors';
+import FastImage from 'react-native-fast-image';
 
 export default function ProfileScreen() {
   const userData = auth().currentUser;
@@ -13,6 +14,7 @@ export default function ProfileScreen() {
       logout();
     }
   };
+
   return (
     <View style={{alignItems: 'center', marginTop: 30}}>
       <View style={{alignItems: 'center', marginBottom: 18}}>
@@ -27,6 +29,12 @@ export default function ProfileScreen() {
             ? 'Verfied Account'
             : 'Please Verify your Account'}
         </Text>
+        <View style={{marginVertical: 10, alignItems: 'center'}}>
+          <FastImage
+            source={{uri: userData.photoURL}}
+            style={{width: 80, height: 80, borderRadius: 40}}
+          />
+        </View>
       </View>
       <ButtonComponent
         title="Logout"

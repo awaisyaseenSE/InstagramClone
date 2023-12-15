@@ -24,6 +24,7 @@ const GetUserEmailOrPhoneCompo = ({
   setIsCreated,
   fullName,
   dateOfBirth,
+  userProfilePicUrl,
 }) => {
   const [emailError, setEmailError] = useState(false);
   const [emailErrorText, setEmailErrorText] = useState('');
@@ -62,11 +63,13 @@ const GetUserEmailOrPhoneCompo = ({
     try {
       await auth().currentUser?.updateProfile({
         displayName: fullName,
+        photoURL: userProfilePicUrl,
       });
       await firestore().collection('users').doc(auth().currentUser.uid).set({
         fullName: fullName,
         email: email,
         dateOfBirth: dateOfBirth,
+        imageUrl: userProfilePicUrl,
       });
       return true;
     } catch (error) {

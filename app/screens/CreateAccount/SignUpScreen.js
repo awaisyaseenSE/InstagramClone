@@ -12,6 +12,7 @@ import navigationStrings from '../../navigation/navigationStrings';
 import GetUserEmailOrPhoneCompo from './components/GetUserEmailOrPhoneCompo';
 import {useTheme} from '../../themes/ThemeContext';
 import fontFamily from '../../styles/fontFamily';
+import GetUserProfileImage from './components/GetUserProfileImage';
 
 export default function SignUpScreen() {
   const navigation = useNavigation();
@@ -21,6 +22,7 @@ export default function SignUpScreen() {
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [userProfilePicUrl, setUserProfilePicUrl] = useState('');
   const [isEmailSignIn, setIsEmailSignIn] = useState(true);
   const [loading, setLoading] = useState(false);
   const [isCreated, setIsCreated] = useState(false);
@@ -72,6 +74,14 @@ export default function SignUpScreen() {
               />
             )}
             {selectedIndex == 3 && (
+              <GetUserProfileImage
+                selectedIndex={selectedIndex}
+                setSelectedIndex={setSelectedIndex}
+                setUserProfilePicUrl={setUserProfilePicUrl}
+                userProfilePicUrl={userProfilePicUrl}
+              />
+            )}
+            {selectedIndex == 4 && (
               <GetUserEmailOrPhoneCompo
                 email={email}
                 setEmail={setEmail}
@@ -85,6 +95,7 @@ export default function SignUpScreen() {
                 setIsCreated={setIsCreated}
                 fullName={fullName}
                 dateOfBirth={dateOfBirth}
+                userProfilePicUrl={userProfilePicUrl}
               />
             )}
           </View>

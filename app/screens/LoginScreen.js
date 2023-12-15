@@ -19,6 +19,7 @@ import auth from '@react-native-firebase/auth';
 import {useTheme} from '../themes/ThemeContext';
 import ButtonComponent from './CreateAccount/components/ButtonComponent';
 import fontFamily from '../styles/fontFamily';
+import storage from '@react-native-firebase/storage';
 
 export default function LoginScreen() {
   const {theme, toggleTheme} = useTheme();
