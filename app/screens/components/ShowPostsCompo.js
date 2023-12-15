@@ -26,6 +26,7 @@ const ShowPostsCompo = ({item, allUrls}) => {
   const screenHeight = Dimensions.get('screen').height;
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(1);
   const [showComment, setShowComment] = useState(false);
+  const [commentLength, setCommentLength] = useState(0);
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -52,7 +53,43 @@ const ShowPostsCompo = ({item, allUrls}) => {
     //     );
     //   });
   }, []);
+  useEffect(() => {
+    const unsubscribe = firestore()
+      .collection('posts')
+      .doc(item.id)
+      .collection('comments')
+      .onSnapshot(snapshot => {
+        const newMessages = snapshot.docs.map(doc => ({
+          ...doc.data(),
+        }));
 
+        setCommentLength(newMessages.length);
+      });
+    return () => unsubscribe();
+  }, []);
+  function formateTime() {
+    const postTime = item.time.toDate();
+    const currentTime = new Date();
+    const timeDiff = currentTime - postTime;
+    const seconds = Math.floor(timeDiff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    if (seconds < 60) {
+      return `now`;
+      // return `${seconds} seconds ago`;
+    } else if (minutes < 60) {
+      return `${minutes} min ago`;
+    } else if (hours < 24) {
+      return `${hours} hour ago`;
+    } else if (days === 1) {
+      return 'Yesterday';
+    } else {
+      // Format the postTime to display the date
+      const options = {year: 'numeric', month: 'short', day: 'numeric'};
+      return postTime.toLocaleDateString(undefined, options);
+    }
+  }
   return (
     <>
       <View>
@@ -143,7 +180,7 @@ const ShowPostsCompo = ({item, allUrls}) => {
             justifyContent: 'space-between',
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <LikeComponent postId={item.id} />
+            <LikeComponent postId={item.id} postLikes={item.likes} />
             <TouchableOpacity
               style={styles.postIconsContainer}
               onPress={() => setShowComment(!showComment)}>
@@ -198,8 +235,22 @@ const ShowPostsCompo = ({item, allUrls}) => {
         </View>
         <View style={styles.captionContainer}>
           <Text style={styles.captionText}>{item.likes.length} Likes</Text>
-          <Text style={styles.captionText} numberOfLines={3}>
-            {item.caption}
+          {item.caption !== '' && (
+            <Text style={[styles.captionText]} numberOfLines={3}>
+              {item.caption}
+            </Text>
+          )}
+          {commentLength > 0 && (
+            <TouchableOpacity onPress={() => setShowComment(!showComment)}>
+              <Text
+                style={[styles.captionText, {color: theme.commentGrayText}]}>
+                View{commentLength == 1 ? '' : ' all'} {commentLength}
+                {commentLength == 1 ? ' comment' : ' comments'}
+              </Text>
+            </TouchableOpacity>
+          )}
+          <Text style={[styles.captionText, {color: theme.commentGrayText}]}>
+            {formateTime()}
           </Text>
         </View>
       </View>

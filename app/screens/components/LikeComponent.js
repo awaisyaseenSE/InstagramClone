@@ -4,7 +4,7 @@ import {useTheme} from '../../themes/ThemeContext';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
-const LikeComponent = ({postId}) => {
+const LikeComponent = ({postId, postLikes}) => {
   const {theme} = useTheme();
   const [liked, setLiked] = useState(false);
 
@@ -59,7 +59,7 @@ const LikeComponent = ({postId}) => {
   return (
     <>
       <TouchableOpacity style={styles.postIconsContainer} onPress={handleLike}>
-        <Image
+        {/* <Image
           source={
             liked
               ? require('../../assets/tab_heart_fill.png')
@@ -68,6 +68,21 @@ const LikeComponent = ({postId}) => {
           style={[
             styles.postIconsStyle,
             {tintColor: liked ? 'red' : theme.text},
+          ]}
+        /> */}
+        <Image
+          source={
+            postLikes.includes(auth().currentUser.uid)
+              ? require('../../assets/tab_heart_fill.png')
+              : require('../../assets/tab_heart.png')
+          }
+          style={[
+            styles.postIconsStyle,
+            {
+              tintColor: postLikes.includes(auth().currentUser.uid)
+                ? 'red'
+                : theme.text,
+            },
           ]}
         />
       </TouchableOpacity>
