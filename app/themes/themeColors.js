@@ -23,6 +23,8 @@ export const lightTheme = {
   replyCommentBg: '#EFEFEF',
   replyCommentText: '#6B6B6B',
   replyCommentIconColor: '#010101',
+  profileBg: '#FAFAFA',
+  profileImgBorder: '#C7C7CC',
 };
 
 export const darkTheme = {
@@ -50,4 +52,6 @@ export const darkTheme = {
   replyCommentBg: '#363636',
   replyCommentText: '#CDD2D6',
   replyCommentIconColor: '#E7E7E7',
+  profileBg: '#121212',
+  profileImgBorder: '#48484A',
 };
