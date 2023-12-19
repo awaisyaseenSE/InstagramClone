@@ -6,4 +6,6 @@ export default {
   FORGOT_PASSWORD: 'ForgotPasswordScreen',
   PHOTO_CAPTURE_SCREEN: 'PhotoCaptureScreen',
   CREATE_POST_SCREEN: 'CreatePostScreen',
+  CREATE_STORY_SCREEN: 'CreateStoryScreen',
+  SHOW_GALLERY_STORY: 'ShowGalleryStoryScreen',
 };

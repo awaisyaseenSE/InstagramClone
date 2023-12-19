@@ -1061,6 +1061,8 @@ PODS:
     - React-Core
   - react-native-image-picker (7.0.3):
     - React-Core
+  - react-native-insta-story (1.1.9):
+    - React
   - react-native-safe-area-context (4.7.4):
     - React-Core
   - React-NativeModulesApple (0.72.7):
@@ -1241,6 +1243,7 @@ DEPENDENCIES:
   - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-insta-story (from `../node_modules/react-native-insta-story`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1348,6 +1351,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-date-picker"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-insta-story:
+    :path: "../node_modules/react-native-insta-story"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-NativeModulesApple:
@@ -1452,6 +1457,7 @@ SPEC CHECKSUMS:
   react-native-cameraroll: 2a198b0eb86c7ccf3303fb57702b2465cc292c94
   react-native-date-picker: 1d61c76315098a6ad4c643a356f005916c7d4875
   react-native-image-picker: 2381c008bbb09e72395a2d043c147b11bd1523d9
+  react-native-insta-story: 67a7bc0b4ba052973aa54b613708a838f4774bf2
   react-native-safe-area-context: 2cd91d532de12acdb0a9cbc8d43ac72a8e4c897c
   React-NativeModulesApple: ac9cea059dfe97cf3a4f00aa2774293bf5a99463
   React-perflogger: 31ea61077185eb1428baf60c0db6e2886f141a5a

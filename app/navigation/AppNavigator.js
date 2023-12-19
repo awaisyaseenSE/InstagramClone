@@ -4,6 +4,8 @@ import Home from '../screens/Home';
 import TabRoutes from './TabRoutes';
 import PhotoCaptureScreen from '../screens/CreatePost/PhotoCaptureScreen';
 import CreatePostScreen from '../screens/CreatePost/CreatePostScreen';
+import CreateStoryScreen from '../screens/CreateStory/CreateStoryScreen';
+import ShowGalleryStoryScreen from '../screens/CreateStory/ShowGalleryStoryScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +30,16 @@ function AppNavigator() {
       <Stack.Screen
         name="CreatePostScreen"
         component={CreatePostScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CreateStoryScreen"
+        component={CreateStoryScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ShowGalleryStoryScreen"
+        component={ShowGalleryStoryScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

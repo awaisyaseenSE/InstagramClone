@@ -123,6 +123,26 @@ const galleryStyle = theme => {
       paddingHorizontal: 20,
       paddingVertical: 12,
     },
+    createStoryImage: {
+      width: screenWidth - 14,
+      height: screenHeight * 0.8,
+      resizeMode: 'cover',
+      borderRadius: 8,
+    },
+    forwardIcon: {
+      width: 14,
+      height: 14,
+      resizeMode: 'contain',
+      tintColor: theme.background,
+    },
+    forwardIconContainer: {
+      width: 32,
+      height: 32,
+      borderRadius: 32 / 2,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.text,
+    },
   });
   return styles;
 };
