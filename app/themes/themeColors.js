@@ -25,6 +25,7 @@ export const lightTheme = {
   replyCommentIconColor: '#010101',
   profileBg: '#FAFAFA',
   profileImgBorder: '#C7C7CC',
+  profileGray: 'rgba(0,0,0,0.4)',
 };
 
 export const darkTheme = {
@@ -54,4 +55,5 @@ export const darkTheme = {
   replyCommentIconColor: '#E7E7E7',
   profileBg: '#121212',
   profileImgBorder: '#48484A',
+  profileGray: 'rgba(255,255,255,.4)',
 };

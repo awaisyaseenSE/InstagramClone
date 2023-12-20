@@ -95,6 +95,24 @@ const ProfileStyle = theme => {
       color: theme.text,
       fontFamily: fontFamily.semiBold,
     },
+    profileTabsIconStyle: {
+      width: 20,
+      height: 20,
+      resizeMode: 'contain',
+      tintColor: theme.profileGray,
+    },
+    profileTabsIconContainer: {
+      flex: 1,
+      alignItems: 'center',
+      borderBottomWidth: 0.5,
+      borderBottomColor: theme.profileImgBorder,
+      paddingBottom: 12,
+    },
+    profileTabContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 16,
+    },
   });
   return styles;
 };

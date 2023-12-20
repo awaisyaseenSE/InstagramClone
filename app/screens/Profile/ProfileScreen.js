@@ -1,15 +1,16 @@
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import ButtonComponent from '../CreateAccount/components/ButtonComponent';
 import useAuth from '../../auth/useAuth';
 import auth from '@react-native-firebase/auth';
-import colors from '../../styles/colors';
 import FastImage from 'react-native-fast-image';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../themes/ThemeContext';
 import ProfileStyle from '../style/ProfileStyle';
 import firestore from '@react-native-firebase/firestore';
 import MyIndicator from '../../components/MyIndicator';
+import ProfileGridCompo from './ProfileGridCompo';
+import ProfileReelCompo from './ProfileReelCompo';
+import ProfileUserTagsCompo from './ProfileUserTagsCompo';
 
 export default function ProfileScreen() {
   const {theme} = useTheme();
@@ -19,6 +20,8 @@ export default function ProfileScreen() {
   const [userName, setUserName] = useState('');
   const [userImageUrl, setUserImageUrl] = useState('');
   const [userAllData, setUserAllData] = useState(null);
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [userPostsLength, setUserPostsLength] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -100,6 +103,64 @@ export default function ProfileScreen() {
             <Text style={styles.editProfileBtnText}>Edit Profile</Text>
           </TouchableOpacity>
         </View>
+        <View style={styles.profileTabContainer}>
+          <TouchableOpacity
+            style={[
+              styles.profileTabsIconContainer,
+              {
+                borderColor:
+                  selectedTab === 0 ? theme.text : theme.profileImgBorder,
+              },
+            ]}
+            onPress={() => setSelectedTab(0)}>
+            <Image
+              source={require('../../assets/grid.png')}
+              style={[
+                styles.profileTabsIconStyle,
+                {tintColor: selectedTab === 0 ? theme.text : theme.profileGray},
+              ]}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.profileTabsIconContainer,
+              {
+                borderColor:
+                  selectedTab === 1 ? theme.text : theme.profileImgBorder,
+              },
+            ]}
+            onPress={() => setSelectedTab(1)}>
+            <Image
+              source={require('../../assets/reel.png')}
+              style={[
+                styles.profileTabsIconStyle,
+                {tintColor: selectedTab === 1 ? theme.text : theme.profileGray},
+              ]}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.profileTabsIconContainer,
+              {
+                borderColor:
+                  selectedTab === 2 ? theme.text : theme.profileImgBorder,
+              },
+            ]}
+            onPress={() => setSelectedTab(2)}>
+            <Image
+              source={require('../../assets/user_two.png')}
+              style={[
+                styles.profileTabsIconStyle,
+                {tintColor: selectedTab === 2 ? theme.text : theme.profileGray},
+              ]}
+            />
+          </TouchableOpacity>
+        </View>
+        {selectedTab === 0 && (
+          <ProfileGridCompo setUserPostsLength={setUserPostsLength} />
+        )}
+        {selectedTab === 1 && <ProfileReelCompo />}
+        {selectedTab === 2 && <ProfileUserTagsCompo />}
       </View>
       <MyIndicator visible={laoding} />
     </>

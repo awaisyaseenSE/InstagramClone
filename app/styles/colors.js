@@ -13,4 +13,5 @@ export default {
   red: 'red',
   galleryPickImageBg: '#EFEFEF',
   lightBlackTwo: '#808080',
+  profileGray: 'rgba(0,0,0,0.4)',
 };
