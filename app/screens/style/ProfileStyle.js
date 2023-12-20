@@ -113,6 +113,74 @@ const ProfileStyle = theme => {
       alignItems: 'center',
       marginTop: 16,
     },
+    editProfileText: {
+      fontSize: 14,
+      fontFamily: fontFamily.medium,
+      color: theme.text,
+    },
+    editProfileTextContainer: {
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+    },
+    editProfileHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 12,
+    },
+    editPofileImageContainer: {
+      alignItems: 'center',
+      paddingHorizontal: 4,
+      paddingVertical: 4,
+    },
+    userImageStyle: {
+      width: 90,
+      height: 90,
+      borderRadius: 45,
+    },
+    editProfileUserDetailContainer: {
+      marginVertical: 10,
+      paddingVertical: 10,
+      borderTopWidth: 0.5,
+      borderTopColor: theme.profileImgBorder,
+      borderBottomWidth: 0.5,
+      borderBottomColor: theme.profileImgBorder,
+      paddingHorizontal: 20,
+    },
+    errorText: {
+      fontSize: 12,
+      color: theme.red,
+      fontFamily: fontFamily.regular,
+      alignSelf: 'center',
+    },
+    editProfileDownIconContainer: {
+      position: 'absolute',
+      right: 0,
+      bottom: 8,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+    },
+    editPofileDownIconStyle: {
+      width: 12,
+      height: 12,
+      resizeMode: 'contain',
+      tintColor: theme.text,
+    },
+    editProfileDownModal: {
+      width: '50%',
+      backgroundColor: theme.bottonTabBg,
+      paddingHorizontal: 12,
+      paddingVertical: 14,
+      borderRadius: 4,
+      borderWidth: 0.5,
+      borderColor: theme.profileImgBorder,
+    },
+    editProfileGenderText: {
+      fontSize: 14,
+      color: theme.lightText,
+      fontFamily: fontFamily.medium,
+      marginLeft: 12,
+    },
   });
   return styles;
 };

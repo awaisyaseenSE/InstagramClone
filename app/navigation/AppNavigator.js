@@ -8,6 +8,7 @@ import CreateStoryScreen from '../screens/CreateStory/CreateStoryScreen';
 import ShowGalleryStoryScreen from '../screens/CreateStory/ShowGalleryStoryScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import CustomDrawer from './CustomDrawer';
+import EditProfileScreen from '../screens/Profile/EditProfileScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -78,6 +79,11 @@ function AppNavigator() {
       <Stack.Screen
         name="ShowGalleryStoryScreen"
         component={ShowGalleryStoryScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EditProfileScreen"
+        component={EditProfileScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

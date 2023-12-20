@@ -11,6 +11,7 @@ import MyIndicator from '../../components/MyIndicator';
 import ProfileGridCompo from './ProfileGridCompo';
 import ProfileReelCompo from './ProfileReelCompo';
 import ProfileUserTagsCompo from './ProfileUserTagsCompo';
+import navigationStrings from '../../navigation/navigationStrings';
 
 export default function ProfileScreen() {
   const {theme} = useTheme();
@@ -99,7 +100,13 @@ export default function ProfileScreen() {
           </Text>
         </View>
         <View style={{paddingHorizontal: 24}}>
-          <TouchableOpacity style={styles.editProfileBtnContainer}>
+          <TouchableOpacity
+            style={styles.editProfileBtnContainer}
+            onPress={() =>
+              navigation.navigate(navigationStrings.EDIT_PROFILE, {
+                userData: userAllData,
+              })
+            }>
             <Text style={styles.editProfileBtnText}>Edit Profile</Text>
           </TouchableOpacity>
         </View>

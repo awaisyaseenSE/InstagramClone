@@ -70,6 +70,9 @@ const GetUserEmailOrPhoneCompo = ({
         email: email,
         dateOfBirth: dateOfBirth,
         imageUrl: userProfilePicUrl,
+        bio: '',
+        website: '',
+        gender: '',
       });
       return true;
     } catch (error) {

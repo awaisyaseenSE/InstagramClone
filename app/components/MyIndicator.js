@@ -6,7 +6,8 @@ export default function MyIndicator({
   visible,
   style,
   color = colors.blue,
-  size = 14,
+  size = 34,
+  backgroundColor = colors.white,
 }) {
   if (!visible) {
     return null;
@@ -18,7 +19,7 @@ export default function MyIndicator({
 
         {
           opacity: 0.6,
-          backgroundColor: colors.white,
+          backgroundColor: backgroundColor,
         },
         style,
       ]}>

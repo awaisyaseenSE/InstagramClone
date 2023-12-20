@@ -8,4 +8,5 @@ export default {
   CREATE_POST_SCREEN: 'CreatePostScreen',
   CREATE_STORY_SCREEN: 'CreateStoryScreen',
   SHOW_GALLERY_STORY: 'ShowGalleryStoryScreen',
+  EDIT_PROFILE: 'EditProfileScreen',
 };
