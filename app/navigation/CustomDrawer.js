@@ -12,16 +12,21 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import colors from '../styles/colors';
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import useAuth from '../auth/useAuth';
+import {useTheme} from '../themes/ThemeContext';
+import ProfileDrawerStyle from './style/ProfileDrawerStyle';
+import fontFamily from '../styles/fontFamily';
+import DrawerItemListCompo from './DrawerItemListCompo';
 
 function CustomDrawer(props) {
-  const [userStatus, setUserStatus] = useState('');
-  const [userExist, setUserExist] = useState(false);
-  const {navigation} = props;
+  const {theme} = useTheme();
+  const styles = ProfileDrawerStyle(theme);
+  // const {navigation} = props;
   const {logout} = useAuth();
 
   const handleLogout = () => {
@@ -33,94 +38,69 @@ function CustomDrawer(props) {
   return (
     <>
       <DrawerContentScrollView
-        style={{backgroundColor: colors.white, width: '100%'}}
+        style={{
+          backgroundColor: theme.background,
+          width: '100%',
+          paddingHorizontal: 12,
+        }}
         showsVerticalScrollIndicator={false}>
-        <View style={styles.headerContainer}>
-          <Image
-            source={require('../assets/logo.png')}
-            style={styles.logoStyle}
-            resizeMode="contain"
+        <Text
+          style={[
+            styles.userNameText,
+            {marginTop: Platform.OS === 'android' ? 10 : 0},
+          ]}>
+          {auth().currentUser?.displayName}
+        </Text>
+        <View style={{flex: 1, marginTop: 18}}>
+          <DrawerItemListCompo
+            image={require('../assets/time.png')}
+            title="Archive"
+          />
+          <DrawerItemListCompo
+            image={require('../assets/activity.png')}
+            title="Your Activity"
+          />
+          <DrawerItemListCompo
+            image={require('../assets/nametag.png')}
+            title="Nametag"
+          />
+          <DrawerItemListCompo
+            image={require('../assets/save.png')}
+            title="Saved"
+          />
+          <DrawerItemListCompo
+            image={require('../assets/close_friends.png')}
+            title="Closed Friends"
+          />
+          <DrawerItemListCompo
+            image={require('../assets/find_people.png')}
+            title="Discover People"
+          />
+          <DrawerItemListCompo
+            image={require('../assets/facebook.png')}
+            title="Open Facebook"
+          />
+          <DrawerItemListCompo
+            image={require('../assets/setting.png')}
+            title="Settings"
           />
         </View>
       </DrawerContentScrollView>
       <View
         style={{
-          backgroundColor: colors.blue,
           paddingVertical: 24,
-          paddingHorizontal: 16,
+          paddingHorizontal: 12,
+          backgroundColor: theme.background,
         }}>
-        <TouchableOpacity
-          style={styles.itemDetailContainer}
-          activeOpacity={0.5}
-          onPress={handleLogout}>
-          <Image
-            source={require('../assets/logo.png')}
-            style={styles.logoutIconStyle}
-          />
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
+        <DrawerItemListCompo
+          image={require('../assets/exit.png')}
+          title="Logout"
+          style={{marginBottom: Platform.OS === 'ios' ? 8 : 2}}
+          onPress={handleLogout}
+        />
       </View>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  headerContainer: {
-    backgroundColor: colors.white,
-    paddingVertical: 50,
-    alignItems: 'center',
-  },
-  logoStyle: {
-    width: 110,
-    height: 70,
-  },
-  profileImageStyle: {
-    width: 70,
-    height: 70,
-  },
-  profileDetailContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  itemDetailContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 24,
-    paddingHorizontal: 14,
-  },
-  profileNameText: {
-    fontSize: 16,
-    fontFamily: 'UberMove-Medium',
-    marginLeft: 12,
-  },
-  mainContainer: {
-    backgroundColor: colors.offWhite,
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    flex: 1,
-  },
-  iconStyle: {
-    width: 30,
-    height: 30,
-    resizeMode: 'contain',
-    tintColor: colors.gray,
-  },
-  itemText: {
-    fontSize: 16,
-    fontFamily: 'UberMove-Medium',
-    marginLeft: 12,
-  },
-  logoutText: {
-    fontSize: 16,
-    fontFamily: 'UberMove-Medium',
-    marginLeft: 12,
-  },
-  logoutIconStyle: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
-    tintColor: colors.gray,
-  },
-});
 
 export default CustomDrawer;
