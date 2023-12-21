@@ -24,7 +24,12 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import ShowCommentsCompo from './ShowCommentsCompo';
 
-const CommentModal = ({showComment, setShowComment, postId}) => {
+const CommentModal = ({
+  showComment,
+  setShowComment,
+  postId,
+  switchToScreen,
+}) => {
   const {theme} = useTheme();
   const styles = CommentStyle(theme);
   const [comment, setComment] = useState('');
@@ -157,6 +162,9 @@ const CommentModal = ({showComment, setShowComment, postId}) => {
                         setShowReply={setShowReply}
                         setReplyToUserName={setReplyToUserName}
                         setReplyCommentId={setReplyCommentId}
+                        showComment={showComment}
+                        setShowComment={setShowComment}
+                        switchToScreen={switchToScreen}
                       />
                     )}
                   />

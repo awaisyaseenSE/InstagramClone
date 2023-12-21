@@ -29,7 +29,7 @@ const TabRoutes = () => {
           paddingTop: Platform.OS === 'android' ? 0 : 0,
         }}>
         {/* <View style={{flex: 1}}> */}
-        {selectedScreen === 0 && <Home />}
+        {selectedScreen === 0 && <Home switchToScreen={switchToScreen} />}
         {selectedScreen === 1 && <SearchScreen />}
         {selectedScreen === 2 && (
           <GalleryScreen switchToScreen={switchToScreen} />

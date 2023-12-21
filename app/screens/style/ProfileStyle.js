@@ -181,6 +181,24 @@ const ProfileStyle = theme => {
       fontFamily: fontFamily.medium,
       marginLeft: 12,
     },
+    userProfileFollowBtn: {
+      backgroundColor: theme.userProfileBlue,
+      paddingVertical: 6,
+      borderRadius: 6,
+      alignItems: 'center',
+      flex: 1,
+    },
+    userProfileFollowText: {
+      fontSize: 12,
+      color: theme.text,
+      fontFamily: fontFamily.semiBold,
+    },
+    userProfileFollowBtnContainer: {
+      paddingHorizontal: 20,
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 8,
+    },
   });
   return styles;
 };

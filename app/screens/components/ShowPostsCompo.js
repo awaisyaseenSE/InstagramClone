@@ -17,10 +17,13 @@ import ShowPostStyle from '../style/ShowPostStyle';
 import colors from '../../styles/colors';
 import LikeComponent from './LikeComponent';
 import CommentCompo from './CommentModal';
+import {useNavigation} from '@react-navigation/native';
+import navigationStrings from '../../navigation/navigationStrings';
 
-const ShowPostsCompo = ({item, allUrls}) => {
+const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
   const {theme} = useTheme();
   const styles = ShowPostStyle(theme);
+  const navigation = useNavigation();
   const [postUserData, setPostUserData] = useState(null);
   const screenWidth = Dimensions.get('screen').width;
   const screenHeight = Dimensions.get('screen').height;
@@ -90,6 +93,17 @@ const ShowPostsCompo = ({item, allUrls}) => {
       return postTime.toLocaleDateString(undefined, options);
     }
   }
+
+  const profileNavigationHandler = () => {
+    if (item.userUid == auth().currentUser.uid) {
+      switchToScreen(4);
+    } else {
+      navigation.navigate(navigationStrings.USER_PROFILE, {
+        userUid: item.userUid,
+      });
+    }
+  };
+
   return (
     <>
       <View>
@@ -99,7 +113,7 @@ const ShowPostsCompo = ({item, allUrls}) => {
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={profileNavigationHandler}>
               <FastImage
                 source={{
                   uri: postUserData?.imageUrl,
@@ -259,6 +273,7 @@ const ShowPostsCompo = ({item, allUrls}) => {
           showComment={showComment}
           setShowComment={setShowComment}
           postId={item.id}
+          switchToScreen={switchToScreen}
         />
       )}
     </>

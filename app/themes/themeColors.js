@@ -26,6 +26,9 @@ export const lightTheme = {
   profileBg: '#FAFAFA',
   profileImgBorder: '#C7C7CC',
   profileGray: 'rgba(0,0,0,0.4)',
+  userProfileBlue: '#0395F7',
+  userProfileGray: '#EFEFEF',
+  userFollowerGrayText: '#6D6D6D',
 };
 
 export const darkTheme = {
@@ -56,4 +59,7 @@ export const darkTheme = {
   profileBg: '#121212',
   profileImgBorder: '#48484A',
   profileGray: 'rgba(255,255,255,.4)',
+  userProfileBlue: '#0395F7',
+  userProfileGray: '#262626',
+  userFollowerGrayText: '#AEAEAE',
 };

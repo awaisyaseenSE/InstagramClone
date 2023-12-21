@@ -17,7 +17,7 @@ import MyIndicator from '../../components/MyIndicator';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
 
-const ProfileGridCompo = ({setUserPostsLength}) => {
+const ProfileGridCompo = ({setUserPostsLength, userUid}) => {
   const {theme} = useTheme();
   const styles = ProfileStyle(theme);
   const [laoding, setLoading] = useState(false);
@@ -34,7 +34,7 @@ const ProfileGridCompo = ({setUserPostsLength}) => {
       .onSnapshot(snap => {
         const allPostData = snap.docs
           .map(doc => ({...doc.data(), id: doc.id}))
-          .filter(post => post.userUid === auth().currentUser.uid);
+          .filter(post => post.userUid === userUid);
         setUserPostsLength(allPostData.length);
         setAllUserPosts(allPostData);
         setLoading(false);
@@ -50,6 +50,7 @@ const ProfileGridCompo = ({setUserPostsLength}) => {
             onPress={() =>
               navigation.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
                 clickedItem: item,
+                userUid: userUid,
               })
             }>
             <FastImage

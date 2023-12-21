@@ -20,7 +20,7 @@ import auth from '@react-native-firebase/auth';
 import MyIndicator from '../components/MyIndicator';
 import ShowPostsCompo from './components/ShowPostsCompo';
 
-export default function Home() {
+export default function Home({switchToScreen}) {
   const {theme} = useTheme();
   const [postData, setPostData] = useState([]);
   const [laoding, setLoading] = useState(false);
@@ -58,7 +58,11 @@ export default function Home() {
             <FlatList
               data={postData}
               renderItem={({item}) => (
-                <ShowPostsCompo item={item} allUrls={item.medialUrls} />
+                <ShowPostsCompo
+                  item={item}
+                  allUrls={item.medialUrls}
+                  switchToScreen={switchToScreen}
+                />
               )}
               showsVerticalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}

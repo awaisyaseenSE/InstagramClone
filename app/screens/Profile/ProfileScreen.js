@@ -84,19 +84,55 @@ export default function ProfileScreen() {
               <Text style={styles.followingContentText}>{userPostsLength}</Text>
               <Text style={styles.followingContentText1}>Posts</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.followingTextContainer}>
-              <Text style={styles.followingContentText}>22</Text>
+            <TouchableOpacity
+              style={styles.followingTextContainer}
+              onPress={() => {
+                userAllData !== null && userAllData.followers.length > 0
+                  ? navigation.navigate(
+                      navigationStrings.FOLLOWER_FOLLOWING_SCREEN,
+                      {
+                        followingList: userAllData.following,
+                        followerList: userAllData.followers,
+                        userName: userName,
+                        selectedIndex: 'followers',
+                        totalFollowers: userAllData.followers.length,
+                        totalFollowing: userAllData.following.length,
+                      },
+                    )
+                  : null;
+              }}>
+              <Text style={styles.followingContentText}>
+                {userAllData !== null ? userAllData.followers.length : '22'}
+              </Text>
               <Text style={styles.followingContentText1}>Followers</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.followingTextContainer}>
-              <Text style={styles.followingContentText}>12</Text>
+            <TouchableOpacity
+              style={styles.followingTextContainer}
+              onPress={() => {
+                userAllData !== null && userAllData.following.length > 0
+                  ? navigation.navigate(
+                      navigationStrings.FOLLOWER_FOLLOWING_SCREEN,
+                      {
+                        followingList: userAllData.following,
+                        followerList: userAllData.followers,
+                        userName: userName,
+                        selectedIndex: 'following',
+                        totalFollowers: userAllData.followers.length,
+                        totalFollowing: userAllData.following.length,
+                      },
+                    )
+                  : null;
+              }}>
+              <Text style={styles.followingContentText}>
+                {userAllData !== null ? userAllData.following.length : '22'}
+              </Text>
               <Text style={styles.followingContentText1}>Following</Text>
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.bioContainer}>
           <Text style={styles.bioText}>
-            Digital goodies designer Everthing is designed.
+            {userAllData !== null ? userAllData.bio : ''}
           </Text>
         </View>
         <View style={{paddingHorizontal: 24}}>
@@ -164,7 +200,10 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
         {selectedTab === 0 && (
-          <ProfileGridCompo setUserPostsLength={setUserPostsLength} />
+          <ProfileGridCompo
+            setUserPostsLength={setUserPostsLength}
+            userUid={auth().currentUser.uid}
+          />
         )}
         {selectedTab === 1 && <ProfileReelCompo />}
         {selectedTab === 2 && <ProfileUserTagsCompo />}

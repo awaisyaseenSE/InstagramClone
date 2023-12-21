@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import FastImage from 'react-native-fast-image';
@@ -14,12 +15,21 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {useTheme} from '../../themes/ThemeContext';
 import CommentStyle from '../style/CommentStyle';
+import {useNavigation} from '@react-navigation/native';
+import navigationStrings from '../../navigation/navigationStrings';
 
-const ShowReplyCompo = ({data, postId}) => {
+const ShowReplyCompo = ({
+  data,
+  postId,
+  showComment,
+  setShowComment,
+  switchToScreen,
+}) => {
   const {theme} = useTheme();
   const styles = CommentStyle(theme);
   const [userData, setUserData] = useState(null);
   const [laoding, setLoading] = useState(false);
+  const navigation = useNavigation();
   const loggedUser = auth().currentUser.uid;
 
   var isMoundted = false;
@@ -107,12 +117,26 @@ const ShowReplyCompo = ({data, postId}) => {
     }
   };
 
+  const profileNavigationHandler = () => {
+    if (data.userId == auth().currentUser.uid) {
+      setShowComment(!showComment);
+      switchToScreen(4);
+    } else {
+      setShowComment(!showComment);
+      navigation.navigate(navigationStrings.USER_PROFILE, {
+        userUid: data.userId,
+      });
+    }
+  };
+
   return (
     <View style={mystyles.replyContainer}>
-      <FastImage
-        source={{uri: userData?.imageUrl}}
-        style={mystyles.userImageStyle}
-      />
+      <TouchableOpacity onPress={profileNavigationHandler}>
+        <FastImage
+          source={{uri: userData?.imageUrl}}
+          style={mystyles.userImageStyle}
+        />
+      </TouchableOpacity>
       <View style={mystyles.replyTextContainer}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={[styles.userNameStyle, {fontSize: 11}]}>

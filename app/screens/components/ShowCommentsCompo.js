@@ -1,4 +1,11 @@
-import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  Alert,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
 import CommentStyle from '../style/CommentStyle';
@@ -8,12 +15,17 @@ import MyIndicator from '../../components/MyIndicator';
 import fontFamily from '../../styles/fontFamily';
 import auth from '@react-native-firebase/auth';
 import ShowReplyCompo from './ShowReplyCompo';
+import navigationStrings from '../../navigation/navigationStrings';
+import {useNavigation} from '@react-navigation/native';
 
 const ShowCommentsCompo = ({
   item,
   setShowReply,
   setReplyToUserName,
   setReplyCommentId,
+  showComment,
+  setShowComment,
+  switchToScreen,
 }) => {
   const {theme} = useTheme();
   const styles = CommentStyle(theme);
@@ -22,6 +34,7 @@ const ShowCommentsCompo = ({
   const loggedUser = auth().currentUser.uid;
   const [replyData, setReplyData] = useState([]);
   const [showReplyData, setShowReplyData] = useState(false);
+  const navigation = useNavigation();
 
   function formateTime() {
     const postTime = item.time;
@@ -135,15 +148,29 @@ const ShowCommentsCompo = ({
     setShowReply(true);
   };
 
+  const profileNavigationHandler = () => {
+    if (item.userId == auth().currentUser.uid) {
+      setShowComment(!showComment);
+      switchToScreen(4);
+    } else {
+      setShowComment(!showComment);
+      navigation.navigate(navigationStrings.USER_PROFILE, {
+        userUid: item.userId,
+      });
+    }
+  };
+
   return (
     <>
       <View style={styles.commentsContainer}>
-        <FastImage
-          source={{
-            uri: userData?.imageUrl,
-          }}
-          style={styles.profileImageStyle}
-        />
+        <TouchableOpacity onPress={profileNavigationHandler}>
+          <FastImage
+            source={{
+              uri: userData?.imageUrl,
+            }}
+            style={styles.profileImageStyle}
+          />
+        </TouchableOpacity>
         <View style={{flex: 1, paddingHorizontal: 20}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.userNameStyle}>{userData?.fullName}</Text>
@@ -200,6 +227,9 @@ const ShowCommentsCompo = ({
                   data={item}
                   postId={item.postId}
                   commentId={item.commentId}
+                  showComment={showComment}
+                  setShowComment={setShowComment}
+                  switchToScreen={switchToScreen}
                 />
               )}
               showsVerticalScrollIndicator={false}

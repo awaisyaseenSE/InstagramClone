@@ -15,6 +15,7 @@ export default function ShowAllUserPostsScreen({route}) {
   const [laoding, setLoading] = useState(false);
   const navigation = useNavigation();
   const clickedItem = route.params?.clickedItem;
+  const userUid = route.params?.userUid;
   const userClickedPost = useRef(null);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function ShowAllUserPostsScreen({route}) {
       .onSnapshot(snap => {
         const allPostData = snap.docs
           .map(doc => ({...doc.data(), id: doc.id}))
-          .filter(post => post.userUid === auth().currentUser.uid);
+          .filter(post => post.userUid === userUid);
         setAllUserPosts(allPostData);
         setLoading(false);
       });

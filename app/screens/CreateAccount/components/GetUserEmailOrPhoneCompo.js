@@ -73,6 +73,8 @@ const GetUserEmailOrPhoneCompo = ({
         bio: '',
         website: '',
         gender: '',
+        followers: [],
+        following: [],
       });
       return true;
     } catch (error) {
