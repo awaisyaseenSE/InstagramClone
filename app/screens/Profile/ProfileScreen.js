@@ -81,7 +81,7 @@ export default function ProfileScreen() {
           </View>
           <View style={styles.followerContainer}>
             <TouchableOpacity style={styles.followingTextContainer}>
-              <Text style={styles.followingContentText}>54</Text>
+              <Text style={styles.followingContentText}>{userPostsLength}</Text>
               <Text style={styles.followingContentText1}>Posts</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.followingTextContainer}>

@@ -36,11 +36,16 @@ const StoryComponent = () => {
     // const currentDate = new Date();
     // const currentTime = currentDate.getTime();
     const currentDate = new Date(); // get current date and time
-    const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
+    // const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
+    const currentTime = new Date();
+    const twentyFourHoursAgo = new Date(
+      currentTime.getTime() - 24 * 60 * 60 * 1000,
+    );
+
     firestore()
       .collection('story')
       .orderBy('time', 'desc')
-      .where('time', '<=', currentDate)
+      .where('time', '>=', twentyFourHoursAgo)
       .onSnapshot(snap => {
         var temp = [];
         if (snap.docs.length > 0) {

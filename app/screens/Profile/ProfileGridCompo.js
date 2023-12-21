@@ -14,6 +14,8 @@ import firestore from '@react-native-firebase/firestore';
 import {useTheme} from '../../themes/ThemeContext';
 import ProfileStyle from '../style/ProfileStyle';
 import MyIndicator from '../../components/MyIndicator';
+import {useNavigation} from '@react-navigation/native';
+import navigationStrings from '../../navigation/navigationStrings';
 
 const ProfileGridCompo = ({setUserPostsLength}) => {
   const {theme} = useTheme();
@@ -22,6 +24,7 @@ const ProfileGridCompo = ({setUserPostsLength}) => {
   const [allUserPosts, setAllUserPosts] = useState([]);
   const screenWidth = Dimensions.get('screen').width;
   const screenHeight = Dimensions.get('screen').height;
+  const navigation = useNavigation();
 
   useEffect(() => {
     setLoading(true);
@@ -43,7 +46,12 @@ const ProfileGridCompo = ({setUserPostsLength}) => {
     return (
       <>
         <View>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
+                clickedItem: item,
+              })
+            }>
             <FastImage
               source={{uri: item.medialUrls[0]}}
               style={{

@@ -9,4 +9,6 @@ export default {
   CREATE_STORY_SCREEN: 'CreateStoryScreen',
   SHOW_GALLERY_STORY: 'ShowGalleryStoryScreen',
   EDIT_PROFILE: 'EditProfileScreen',
+  SETTING_SCREEN: 'SettingScreen',
+  SHOW_ALL_USER_POSTS: 'ShowAllUserPostsScreen',
 };

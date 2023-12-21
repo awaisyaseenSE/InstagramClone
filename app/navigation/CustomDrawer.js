@@ -22,12 +22,14 @@ import {useTheme} from '../themes/ThemeContext';
 import ProfileDrawerStyle from './style/ProfileDrawerStyle';
 import fontFamily from '../styles/fontFamily';
 import DrawerItemListCompo from './DrawerItemListCompo';
+import navigationStrings from './navigationStrings';
 
 function CustomDrawer(props) {
   const {theme} = useTheme();
   const styles = ProfileDrawerStyle(theme);
   // const {navigation} = props;
   const {logout} = useAuth();
+  const navigation = useNavigation();
 
   const handleLogout = () => {
     if (auth().currentUser) {
@@ -83,6 +85,9 @@ function CustomDrawer(props) {
           <DrawerItemListCompo
             image={require('../assets/setting.png')}
             title="Settings"
+            onPress={() =>
+              navigation.navigate(navigationStrings.SETTING_SCREEN)
+            }
           />
         </View>
       </DrawerContentScrollView>

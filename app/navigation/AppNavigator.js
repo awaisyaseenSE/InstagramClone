@@ -9,6 +9,8 @@ import ShowGalleryStoryScreen from '../screens/CreateStory/ShowGalleryStoryScree
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import CustomDrawer from './CustomDrawer';
 import EditProfileScreen from '../screens/Profile/EditProfileScreen';
+import SettingScreen from '../screens/SettingScreen';
+import ShowAllUserPostsScreen from '../screens/Profile/ShowAllUserPostsScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -84,6 +86,16 @@ function AppNavigator() {
       <Stack.Screen
         name="EditProfileScreen"
         component={EditProfileScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SettingScreen"
+        component={SettingScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ShowAllUserPostsScreen"
+        component={ShowAllUserPostsScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -22,7 +22,7 @@ import fontFamily from '../styles/fontFamily';
 import storage from '@react-native-firebase/storage';
 
 export default function LoginScreen() {
-  const {theme, toggleTheme} = useTheme();
+  const {theme} = useTheme();
   const screenWidth = Dimensions.get('window').width;
   const screenHeight = Dimensions.get('window').height;
   const navigation = useNavigation();
@@ -240,17 +240,11 @@ export default function LoginScreen() {
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'space-around',
+                justifyContent: 'center',
               }}>
               <Text style={[styles.buttonText, {color: theme.text}]}>
                 Instagram оr Facebook
               </Text>
-              <TouchableOpacity
-                style={styles.toggleThemeButton}
-                onPress={toggleTheme}
-                activeOpacity={0.8}>
-                <Text style={{color: 'white'}}>Toggle Theme</Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>
