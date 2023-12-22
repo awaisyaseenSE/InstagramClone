@@ -13,4 +13,6 @@ export default {
   SHOW_ALL_USER_POSTS: 'ShowAllUserPostsScreen',
   USER_PROFILE: 'UserProfileScreen',
   FOLLOWER_FOLLOWING_SCREEN: 'FollowerAndFollowingScreen',
+  EDIT_POST_SCREEN: 'EditPostScreen',
+  ABOUT_ACCOUNT_SCREEN: 'AboutAccountScreen',
 };

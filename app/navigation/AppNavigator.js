@@ -13,6 +13,8 @@ import SettingScreen from '../screens/SettingScreen';
 import ShowAllUserPostsScreen from '../screens/Profile/ShowAllUserPostsScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import FollowerAndFollowingScreen from '../screens/Following/FollowerAndFollowingScreen';
+import EditPostScreen from '../screens/CreatePost/EditPostScreen';
+import AboutAccountScreen from '../screens/AboutAccountScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -108,6 +110,16 @@ function AppNavigator() {
       <Stack.Screen
         name="FollowerAndFollowingScreen"
         component={FollowerAndFollowingScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EditPostScreen"
+        component={EditPostScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AboutAccountScreen"
+        component={AboutAccountScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

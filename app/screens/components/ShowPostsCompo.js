@@ -19,6 +19,7 @@ import LikeComponent from './LikeComponent';
 import CommentCompo from './CommentModal';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
+import ShowPostOptionModal from './ShowPostOptionModal';
 
 const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
   const {theme} = useTheme();
@@ -30,6 +31,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(1);
   const [showComment, setShowComment] = useState(false);
   const [commentLength, setCommentLength] = useState(0);
+  const [showOptionModal, setShowOptionModal] = useState(false);
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -55,7 +57,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
     //       err,
     //     );
     //   });
-  }, []);
+  }, [postUserData]);
   useEffect(() => {
     const unsubscribe = firestore()
       .collection('posts')
@@ -132,7 +134,8 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
             style={{
               paddingHorizontal: 8,
               paddingVertical: 6,
-            }}>
+            }}
+            onPress={() => setShowOptionModal(!showOptionModal)}>
             <Image
               source={require('../../assets/three_dot.png')}
               style={styles.threeDotIcon}
@@ -274,6 +277,15 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
           setShowComment={setShowComment}
           postId={item.id}
           switchToScreen={switchToScreen}
+        />
+      )}
+      {showOptionModal && (
+        <ShowPostOptionModal
+          showOptionModal={showOptionModal}
+          setShowOptionModal={setShowOptionModal}
+          switchToScreen={switchToScreen}
+          postUserUid={item.userUid}
+          postUserData={postUserData}
         />
       )}
     </>
