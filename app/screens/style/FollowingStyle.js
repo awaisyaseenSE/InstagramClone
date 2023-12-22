@@ -33,6 +33,7 @@ const FollowingStyle = theme => {
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingHorizontal: 20,
+      marginBottom: 16,
     },
     followerImageContainer: {flexDirection: 'row', alignItems: 'center'},
     followerUserNameText: {

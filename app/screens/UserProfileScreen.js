@@ -44,7 +44,7 @@ export default function UserProfileScreen({route}) {
         }
       });
     return () => unsubscribe();
-  }, []);
+  }, [userId]);
 
   const handleFollower = async () => {
     const userRef = firestore().collection('users').doc(userId);

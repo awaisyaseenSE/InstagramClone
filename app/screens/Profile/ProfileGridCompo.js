@@ -40,7 +40,7 @@ const ProfileGridCompo = ({setUserPostsLength, userUid}) => {
         setLoading(false);
       });
     return () => unsubscribe();
-  }, []);
+  }, [userUid]);
 
   const renderItem = ({item}) => {
     return (

@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import MyIndicator from '../../components/MyIndicator';
@@ -16,6 +16,7 @@ const ShowFollowerFollowingCompo = ({item}) => {
   const [userAllData, setUserAllData] = useState(null);
   const {theme} = useTheme();
   const styles = FollowingStyle(theme);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -89,9 +90,21 @@ const ShowFollowerFollowingCompo = ({item}) => {
     await handleFollowing();
   };
 
+  const profileNavigationHandler = () => {
+    if (item == auth().currentUser.uid) {
+      // switchToScreen(4);
+    } else {
+      navigation.navigate(navigationStrings.USER_PROFILE, {
+        userUid: item,
+      });
+    }
+  };
+
   return (
     <View style={styles.userFollowerListContainer}>
-      <TouchableOpacity style={styles.followerImageContainer}>
+      <TouchableOpacity
+        style={styles.followerImageContainer}
+        onPress={profileNavigationHandler}>
         <FastImage source={{uri: userImageUrl}} style={styles.userImage} />
         <Text style={styles.followerUserNameText}>{userName}</Text>
       </TouchableOpacity>
