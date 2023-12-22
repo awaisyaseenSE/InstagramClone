@@ -16,4 +16,5 @@ export default {
   EDIT_POST_SCREEN: 'EditPostScreen',
   ABOUT_ACCOUNT_SCREEN: 'AboutAccountScreen',
   SAVED_POSTS_SCREEN: 'SavedPostsScreen',
+  DISCOVER_PEOPLE_SCREEN: 'DiscoverPeopleScreen',
 };

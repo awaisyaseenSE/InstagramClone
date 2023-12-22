@@ -80,6 +80,9 @@ function CustomDrawer(props) {
           <DrawerItemListCompo
             image={require('../assets/find_people.png')}
             title="Discover People"
+            onPress={() =>
+              navigation.navigate(navigationStrings.DISCOVER_PEOPLE_SCREEN)
+            }
           />
           <DrawerItemListCompo
             image={require('../assets/facebook.png')}
