@@ -20,6 +20,7 @@ import CommentCompo from './CommentModal';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
 import ShowPostOptionModal from './ShowPostOptionModal';
+import MyIndicator from '../../components/MyIndicator';
 
 const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
   const {theme} = useTheme();
@@ -32,6 +33,8 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
   const [showComment, setShowComment] = useState(false);
   const [commentLength, setCommentLength] = useState(0);
   const [showOptionModal, setShowOptionModal] = useState(false);
+  const [currentUserAlldata, setCurrentUserAllData] = useState(null);
+  const [laoding, setLoading] = useState(false);
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -72,6 +75,24 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
       });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    const unsubscribe = firestore()
+      .collection('users')
+      .doc(auth().currentUser?.uid)
+      .onSnapshot(snap => {
+        if (snap.exists) {
+          var data = snap.data();
+          setCurrentUserAllData(data);
+          setLoading(false);
+        } else {
+          setLoading(false);
+        }
+      });
+    return () => unsubscribe();
+  }, []);
+
   function formateTime() {
     const postTime = item.time.toDate();
     const currentTime = new Date();
@@ -103,6 +124,30 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
       navigation.navigate(navigationStrings.USER_PROFILE, {
         userUid: item.userUid,
       });
+    }
+  };
+
+  const handleSavePost = async () => {
+    const currentPostId = item.id;
+    const loggedUserId = auth().currentUser.uid;
+    const userRef = firestore().collection('users').doc(loggedUserId);
+    try {
+      const fuserRef = await userRef.get();
+      if (fuserRef.exists) {
+        const fuserData = fuserRef.data();
+
+        if (fuserData.hasOwnProperty('savedPosts')) {
+          let updatedPosts = [...fuserData.savedPosts]; // Create a new array
+          if (fuserData.savedPosts.includes(currentPostId)) {
+            updatedPosts = updatedPosts.filter(id => id !== currentPostId); // Remove post id
+          } else {
+            updatedPosts.push(currentPostId); // Add post id
+          }
+          await userRef.update({savedPosts: updatedPosts}); // Update the post id
+        }
+      }
+    } catch (error) {
+      console.log('Error in follower function: ', error);
     }
   };
 
@@ -242,10 +287,26 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
             <TouchableOpacity style={styles.postIconsContainer}>
               <View style={styles.postIconsStyle} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.postIconsContainer}>
+            <TouchableOpacity
+              style={styles.postIconsContainer}
+              onPress={handleSavePost}>
               <Image
-                source={require('../../assets/save.png')}
-                style={styles.postIconsStyle}
+                source={
+                  currentUserAlldata !== null &&
+                  currentUserAlldata.savedPosts.includes(item.id)
+                    ? require('../../assets/saved_fill.png')
+                    : require('../../assets/save.png')
+                }
+                style={[
+                  styles.postIconsStyle,
+                  {
+                    tintColor:
+                      currentUserAlldata !== null &&
+                      currentUserAlldata.savedPosts.includes(item.id)
+                        ? theme.lightText
+                        : theme.text,
+                  },
+                ]}
               />
             </TouchableOpacity>
           </View>
@@ -286,8 +347,12 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
           switchToScreen={switchToScreen}
           postUserUid={item.userUid}
           postUserData={postUserData}
+          currentUserAlldata={currentUserAlldata}
+          postId={item.id}
+          handleSavePost={handleSavePost}
         />
       )}
+      <MyIndicator visible={laoding} />
     </>
   );
 };

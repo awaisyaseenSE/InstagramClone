@@ -15,4 +15,5 @@ export default {
   FOLLOWER_FOLLOWING_SCREEN: 'FollowerAndFollowingScreen',
   EDIT_POST_SCREEN: 'EditPostScreen',
   ABOUT_ACCOUNT_SCREEN: 'AboutAccountScreen',
+  SAVED_POSTS_SCREEN: 'SavedPostsScreen',
 };

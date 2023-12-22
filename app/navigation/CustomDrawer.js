@@ -69,6 +69,9 @@ function CustomDrawer(props) {
           <DrawerItemListCompo
             image={require('../assets/save.png')}
             title="Saved"
+            onPress={() =>
+              navigation.navigate(navigationStrings.SAVED_POSTS_SCREEN)
+            }
           />
           <DrawerItemListCompo
             image={require('../assets/close_friends.png')}

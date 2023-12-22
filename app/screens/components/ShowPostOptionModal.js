@@ -36,6 +36,8 @@ const ShowPostOptionModal = ({
   switchToScreen,
   postUserUid,
   postUserData,
+  currentUserAlldata,
+  handleSavePost,
 }) => {
   const {theme} = useTheme();
   const styles = CommentStyle(theme);
@@ -135,14 +137,23 @@ const ShowPostOptionModal = ({
                 <View style={mystyles.btnsContainer}>
                   <View style={{alignItems: 'center'}}>
                     <TouchableOpacity
-                      style={[mystyles.saveBtn, {borderColor: theme.light}]}>
+                      style={[mystyles.saveBtn, {borderColor: theme.light}]}
+                      onPress={handleSavePost}>
                       <Image
-                        source={require('../../assets/save.png')}
+                        source={
+                          currentUserAlldata !== null &&
+                          currentUserAlldata.savedPosts.includes(postId)
+                            ? require('../../assets/saved_fill.png')
+                            : require('../../assets/save.png')
+                        }
                         style={[mystyles.saveIcon, {tintColor: theme.text}]}
                       />
                     </TouchableOpacity>
                     <Text style={[styles.commentTextStyle, {fontSize: 12}]}>
-                      Save
+                      {currentUserAlldata !== null &&
+                      currentUserAlldata.savedPosts.includes(postId)
+                        ? 'Saved'
+                        : 'Save'}
                     </Text>
                   </View>
                   <View style={{alignItems: 'center'}}>

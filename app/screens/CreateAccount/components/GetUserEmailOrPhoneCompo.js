@@ -76,6 +76,7 @@ const GetUserEmailOrPhoneCompo = ({
         followers: [],
         following: [],
         dateOfJoin: new Date(),
+        savedPosts: [],
       });
       return true;
     } catch (error) {
