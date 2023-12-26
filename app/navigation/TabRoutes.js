@@ -11,6 +11,7 @@ import ProfileScreen from '../screens/Profile/ProfileScreen';
 import GalleryScreen from '../screens/CreatePost/GalleryScreen';
 import auth from '@react-native-firebase/auth';
 import FastImage from 'react-native-fast-image';
+import ReelsScreen from '../screens/Reels/ReelsScreen';
 
 const TabRoutes = () => {
   const {theme} = useTheme();
@@ -34,7 +35,7 @@ const TabRoutes = () => {
         {selectedScreen === 2 && (
           <GalleryScreen switchToScreen={switchToScreen} />
         )}
-        {selectedScreen === 3 && <NotificationScreen />}
+        {selectedScreen === 3 && <ReelsScreen />}
         {selectedScreen === 4 && <ProfileScreen />}
         {/* </View> */}
       </ScreenComponent>
@@ -81,8 +82,8 @@ const TabRoutes = () => {
           <Image
             source={
               selectedScreen === 3
-                ? require('../assets/tab_heart_fill.png')
-                : require('../assets/tab_heart.png')
+                ? require('../assets/reel.png')
+                : require('../assets/reel.png')
             }
             style={styles.iconStyle}
           />

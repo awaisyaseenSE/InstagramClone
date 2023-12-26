@@ -1,9 +1,12 @@
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {useTheme} from '../../themes/ThemeContext';
+import {useNavigation} from '@react-navigation/native';
+import navigationStrings from '../../navigation/navigationStrings';
 
 const TopHomeCompo = () => {
   const {theme} = useTheme();
+  const navigation = useNavigation();
   return (
     <View
       style={[
@@ -13,29 +16,23 @@ const TopHomeCompo = () => {
           borderBottomColor: theme.bottonTabBorderColor,
         },
       ]}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <TouchableOpacity>
-          <Image
-            source={require('../../assets/ic_camera.png')}
-            style={[styles.iconstyle, {tintColor: theme.bottonTabIconColor}]}
-          />
-        </TouchableOpacity>
-        <View style={[styles.iconstyle, {marginLeft: 12}]} />
-      </View>
       <Image
         source={require('../../assets/logo.png')}
         style={[styles.logoStyle, {tintColor: theme.bottonTabIconColor}]}
       />
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(navigationStrings.NOTIFICATION_SCREEN)
+          }>
           <Image
-            source={require('../../assets/IGTV.png')}
+            source={require('../../assets/tab_heart.png')}
             style={[styles.iconstyle, {tintColor: theme.bottonTabIconColor}]}
           />
         </TouchableOpacity>
         <TouchableOpacity>
           <Image
-            source={require('../../assets/share.png')}
+            source={require('../../assets/chat.png')}
             style={[
               styles.iconstyle,
               {marginLeft: 14, tintColor: theme.bottonTabIconColor},
@@ -57,8 +54,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   iconstyle: {
-    width: 24,
-    height: 24,
+    width: 22,
+    height: 22,
     resizeMode: 'contain',
   },
   logoStyle: {

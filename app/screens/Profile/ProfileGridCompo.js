@@ -45,40 +45,42 @@ const ProfileGridCompo = ({setUserPostsLength, userUid}) => {
   const renderItem = ({item}) => {
     return (
       <>
-        <View>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
-                clickedItem: item,
-                userUid: userUid,
-              })
-            }>
-            <FastImage
-              source={{uri: item.medialUrls[0]}}
-              style={{
-                width: screenWidth / 3 - 4,
-                height: screenHeight * 0.15,
-                margin: 2,
-                borderRadius: 2,
-              }}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
-          {item.medialUrls.length > 1 && (
-            <Image
-              source={require('../../assets/multiple.png')}
-              style={{
-                width: 12,
-                height: 12,
-                resizeMode: 'contain',
-                tintColor: 'white',
-                position: 'absolute',
-                top: 10,
-                right: 8,
-              }}
-            />
-          )}
-        </View>
+        {item.type == 'post' && (
+          <View>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
+                  clickedItem: item,
+                  userUid: userUid,
+                })
+              }>
+              <FastImage
+                source={{uri: item.medialUrls[0]}}
+                style={{
+                  width: screenWidth / 3 - 4,
+                  height: screenHeight * 0.15,
+                  margin: 2,
+                  borderRadius: 2,
+                }}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
+            {item.medialUrls.length > 1 && (
+              <Image
+                source={require('../../assets/multiple.png')}
+                style={{
+                  width: 12,
+                  height: 12,
+                  resizeMode: 'contain',
+                  tintColor: 'white',
+                  position: 'absolute',
+                  top: 10,
+                  right: 8,
+                }}
+              />
+            )}
+          </View>
+        )}
       </>
     );
   };

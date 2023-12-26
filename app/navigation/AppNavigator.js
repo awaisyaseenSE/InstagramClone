@@ -17,6 +17,7 @@ import EditPostScreen from '../screens/CreatePost/EditPostScreen';
 import AboutAccountScreen from '../screens/AboutAccountScreen';
 import SavedPostsScreen from '../screens/SavedPostsScreen';
 import DiscoverPeopleScreen from '../screens/DiscoverPeopleScreen';
+import NotificationScreen from '../screens/Notification/NotificationScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -132,6 +133,11 @@ function AppNavigator() {
       <Stack.Screen
         name="DiscoverPeopleScreen"
         component={DiscoverPeopleScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="NotificationScreen"
+        component={NotificationScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
