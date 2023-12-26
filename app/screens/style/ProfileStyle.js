@@ -199,6 +199,29 @@ const ProfileStyle = theme => {
       alignItems: 'center',
       marginBottom: 8,
     },
+    userImageModalContainer: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    closeIconContainerModal: {
+      width: 30,
+      height: 30,
+      borderRadius: 15,
+      backgroundColor: theme.blue,
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      top: 20,
+      right: 20,
+    },
+    closeIconModal: {
+      width: 14,
+      height: 14,
+      resizeMode: 'contain',
+      tintColor: 'black',
+    },
   });
   return styles;
 };
