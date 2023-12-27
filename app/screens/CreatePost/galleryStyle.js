@@ -143,6 +143,34 @@ const galleryStyle = theme => {
       justifyContent: 'center',
       backgroundColor: theme.text,
     },
+    reelStoryText: {
+      fontWeight: '700',
+      fontSize: 12,
+      color: colors.black,
+    },
+    videoIconStyle: {
+      width: 22,
+      height: 22,
+      resizeMode: 'contain',
+      position: 'absolute',
+      bottom: 10,
+      left: 8,
+      backgroundColor: 'rgba(255,255,255,0.4)',
+    },
+    pauseButtonIcon: {
+      width: 24,
+      height: 24,
+      resizeMode: 'contain',
+      backgroundColor: 'rgba(255,255,255,0.2)',
+    },
+    pauseButtonIconContainer: {
+      position: 'absolute',
+      top: 0,
+      width: 200,
+      height: 200,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   });
   return styles;
 };

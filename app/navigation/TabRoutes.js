@@ -13,10 +13,13 @@ import auth from '@react-native-firebase/auth';
 import FastImage from 'react-native-fast-image';
 import ReelsScreen from '../screens/Reels/ReelsScreen';
 
-const TabRoutes = () => {
+const TabRoutes = ({route}) => {
+  const screenNo = route.params?.screenNo;
   const {theme} = useTheme();
   const styles = BottomTabStyle(theme);
-  const [selectedScreen, setSelectedScreen] = useState(0);
+  const [selectedScreen, setSelectedScreen] = useState(
+    screenNo !== undefined ? screenNo : 0,
+  );
   const userProfilePic = auth().currentUser.photoURL;
   const switchToScreen = screenIndex => {
     setSelectedScreen(screenIndex);

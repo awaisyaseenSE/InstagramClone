@@ -18,4 +18,6 @@ export default {
   SAVED_POSTS_SCREEN: 'SavedPostsScreen',
   DISCOVER_PEOPLE_SCREEN: 'DiscoverPeopleScreen',
   NOTIFICATION_SCREEN: 'NotificationScreen',
+  SHOW_GALLERY_REEL: 'ShowGalleryReelScreen',
+  CREATE_REEL_SCREEN: 'CreateReelScreen',
 };

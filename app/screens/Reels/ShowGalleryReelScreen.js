@@ -2,32 +2,28 @@ import {
   View,
   Text,
   PermissionsAndroid,
-  Alert,
   Platform,
   Image,
   FlatList,
-  Dimensions,
   TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useTheme} from '../../themes/ThemeContext';
-import galleryStyle from './galleryStyle';
-import ButtonComponent from '../CreateAccount/components/ButtonComponent';
+import galleryStyle from '../CreatePost/galleryStyle';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import MyIndicator from '../../components/MyIndicator';
 import ScreenComponent from '../../components/ScreenComponent';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
 import colors from '../../styles/colors';
+import {useTheme} from '../../themes/ThemeContext';
 
-export default function GalleryScreen({switchToScreen}) {
+export default function ShowGalleryReelScreen() {
   const {theme} = useTheme();
   const styles = galleryStyle(theme);
   const [media, setMedia] = useState([]);
-  const [pickedImage, setPickedImage] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectMultiple, setSelectMultiple] = useState(false);
-  const [selectAllUri, setSelectAllUri] = useState([]);
+  const [selectVideoUri, setVideoUri] = useState('');
   const navigation = useNavigation();
 
   async function hasAndroidPermission() {
@@ -84,11 +80,14 @@ export default function GalleryScreen({switchToScreen}) {
       return;
     }
 
-    let params = {first: 20, assetType: 'All'};
+    let params = {
+      first: 20,
+      assetType: 'Videos',
+      includes: ['fileSize', 'playableDuration'],
+    };
     CameraRoll.getPhotos(params)
       .then(res => {
         setMedia(res.edges);
-        setPickedImage(res.edges[0].node.image.uri);
         setLoading(false);
       })
       .catch(err => {
@@ -109,70 +108,32 @@ export default function GalleryScreen({switchToScreen}) {
     savePicture();
   }, []);
 
-  const handleMultipleMediaSelection = item => {
-    if (selectAllUri.includes(item)) {
-      const updatedSelection = selectAllUri.filter(
-        selectedUri => selectedUri !== item,
-      );
-      setSelectAllUri(updatedSelection);
-    } else {
-      setSelectAllUri([...selectAllUri, item]);
-    }
-  };
-
   const imagePressed = item => {
-    if (selectMultiple) {
-      handleMultipleMediaSelection(item.node.image.uri);
-    } else {
-      setPickedImage(item.node.image.uri);
-    }
+    const videoPath = item.node.image.uri;
+    navigation.navigate(navigationStrings.CREATE_REEL_SCREEN, {
+      videoPath: videoPath,
+    });
   };
 
   const renderItem = ({item}) => {
-    const isSelected = selectAllUri.includes(item.node.image.uri);
-    let indexOfSelected = 0;
-    if (isSelected) {
-      let ind = selectAllUri.indexOf(item.node.image.uri);
-      indexOfSelected = ind + 1;
-    }
     return (
-      <View>
+      <View style={{padding: 4}}>
         <TouchableOpacity onPress={() => imagePressed(item)}>
           <Image
             source={{uri: item.node.image.uri}}
-            style={styles.allImagesStyle}
+            style={[styles.allImagesStyle, {height: 200}]}
             resizeMode="cover"
           />
-          {selectMultiple && isSelected && (
-            <View style={styles.selectedMediaIndexContainer}>
-              <Text style={styles.indextext}>{indexOfSelected}</Text>
-            </View>
-          )}
+          <Image
+            source={require('../../assets/video_button.png')}
+            style={styles.videoIconStyle}
+          />
         </TouchableOpacity>
       </View>
     );
   };
 
-  const handleNextScreen = () => {
-    let allImages = [];
-    if (selectMultiple) {
-      //   console.log(
-      //     'handle next screen in this select multiple is true: >>>>>>>>>>   ',
-      //     selectAllUri,
-      //   );
-      switchToScreen(0);
-      navigation.navigate(navigationStrings.CREATE_POST_SCREEN, {
-        allMedia: selectAllUri,
-      });
-    } else {
-      switchToScreen(0);
-      allImages.push(pickedImage);
-      //   console.log('single image is selected here: ', allImages);
-      navigation.navigate(navigationStrings.CREATE_POST_SCREEN, {
-        allMedia: allImages,
-      });
-    }
-  };
+  const handleNextScreen = () => {};
 
   return (
     <>
@@ -182,78 +143,26 @@ export default function GalleryScreen({switchToScreen}) {
             <View style={styles.headingIconContainer}>
               <TouchableOpacity
                 style={styles.headingiconImageContainer}
-                onPress={() => switchToScreen(0)}>
+                onPress={() => navigation.goBack()}>
                 <Image
                   source={require('../../assets/close.png')}
                   style={styles.closeIconStyle}
                 />
               </TouchableOpacity>
-              <Text style={styles.heading}>New Post</Text>
+              <Text style={styles.heading}>Add Reel</Text>
             </View>
-            <TouchableOpacity
-              style={styles.nextContainer}
-              onPress={handleNextScreen}>
-              <Text style={styles.nextText}>Next</Text>
-            </TouchableOpacity>
-          </View>
-          {media.length > 0 ? (
-            <View style={styles.pickedImageContainer}>
-              {pickedImage !== '' && (
-                <Image
-                  source={{uri: pickedImage}}
-                  style={styles.pickedImageStyle}
-                />
-              )}
-            </View>
-          ) : (
-            <View style={{paddingLeft: 12}}>
+            {selectVideoUri !== '' && (
               <TouchableOpacity
-                style={{paddingHorizontal: 12, paddingVertical: 6}}
-                onPress={() =>
-                  navigation.navigate(navigationStrings.PHOTO_CAPTURE_SCREEN)
-                }>
-                <Image
-                  source={require('../../assets/camera.png')}
-                  style={styles.closeIconStyle}
-                />
+                style={styles.nextContainer}
+                onPress={handleNextScreen}>
+                <Text style={styles.nextText}>Next</Text>
               </TouchableOpacity>
-            </View>
-          )}
+            )}
+          </View>
           {media.length > 0 && (
             <View style={styles.recentTextContainer}>
               <Text style={styles.recentText}>Recents</Text>
               <View style={styles.cameraContainer}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate(navigationStrings.SHOW_GALLERY_STORY)
-                  }>
-                  <Text style={styles.reelStoryText}>Story</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    marginHorizontal: 8,
-                  }}
-                  onPress={() =>
-                    navigation.navigate(navigationStrings.SHOW_GALLERY_REEL)
-                  }>
-                  <Text style={[styles.reelStoryText]}>Reel</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[
-                    styles.cameraMainContainer,
-                    {
-                      backgroundColor: selectMultiple
-                        ? colors.blue
-                        : colors.lightBlackTwo,
-                    },
-                  ]}
-                  onPress={() => setSelectMultiple(!selectMultiple)}>
-                  <Image
-                    source={require('../../assets/multiple.png')}
-                    style={styles.cameraIcon}
-                  />
-                </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.cameraMainContainer, {marginLeft: 8}]}
                   onPress={() =>
@@ -275,10 +184,9 @@ export default function GalleryScreen({switchToScreen}) {
               showsVerticalScrollIndicator={false}
               numColumns={3}
               ItemSeparatorComponent={<View style={{marginVertical: 2}} />}
-              columnWrapperStyle={{
-                justifyContent: 'space-between',
-                // margin: 4,
-              }}
+              //   columnWrapperStyle={{
+              //     justifyContent: 'space-between',
+              //   }}
             />
           </View>
         </View>

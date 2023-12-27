@@ -18,6 +18,8 @@ import AboutAccountScreen from '../screens/AboutAccountScreen';
 import SavedPostsScreen from '../screens/SavedPostsScreen';
 import DiscoverPeopleScreen from '../screens/DiscoverPeopleScreen';
 import NotificationScreen from '../screens/Notification/NotificationScreen';
+import ShowGalleryReelScreen from '../screens/Reels/ShowGalleryReelScreen';
+import CreateReelScreen from '../screens/Reels/CreateReelScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -138,6 +140,16 @@ function AppNavigator() {
       <Stack.Screen
         name="NotificationScreen"
         component={NotificationScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ShowGalleryReelScreen"
+        component={ShowGalleryReelScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CreateReelScreen"
+        component={CreateReelScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

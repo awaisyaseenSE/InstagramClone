@@ -13,7 +13,7 @@ import {
 import React, {useState} from 'react';
 import ScreenComponent from '../../components/ScreenComponent';
 import {useTheme} from '../../themes/ThemeContext';
-import galleryStyle from './galleryStyle';
+import galleryStyle from '../CreatePost/galleryStyle';
 import {useNavigation} from '@react-navigation/native';
 import ButtonComponent from '../CreateAccount/components/ButtonComponent';
 import MyIndicator from '../../components/MyIndicator';
@@ -21,15 +21,17 @@ import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import navigationStrings from '../../navigation/navigationStrings';
+import Video from 'react-native-video';
 
-export default function CreatePostScreen({route}) {
+export default function CreateReelScreen({route}) {
   const {theme} = useTheme();
   const styles = galleryStyle(theme);
   const navigation = useNavigation();
-  const allMedia = route?.params.allMedia;
+  const videoPath = route?.params.videoPath;
   const [loading, setLoading] = useState(false);
   const [caption, setCaption] = useState('');
   const [medialUrls, setMediaUrls] = useState([]);
+  const [pauseVideo, setPauseVideo] = useState(false);
 
   const handleUploadPost = allUrls => {
     try {
@@ -41,9 +43,8 @@ export default function CreatePostScreen({route}) {
           time: new Date(),
           userUid: auth().currentUser.uid,
           likes: [],
-          type: 'post',
         })
-        .then(() => navigation.navigate('TabRoutes', {screenNo: 3}))
+        .then(() => navigation.navigate('TabRoutes'))
         .catch(er => {
           console.log('getting error while uploading post to firestore: ', er);
         });
@@ -52,37 +53,60 @@ export default function CreatePostScreen({route}) {
     }
   };
 
-  const uploadImages = async newImages => {
+  const uploadVideo = async () => {
     setLoading(true);
+    const timestamp = Date.now();
+    const imageName = `ReelVideos/${timestamp}.mp4`;
+    const reference = storage().ref(imageName);
     try {
-      let allUrls = [];
-      await Promise.all(
-        newImages.map(async image => {
-          const timestamp = Date.now();
-          const postId = `post_${timestamp}`;
-          const imageRef = storage().ref(`postImages/${postId}.jpg`);
-          await imageRef.putFile(image);
-          const downloadURL = await imageRef.getDownloadURL();
-          allUrls.push(downloadURL);
-          setMediaUrls(prevData => [...prevData, downloadURL]);
-        }),
-      );
+      const task = reference.putFile(videoPath);
+      await task;
+      const downloadURL = await reference.getDownloadURL();
+      console.log('video downlaod url: ', downloadURL);
       setLoading(false);
-      handleUploadPost(allUrls);
+      return downloadURL;
     } catch (error) {
-      console.error('Error uploading images: ', error);
       setLoading(false);
+      console.error('Error while uploading video of reel : ', error);
+      return null;
     }
   };
 
   const handleSharePost = async () => {
     try {
-      await uploadImages(allMedia);
+      const videoDownloadUrl = await uploadVideo();
+      if (videoDownloadUrl !== null) {
+        setLoading(true);
+        firestore()
+          .collection('posts')
+          .add({
+            caption,
+            medialUrls: [videoDownloadUrl],
+            time: new Date(),
+            userUid: auth().currentUser.uid,
+            likes: [],
+            type: 'reel',
+          })
+          .then(() => navigation.navigate('TabRoutes'))
+          .catch(er => {
+            console.log(
+              'getting error while uploading post to firestore: ',
+              er,
+            );
+          });
+      }
     } catch (error) {
-      console.log('error in handleSharePost funtion: ', error);
+      setLoading(false);
+      console.log('error in handle Share Reel funtion: ', error);
     }
   };
 
+  const onBuffer = data => {
+    console.log('on Buffer react native video: ', data);
+  };
+  const videoError = err => {
+    console.log('Error react native video: ', err);
+  };
   return (
     <>
       <ScreenComponent style={{flex: 1, backgroundColor: theme.background}}>
@@ -97,20 +121,36 @@ export default function CreatePostScreen({route}) {
               style={styles.closeIconStyle}
             />
           </TouchableOpacity>
-          <Text style={styles.heading}>Create Post</Text>
+          <Text style={styles.heading}>Create Reel</Text>
         </View>
-        <View>
-          <FlatList
-            data={allMedia}
-            renderItem={({item}) => {
-              return (
-                <Image source={{uri: item}} style={styles.createPostImages} />
-              );
-            }}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-          />
+        <View style={{paddingHorizontal: 30}}>
+          <TouchableOpacity onPress={() => setPauseVideo(!pauseVideo)}>
+            <Video
+              source={{
+                uri: videoPath,
+              }}
+              style={{
+                width: 200,
+                height: 200,
+                borderRadius: 8,
+              }}
+              onBuffer={onBuffer}
+              onError={videoError}
+              resizeMode="cover"
+              poster="https://e1.pxfuel.com/desktop-wallpaper/802/816/desktop-wallpaper-black-iphone-7-posted-by-michelle-mercado-black-ios.jpg"
+              posterResizeMode="cover"
+              repeat
+              paused={pauseVideo}
+            />
+            {pauseVideo && (
+              <View style={styles.pauseButtonIconContainer}>
+                <Image
+                  source={require('../../assets/pause-button.png')}
+                  style={styles.pauseButtonIcon}
+                />
+              </View>
+            )}
+          </TouchableOpacity>
         </View>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
