@@ -31,13 +31,18 @@ const ProfileGridCompo = ({setUserPostsLength, userUid}) => {
     const unsubscribe = firestore()
       .collection('posts')
       .orderBy('time', 'desc')
+      .where('type', '==', 'post')
       .onSnapshot(snap => {
-        const allPostData = snap.docs
-          .map(doc => ({...doc.data(), id: doc.id}))
-          .filter(post => post.userUid === userUid);
-        setUserPostsLength(allPostData.length);
-        setAllUserPosts(allPostData);
-        setLoading(false);
+        if (snap) {
+          const allPostData = snap.docs
+            .map(doc => ({...doc.data(), id: doc.id}))
+            .filter(post => post.userUid === userUid);
+          setUserPostsLength(allPostData.length);
+          setAllUserPosts(allPostData);
+          setLoading(false);
+        } else {
+          setLoading(false);
+        }
       });
     return () => unsubscribe();
   }, [userUid]);
@@ -45,49 +50,49 @@ const ProfileGridCompo = ({setUserPostsLength, userUid}) => {
   const renderItem = ({item}) => {
     return (
       <>
-        {item.type == 'post' && (
-          <View>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
-                  clickedItem: item,
-                  userUid: userUid,
-                })
-              }>
-              <FastImage
-                source={{uri: item.medialUrls[0]}}
-                style={{
-                  width: screenWidth / 3 - 4,
-                  height: screenHeight * 0.15,
-                  margin: 2,
-                  borderRadius: 2,
-                }}
-                resizeMode="cover"
-              />
-            </TouchableOpacity>
-            {item.medialUrls.length > 1 && (
-              <Image
-                source={require('../../assets/multiple.png')}
-                style={{
-                  width: 12,
-                  height: 12,
-                  resizeMode: 'contain',
-                  tintColor: 'white',
-                  position: 'absolute',
-                  top: 10,
-                  right: 8,
-                }}
-              />
-            )}
-          </View>
-        )}
+        {/* {item.type == 'post' && ( */}
+        <View>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
+                clickedItem: item,
+                userUid: userUid,
+              })
+            }>
+            <FastImage
+              source={{uri: item.medialUrls[0]}}
+              style={{
+                width: screenWidth / 3 - 4,
+                height: screenHeight * 0.15,
+                margin: 2,
+                borderRadius: 2,
+              }}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+          {item.medialUrls.length > 1 && (
+            <Image
+              source={require('../../assets/multiple.png')}
+              style={{
+                width: 12,
+                height: 12,
+                resizeMode: 'contain',
+                tintColor: 'white',
+                position: 'absolute',
+                top: 10,
+                right: 8,
+              }}
+            />
+          )}
+        </View>
+        {/* )} */}
       </>
     );
   };
 
   return (
     <>
-      <View style={{paddingVertical: 12}}>
+      <View style={{paddingVertical: 12, flex: 1, marginBottom: 50}}>
         <FlatList
           data={allUserPosts}
           renderItem={renderItem}
