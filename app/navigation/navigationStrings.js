@@ -20,4 +20,5 @@ export default {
   NOTIFICATION_SCREEN: 'NotificationScreen',
   SHOW_GALLERY_REEL: 'ShowGalleryReelScreen',
   CREATE_REEL_SCREEN: 'CreateReelScreen',
+  CHAT_SCREEN: 'ChatScreen',
 };

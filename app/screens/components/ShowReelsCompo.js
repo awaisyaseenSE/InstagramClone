@@ -20,8 +20,8 @@ import LikeComponent from './LikeComponent';
 import CommentModal from './CommentModal';
 import navigationStrings from '../../navigation/navigationStrings';
 
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
 
 const ShowReelsCompo = ({
   item,
@@ -156,7 +156,7 @@ const ShowReelsCompo = ({
             ref={videoRef}
             style={{
               width: screenWidth,
-              height: screenHeight - 100,
+              height: screenHeight - 70,
             }}
             onBuffer={onBuffer}
             onError={videoError}
@@ -175,9 +175,6 @@ const ShowReelsCompo = ({
             bottom: 20,
             height: '34%',
             paddingHorizontal: 20,
-            // backgroundColor: 'rgba(0,0,0,0.1)',
-            // paddingBottom: 20,
-            // justifyContent: 'flex-end',
           }}>
           <View
             style={{
@@ -281,9 +278,8 @@ const ShowReelsCompo = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    // height: screenHeight - 100,
+    backgroundColor: 'rgba(0,0,0,0.1)',
+    height: screenHeight - 70,
   },
   reelIcons: {
     width: 28,

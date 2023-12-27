@@ -14,7 +14,7 @@ const ReelStyle = theme => {
       fontSize: 18,
       color: colors.white,
       position: 'absolute',
-      top: 8,
+      top: 40,
       left: 14,
       fontFamily: fontFamily.semiBold,
     },
@@ -26,7 +26,7 @@ const ReelStyle = theme => {
     },
     reelCameraIconContainer: {
       position: 'absolute',
-      top: 8,
+      top: 40,
       right: 14,
     },
   });

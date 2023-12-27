@@ -25,14 +25,8 @@ const TabRoutes = ({route}) => {
     setSelectedScreen(screenIndex);
   };
   return (
-    <>
-      <ScreenComponent
-        style={{
-          flex: 1,
-          backgroundColor: theme.bottonTabBg,
-          paddingTop: Platform.OS === 'android' ? 0 : 0,
-        }}>
-        {/* <View style={{flex: 1}}> */}
+    <View style={{flex: 1}}>
+      <View style={{flex: 1}}>
         {selectedScreen === 0 && <Home switchToScreen={switchToScreen} />}
         {selectedScreen === 1 && <SearchScreen />}
         {selectedScreen === 2 && (
@@ -42,8 +36,7 @@ const TabRoutes = ({route}) => {
           <ReelsScreen switchToScreen={switchToScreen} />
         )}
         {selectedScreen === 4 && <ProfileScreen />}
-        {/* </View> */}
-      </ScreenComponent>
+      </View>
       <View style={styles.bottomTabContainer}>
         <TouchableOpacity
           onPress={() => switchToScreen(0)}
@@ -112,7 +105,7 @@ const TabRoutes = ({route}) => {
           )}
         </TouchableOpacity>
       </View>
-    </>
+    </View>
   );
 };
 

@@ -30,7 +30,8 @@ const TopHomeCompo = () => {
             style={[styles.iconstyle, {tintColor: theme.bottonTabIconColor}]}
           />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate(navigationStrings.CHAT_SCREEN)}>
           <Image
             source={require('../../assets/chat.png')}
             style={[
