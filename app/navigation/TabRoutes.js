@@ -35,7 +35,9 @@ const TabRoutes = () => {
         {selectedScreen === 2 && (
           <GalleryScreen switchToScreen={switchToScreen} />
         )}
-        {selectedScreen === 3 && <ReelsScreen />}
+        {selectedScreen === 3 && (
+          <ReelsScreen switchToScreen={switchToScreen} />
+        )}
         {selectedScreen === 4 && <ProfileScreen />}
         {/* </View> */}
       </ScreenComponent>

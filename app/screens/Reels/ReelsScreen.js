@@ -19,40 +19,81 @@ import ScreenComponent from '../../components/ScreenComponent';
 import ReelStyle from '../style/ReelStyle';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import ShowReelsCompo from '../components/ShowReelsCompo';
+import fontFamily from '../../styles/fontFamily';
+import colors from '../../styles/colors';
 
-export default function ReelsScreen() {
+export default function ReelsScreen({switchToScreen}) {
   const {theme} = useTheme();
   const styles = ReelStyle(theme);
   const [laoding, setLoading] = useState(false);
   const navigation = useNavigation();
   const [reelData, setReelData] = useState([]);
   const [currentReelIndex, setCurrentReelIndex] = useState(0);
+  var isMounted = false;
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   const unsubscribe = firestore()
+  //     .collection('posts')
+  //     .orderBy('time', 'desc')
+  //     .where('type', '==', 'reel')
+  //     .onSnapshot(snap => {
+  //       if (snap) {
+  //         var temp = [];
+  //         if (snap.docs.length > 0) {
+  //           var doc = snap.docs;
+  //           doc.forEach(each => {
+  //             temp.push({...each.data(), id: each.id});
+  //           });
+  //           setReelData(temp);
+  //           setLoading(false);
+  //         } else {
+  //           setLoading(false);
+  //         }
+  //       } else {
+  //         setLoading(false);
+  //       }
+  //     });
+  //   return () => unsubscribe();
+  // }, []);
 
   useEffect(() => {
-    setLoading(true);
-    const unsubscribe = firestore()
-      .collection('posts')
-      .orderBy('time', 'desc')
-      .where('type', '==', 'reel')
-      .onSnapshot(snap => {
-        if (snap) {
-          var temp = [];
-          if (snap.docs.length > 0) {
-            var doc = snap.docs;
-            doc.forEach(each => {
-              temp.push(each.data());
-            });
-            setReelData(temp);
-            setLoading(false);
+    isMounted = true;
+    getPostData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const getPostData = () => {
+    try {
+      setLoading(true);
+      firestore()
+        .collection('posts')
+        .orderBy('time', 'desc')
+        .where('type', '==', 'reel')
+        .onSnapshot(snap => {
+          if (snap) {
+            var temp = [];
+            if (snap.docs.length > 0) {
+              var doc = snap.docs;
+              doc.forEach(each => {
+                temp.push({...each.data(), id: each.id});
+              });
+              setReelData(temp);
+              setLoading(false);
+            } else {
+              setLoading(false);
+            }
           } else {
             setLoading(false);
           }
-        } else {
-          setLoading(false);
-        }
-      });
-    return () => unsubscribe();
-  }, []);
+        });
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
 
   const onChangeIndex = ({index}) => {
     setCurrentReelIndex(index);
@@ -72,11 +113,20 @@ export default function ReelsScreen() {
                 item={item}
                 index={index}
                 currentReelIndex={currentReelIndex}
+                getPostData={getPostData}
+                switchToScreen={switchToScreen}
               />
             )}
             keyExtractor={(item, index) => index.toString()}
             onChangeIndex={onChangeIndex}
           />
+          <Text style={styles.reelTextStyle}>Reels</Text>
+          <TouchableOpacity style={styles.reelCameraIconContainer}>
+            <Image
+              source={require('../../assets/camera.png')}
+              style={styles.reelCameraIcon}
+            />
+          </TouchableOpacity>
         </View>
       </ScreenComponent>
       <MyIndicator visible={laoding} />

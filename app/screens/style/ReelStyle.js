@@ -10,6 +10,25 @@ const ReelStyle = theme => {
       flex: 1,
       backgroundColor: theme.profileBg,
     },
+    reelTextStyle: {
+      fontSize: 18,
+      color: colors.white,
+      position: 'absolute',
+      top: 8,
+      left: 14,
+      fontFamily: fontFamily.semiBold,
+    },
+    reelCameraIcon: {
+      width: 24,
+      height: 24,
+      resizeMode: 'contain',
+      tintColor: colors.white,
+    },
+    reelCameraIconContainer: {
+      position: 'absolute',
+      top: 8,
+      right: 14,
+    },
   });
   return styles;
 };
