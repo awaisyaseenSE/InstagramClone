@@ -4,13 +4,7 @@ import {useTheme} from '../../themes/ThemeContext';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
-const LikeComponent = ({
-  postId,
-  postLikes,
-  getPostData,
-  iconStyle,
-  iconContianerStyle,
-}) => {
+const LikeComponent = ({postId, postLikes, iconStyle, iconContianerStyle}) => {
   const {theme} = useTheme();
   const [liked, setLiked] = useState(false);
 
@@ -48,18 +42,12 @@ const LikeComponent = ({
               likes: firestore.FieldValue.arrayRemove(loggedUser.uid),
             });
             setLiked(false);
-            if (getPostData !== undefined) {
-              getPostData();
-            }
           } else {
             // User hasn't liked the post, so like it
             await postRef.update({
               likes: firestore.FieldValue.arrayUnion(loggedUser.uid),
             });
             setLiked(true);
-            if (getPostData !== undefined) {
-              getPostData();
-            }
           }
         }
       }

@@ -3,26 +3,18 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  FlatList,
   Dimensions,
   StyleSheet,
-  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import auth from '@react-native-firebase/auth';
-import FastImage from 'react-native-fast-image';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../themes/ThemeContext';
 import firestore from '@react-native-firebase/firestore';
 import MyIndicator from '../../components/MyIndicator';
 import navigationStrings from '../../navigation/navigationStrings';
-import ScreenComponent from '../../components/ScreenComponent';
 import ReelStyle from '../style/ReelStyle';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
-import ShowReelsCompo from '../components/ShowReelsCompo';
-import fontFamily from '../../styles/fontFamily';
-import colors from '../../styles/colors';
-const {height, width} = Dimensions.get('screen');
+import ShowReelVideoCompo from '../components/ShowReelVideoCompo';
 
 export default function ReelsScreen({switchToScreen}) {
   const {theme} = useTheme();
@@ -32,32 +24,6 @@ export default function ReelsScreen({switchToScreen}) {
   const [reelData, setReelData] = useState([]);
   const [currentReelIndex, setCurrentReelIndex] = useState(0);
   var isMounted = false;
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   const unsubscribe = firestore()
-  //     .collection('posts')
-  //     .orderBy('time', 'desc')
-  //     .where('type', '==', 'reel')
-  //     .onSnapshot(snap => {
-  //       if (snap) {
-  //         var temp = [];
-  //         if (snap.docs.length > 0) {
-  //           var doc = snap.docs;
-  //           doc.forEach(each => {
-  //             temp.push({...each.data(), id: each.id});
-  //           });
-  //           setReelData(temp);
-  //           setLoading(false);
-  //         } else {
-  //           setLoading(false);
-  //         }
-  //       } else {
-  //         setLoading(false);
-  //       }
-  //     });
-  //   return () => unsubscribe();
-  // }, []);
 
   useEffect(() => {
     isMounted = true;
@@ -73,21 +39,17 @@ export default function ReelsScreen({switchToScreen}) {
       firestore()
         .collection('posts')
         .orderBy('time', 'desc')
-        .where('type', '==', 'reel')
         .onSnapshot(snap => {
-          if (snap) {
-            var temp = [];
-            if (snap.docs.length > 0) {
-              var doc = snap.docs;
-              doc.forEach(each => {
-                temp.push({...each.data(), id: each.id});
-              });
-              setReelData(temp);
-              setLoading(false);
-              // console.log('reel length: ', temp.length);
-            } else {
-              setLoading(false);
-            }
+          var temp = [];
+          if (snap.docs.length > 0) {
+            var doc = snap.docs;
+            doc.forEach(each => {
+              temp.push({...each.data(), id: each.id});
+            });
+            const filteredReelData = temp.filter(ele => ele.type === 'reel');
+            setReelData(filteredReelData);
+            setLoading(false);
+            // console.log('reel length: ', temp.length);
           } else {
             setLoading(false);
           }
@@ -111,11 +73,10 @@ export default function ReelsScreen({switchToScreen}) {
           vertical
           data={reelData}
           renderItem={({item, index}) => (
-            <ShowReelsCompo
+            <ShowReelVideoCompo
               item={item}
               index={index}
               currentReelIndex={currentReelIndex}
-              getPostData={getPostData}
               switchToScreen={switchToScreen}
             />
           )}
@@ -130,31 +91,8 @@ export default function ReelsScreen({switchToScreen}) {
           />
         </TouchableOpacity>
       </View>
-      {/* </ScreenComponent> */}
       <MyIndicator visible={laoding} />
     </>
-  );
-
-  return (
-    <FlatList
-      pagingEnabled
-      data={photos}
-      keyExtractor={item => item.id.toString()}
-      renderItem={({item}) => {
-        return (
-          <View
-            style={{
-              height: height,
-              width: width,
-            }}>
-            <Image
-              source={{uri: item.src.portrait}}
-              style={StyleSheet.absoluteFillObject}
-            />
-          </View>
-        );
-      }}
-    />
   );
 }
 

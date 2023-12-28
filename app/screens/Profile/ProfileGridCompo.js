@@ -31,18 +31,13 @@ const ProfileGridCompo = ({setUserPostsLength, userUid}) => {
     const unsubscribe = firestore()
       .collection('posts')
       .orderBy('time', 'desc')
-      .where('type', '==', 'post')
       .onSnapshot(snap => {
-        if (snap) {
-          const allPostData = snap.docs
-            .map(doc => ({...doc.data(), id: doc.id}))
-            .filter(post => post.userUid === userUid);
-          setUserPostsLength(allPostData.length);
-          setAllUserPosts(allPostData);
-          setLoading(false);
-        } else {
-          setLoading(false);
-        }
+        const allPostData = snap.docs
+          .map(doc => ({...doc.data(), id: doc.id}))
+          .filter(post => post.userUid === userUid && post.type === 'post');
+        setUserPostsLength(allPostData.length);
+        setAllUserPosts(allPostData);
+        setLoading(false);
       });
     return () => unsubscribe();
   }, [userUid]);

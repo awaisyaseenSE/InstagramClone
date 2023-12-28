@@ -30,16 +30,18 @@ export default function Home({switchToScreen}) {
     const unsubscribe = firestore()
       .collection('posts')
       .orderBy('time', 'desc')
-      .where('type', '==', 'post')
+      // .where('type', '==', 'post')
       .onSnapshot(snap => {
-        if (snap) {
-          const allPostData = snap.docs.map(doc => ({
-            ...doc.data(),
-            id: doc.id,
-          }));
-          setPostData(allPostData);
-          setLoading(false);
-        }
+        // if (snap) {
+
+        // }
+        const allPostData = snap.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        const filteredPostData = allPostData.filter(ele => ele.type === 'post');
+        setPostData(filteredPostData);
+        setLoading(false);
       });
 
     return () => unsubscribe();
@@ -57,7 +59,7 @@ export default function Home({switchToScreen}) {
         <TopHomeCompo />
         <View style={{flex: 1, backgroundColor: theme.background}}>
           <StoryComponent />
-          <View style={{flex: 1, marginBottom: 50}}>
+          <View style={{flex: 1}}>
             <FlatList
               data={postData}
               renderItem={({item}) => (

@@ -5,11 +5,9 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  Alert,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {useTheme} from '../../themes/ThemeContext';
 import Video from 'react-native-video';
 import colors from '../../styles/colors';
 import FastImage from 'react-native-fast-image';
@@ -20,30 +18,26 @@ import LikeComponent from './LikeComponent';
 import CommentModal from './CommentModal';
 import navigationStrings from '../../navigation/navigationStrings';
 
-const screenWidth = Dimensions.get('screen').width;
-const screenHeight = Dimensions.get('screen').height;
-
-const ShowReelsCompo = ({
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+const ShowReelVideoCompo = ({
   item,
   index,
   currentReelIndex,
-  setPost,
-  getPostData,
   switchToScreen,
 }) => {
-  const {theme} = useTheme();
-  const videoRef = useRef(null);
   const [pauseVideo, setPauseVideo] = useState(false);
   const [reelUserData, setReelUserData] = useState(null);
   const [showComment, setShowComment] = useState(false);
   const [commentLength, setCommentLength] = useState(0);
   const navigation = useNavigation();
+  const videoRef = useRef(null);
 
   const onBuffer = data => {
-    console.log('on Buffer react native video: ', data);
+    // console.log('on Buffer react native video: ', data);
   };
   const videoError = err => {
-    console.log('Error react native video: ', err);
+    // console.log('Error react native video: ', err);
   };
 
   useEffect(() => {
@@ -134,7 +128,6 @@ const ShowReelsCompo = ({
     await handleFollower();
     await handleFollowing();
   };
-
   const profileNavigationHandler = () => {
     if (item.userUid == auth().currentUser?.uid) {
       switchToScreen(4);
@@ -147,121 +140,157 @@ const ShowReelsCompo = ({
 
   return (
     <>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={() => setPauseVideo(!pauseVideo)}>
+      <View
+        style={{
+          width: screenWidth,
+          height: screenHeight,
+          backgroundColor: 'rgba(0,0,0,0.1)',
+          paddingBottom: 70,
+        }}>
+        <TouchableOpacity>
           <Video
-            source={{
-              uri: item.medialUrls[0],
-            }}
-            ref={videoRef}
             style={{
               width: screenWidth,
-              height: screenHeight - 70,
+              height: screenHeight,
             }}
-            onBuffer={onBuffer}
-            onError={videoError}
+            ref={videoRef}
+            source={{uri: item.medialUrls[0]}}
             resizeMode="cover"
             poster="https://e1.pxfuel.com/desktop-wallpaper/802/816/desktop-wallpaper-black-iphone-7-posted-by-michelle-mercado-black-ios.jpg"
             posterResizeMode="cover"
             repeat
             paused={pauseVideo || currentReelIndex !== index}
-            //   paused={true}
+            onBuffer={onBuffer}
+            onError={videoError}
           />
         </TouchableOpacity>
         <View
           style={{
             position: 'absolute',
             width: '100%',
-            bottom: 20,
-            height: '34%',
-            paddingHorizontal: 20,
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.1)',
           }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              flex: 1,
-            }}>
-            <View
-              style={{
-                flex: 1,
-                // borderWidth: 2,
-                // borderColor: 'black',
-                justifyContent: 'flex-end',
-                // backgroundColor: 'rgba(0,0,0,0.2)',
-              }}>
-              <View style={styles.userDetailContainer}>
-                <TouchableOpacity onPress={profileNavigationHandler}>
-                  <FastImage
-                    style={styles.userProfileImage}
-                    source={{
-                      uri:
-                        reelUserData !== null && reelUserData.imageUrl !== ''
-                          ? reelUserData.imageUrl
-                          : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtTgADTlo3rtSsrCFEIn0Onpx22hbJus4orcFhRIW42G5kl-5628x_kY_4jKUNbOWZQ1E&usqp=CAU',
-                    }}
+          <TouchableOpacity
+            style={{flex: 1}}
+            onPress={() => setPauseVideo(!pauseVideo)}
+            activeOpacity={0.8}>
+            <View style={{flex: 1}}>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                }}>
+                {/* <Text></Text> */}
+                {pauseVideo && (
+                  <Image
+                    source={require('../../assets/pause-button.png')}
+                    style={{width: 40, height: 40, resizeMode: 'contain'}}
                   />
-                </TouchableOpacity>
-                <Text style={styles.userName}>
-                  {reelUserData !== null && reelUserData.fullName}
-                </Text>
-                {item.userUid !== auth().currentUser?.uid && (
-                  <TouchableOpacity
-                    style={styles.followContainer}
-                    onPress={handleFollow}>
-                    <Text style={styles.followText}>
-                      {reelUserData !== null &&
-                      reelUserData.followers.includes(auth().currentUser?.uid)
-                        ? 'Following'
-                        : 'follow'}
-                    </Text>
-                  </TouchableOpacity>
                 )}
               </View>
-              <View>
-                <Text style={styles.desText} numberOfLines={1}>
-                  {item.caption} Tag to your friend this video is amazing. This
-                  video from facebook.
-                </Text>
+              <View
+                style={{
+                  flex: 1,
+                  paddingHorizontal: 20,
+                  paddingTop: 20,
+                  paddingBottom: 20,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    flex: 1,
+                  }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      // borderWidth: 2,
+                      // borderColor: 'black',
+                      justifyContent: 'flex-end',
+                      // backgroundColor: 'rgba(0,0,0,0.2)',
+                    }}>
+                    <View style={styles.userDetailContainer}>
+                      <TouchableOpacity onPress={profileNavigationHandler}>
+                        <FastImage
+                          style={styles.userProfileImage}
+                          source={{
+                            uri:
+                              reelUserData !== null &&
+                              reelUserData.imageUrl !== ''
+                                ? reelUserData.imageUrl
+                                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtTgADTlo3rtSsrCFEIn0Onpx22hbJus4orcFhRIW42G5kl-5628x_kY_4jKUNbOWZQ1E&usqp=CAU',
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <Text style={styles.userName}>
+                        {reelUserData !== null && reelUserData.fullName}
+                      </Text>
+                      {item.userUid !== auth().currentUser?.uid && (
+                        <TouchableOpacity
+                          style={styles.followContainer}
+                          onPress={handleFollow}>
+                          <Text style={styles.followText}>
+                            {reelUserData !== null &&
+                            reelUserData.followers.includes(
+                              auth().currentUser?.uid,
+                            )
+                              ? 'Following'
+                              : 'follow'}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                    <View>
+                      <Text style={styles.desText} numberOfLines={1}>
+                        {item.caption} Tag to your friend this video is amazing.
+                        This video from facebook.
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      justifyContent: 'flex-end',
+                    }}>
+                    <View style={{alignItems: 'center'}}>
+                      <LikeComponent
+                        postId={item.id}
+                        postLikes={item.likes}
+                        iconStyle={{width: 28, height: 28}}
+                        iconContianerStyle={{
+                          paddingHorizontal: 0,
+                          paddingVertical: 0,
+                        }}
+                      />
+                      <Text style={styles.iconText}>{item.likes.length}</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={{alignItems: 'center', marginVertical: 30}}
+                      onPress={() => setShowComment(!showComment)}>
+                      <Image
+                        source={require('../../assets/comment.png')}
+                        style={styles.reelIcons}
+                      />
+                      <Text style={styles.iconText}>{commentLength}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{alignItems: 'center'}}>
+                      <Image
+                        source={require('../../assets/share.png')}
+                        style={styles.reelIcons}
+                      />
+                      <Text style={styles.iconText}>0</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{marginTop: 30}}>
+                      <Image
+                        source={require('../../assets/vertical_dots.png')}
+                        style={styles.reelIcons}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
             </View>
-            <View style={{alignItems: 'flex-end'}}>
-              <View style={{alignItems: 'center'}}>
-                <LikeComponent
-                  postId={item.id}
-                  postLikes={item.likes}
-                  getPostData={getPostData}
-                  iconStyle={{width: 28, height: 28}}
-                  iconContianerStyle={{
-                    paddingHorizontal: 0,
-                    paddingVertical: 0,
-                  }}
-                />
-                <Text style={styles.iconText}>{item.likes.length}</Text>
-              </View>
-              <TouchableOpacity
-                style={{alignItems: 'center', marginVertical: 30}}
-                onPress={() => setShowComment(!showComment)}>
-                <Image
-                  source={require('../../assets/comment.png')}
-                  style={styles.reelIcons}
-                />
-                <Text style={styles.iconText}>{commentLength}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{alignItems: 'center'}}>
-                <Image
-                  source={require('../../assets/share.png')}
-                  style={styles.reelIcons}
-                />
-                <Text style={styles.iconText}>0</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{marginTop: 30}}>
-                <Image
-                  source={require('../../assets/vertical_dots.png')}
-                  style={styles.reelIcons}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
       {showComment && (
@@ -322,4 +351,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ShowReelsCompo;
+export default ShowReelVideoCompo;
