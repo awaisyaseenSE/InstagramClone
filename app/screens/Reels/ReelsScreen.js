@@ -84,7 +84,11 @@ export default function ReelsScreen({switchToScreen}) {
           onChangeIndex={onChangeIndex}
         />
         <Text style={styles.reelTextStyle}>Reels</Text>
-        <TouchableOpacity style={styles.reelCameraIconContainer}>
+        <TouchableOpacity
+          style={styles.reelCameraIconContainer}
+          onPress={() =>
+            navigation.navigate(navigationStrings.SHOW_GALLERY_REEL)
+          }>
           <Image
             source={require('../../assets/camera.png')}
             style={styles.reelCameraIcon}

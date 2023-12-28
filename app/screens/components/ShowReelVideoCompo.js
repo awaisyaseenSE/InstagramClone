@@ -17,6 +17,7 @@ import auth from '@react-native-firebase/auth';
 import LikeComponent from './LikeComponent';
 import CommentModal from './CommentModal';
 import navigationStrings from '../../navigation/navigationStrings';
+import {TapGestureHandler} from 'react-native-gesture-handler';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -171,126 +172,135 @@ const ShowReelVideoCompo = ({
             height: '100%',
             backgroundColor: 'rgba(0,0,0,0.1)',
           }}>
-          <TouchableOpacity
-            style={{flex: 1}}
-            onPress={() => setPauseVideo(!pauseVideo)}
-            activeOpacity={0.8}>
-            <View style={{flex: 1}}>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                }}>
-                {/* <Text></Text> */}
-                {pauseVideo && (
-                  <Image
-                    source={require('../../assets/pause-button.png')}
-                    style={{width: 40, height: 40, resizeMode: 'contain'}}
-                  />
-                )}
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  paddingHorizontal: 20,
-                  paddingTop: 20,
-                  paddingBottom: 20,
-                }}>
+          <TapGestureHandler
+            numberOfTaps={2}
+            onHandlerStateChange={handleFollow}>
+            <TouchableOpacity
+              style={{flex: 1}}
+              onPress={() => setPauseVideo(!pauseVideo)}
+              activeOpacity={0.8}>
+              <View style={{flex: 1}}>
                 <View
                   style={{
-                    flexDirection: 'row',
                     flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                  }}>
+                  {/* <Text></Text> */}
+                  {pauseVideo && (
+                    <Image
+                      source={require('../../assets/pause-button.png')}
+                      style={{
+                        width: 40,
+                        height: 40,
+                        resizeMode: 'contain',
+                        tintColor: 'snow',
+                      }}
+                    />
+                  )}
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    paddingHorizontal: 20,
+                    paddingTop: 20,
+                    paddingBottom: 20,
                   }}>
                   <View
                     style={{
+                      flexDirection: 'row',
                       flex: 1,
-                      // borderWidth: 2,
-                      // borderColor: 'black',
-                      justifyContent: 'flex-end',
-                      // backgroundColor: 'rgba(0,0,0,0.2)',
                     }}>
-                    <View style={styles.userDetailContainer}>
-                      <TouchableOpacity onPress={profileNavigationHandler}>
-                        <FastImage
-                          style={styles.userProfileImage}
-                          source={{
-                            uri:
-                              reelUserData !== null &&
-                              reelUserData.imageUrl !== ''
-                                ? reelUserData.imageUrl
-                                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtTgADTlo3rtSsrCFEIn0Onpx22hbJus4orcFhRIW42G5kl-5628x_kY_4jKUNbOWZQ1E&usqp=CAU',
+                    <View
+                      style={{
+                        flex: 1,
+                        // borderWidth: 2,
+                        // borderColor: 'black',
+                        justifyContent: 'flex-end',
+                        // backgroundColor: 'rgba(0,0,0,0.2)',
+                      }}>
+                      <View style={styles.userDetailContainer}>
+                        <TouchableOpacity onPress={profileNavigationHandler}>
+                          <FastImage
+                            style={styles.userProfileImage}
+                            source={{
+                              uri:
+                                reelUserData !== null &&
+                                reelUserData.imageUrl !== ''
+                                  ? reelUserData.imageUrl
+                                  : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtTgADTlo3rtSsrCFEIn0Onpx22hbJus4orcFhRIW42G5kl-5628x_kY_4jKUNbOWZQ1E&usqp=CAU',
+                            }}
+                          />
+                        </TouchableOpacity>
+                        <Text style={styles.userName}>
+                          {reelUserData !== null && reelUserData.fullName}
+                        </Text>
+                        {item.userUid !== auth().currentUser?.uid && (
+                          <TouchableOpacity
+                            style={styles.followContainer}
+                            onPress={handleFollow}>
+                            <Text style={styles.followText}>
+                              {reelUserData !== null &&
+                              reelUserData.followers.includes(
+                                auth().currentUser?.uid,
+                              )
+                                ? 'Following'
+                                : 'follow'}
+                            </Text>
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                      <View>
+                        <Text style={styles.desText} numberOfLines={1}>
+                          {item.caption} Tag to your friend this video is
+                          amazing. This video from facebook.
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        justifyContent: 'flex-end',
+                      }}>
+                      <View style={{alignItems: 'center'}}>
+                        <LikeComponent
+                          postId={item.id}
+                          postLikes={item.likes}
+                          iconStyle={{width: 28, height: 28}}
+                          iconContianerStyle={{
+                            paddingHorizontal: 0,
+                            paddingVertical: 0,
                           }}
                         />
+                        <Text style={styles.iconText}>{item.likes.length}</Text>
+                      </View>
+                      <TouchableOpacity
+                        style={{alignItems: 'center', marginVertical: 30}}
+                        onPress={() => setShowComment(!showComment)}>
+                        <Image
+                          source={require('../../assets/comment.png')}
+                          style={styles.reelIcons}
+                        />
+                        <Text style={styles.iconText}>{commentLength}</Text>
                       </TouchableOpacity>
-                      <Text style={styles.userName}>
-                        {reelUserData !== null && reelUserData.fullName}
-                      </Text>
-                      {item.userUid !== auth().currentUser?.uid && (
-                        <TouchableOpacity
-                          style={styles.followContainer}
-                          onPress={handleFollow}>
-                          <Text style={styles.followText}>
-                            {reelUserData !== null &&
-                            reelUserData.followers.includes(
-                              auth().currentUser?.uid,
-                            )
-                              ? 'Following'
-                              : 'follow'}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
+                      <TouchableOpacity style={{alignItems: 'center'}}>
+                        <Image
+                          source={require('../../assets/share.png')}
+                          style={styles.reelIcons}
+                        />
+                        <Text style={styles.iconText}>0</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={{marginTop: 30}}>
+                        <Image
+                          source={require('../../assets/vertical_dots.png')}
+                          style={styles.reelIcons}
+                        />
+                      </TouchableOpacity>
                     </View>
-                    <View>
-                      <Text style={styles.desText} numberOfLines={1}>
-                        {item.caption} Tag to your friend this video is amazing.
-                        This video from facebook.
-                      </Text>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: 'flex-end',
-                    }}>
-                    <View style={{alignItems: 'center'}}>
-                      <LikeComponent
-                        postId={item.id}
-                        postLikes={item.likes}
-                        iconStyle={{width: 28, height: 28}}
-                        iconContianerStyle={{
-                          paddingHorizontal: 0,
-                          paddingVertical: 0,
-                        }}
-                      />
-                      <Text style={styles.iconText}>{item.likes.length}</Text>
-                    </View>
-                    <TouchableOpacity
-                      style={{alignItems: 'center', marginVertical: 30}}
-                      onPress={() => setShowComment(!showComment)}>
-                      <Image
-                        source={require('../../assets/comment.png')}
-                        style={styles.reelIcons}
-                      />
-                      <Text style={styles.iconText}>{commentLength}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{alignItems: 'center'}}>
-                      <Image
-                        source={require('../../assets/share.png')}
-                        style={styles.reelIcons}
-                      />
-                      <Text style={styles.iconText}>0</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{marginTop: 30}}>
-                      <Image
-                        source={require('../../assets/vertical_dots.png')}
-                        style={styles.reelIcons}
-                      />
-                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </TapGestureHandler>
         </View>
       </View>
       {showComment && (
