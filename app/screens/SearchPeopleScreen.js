@@ -9,6 +9,7 @@ import {
   Dimensions,
   SafeAreaView,
   ScrollView,
+  TextInput,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ScreenComponent from '../components/ScreenComponent';
@@ -21,19 +22,225 @@ import SearchStyle from './style/SearchStyle';
 import fontFamily from '../styles/fontFamily';
 import navigationStrings from '../navigation/navigationStrings';
 import {useTheme} from '../themes/ThemeContext';
-import TopCompoWithHeading from '../components/TopCompoWithHeading';
 
 export default function SearchPeopleScreen() {
   const navigation = useNavigation();
   const {theme} = useTheme();
+  const [searchText, setSearchText] = useState('');
+  const [userData, setUserData] = useState([]);
+  const currentUserId = auth().currentUser?.uid;
+  const [allUsers, setAllUsers] = useState([]);
+  const [showCrossIcon, setShowCrossIcon] = useState(false);
+
+  const searchPost = async () => {
+    try {
+      const filtered = allUsers.filter(user => {
+        return user.fullName.toLowerCase().includes(searchText.toLowerCase());
+      });
+      setUserData(filtered);
+    } catch (error) {
+      console.log(
+        'Error in while Searching users in Search People Screen: ',
+        error,
+      );
+    }
+  };
+  useEffect(() => {
+    if (searchText !== '') {
+      searchPost();
+    } else {
+      setUserData([]);
+    }
+  }, [searchText]);
+
+  useEffect(() => {
+    const unsubscribe = firestore()
+      .collection('users')
+      .onSnapshot(snapshot => {
+        const users = [];
+        snapshot.forEach(doc => {
+          const userData = doc.data();
+          const userId = doc.id;
+          if (userId !== currentUserId) {
+            users.push({...userData, id: userId});
+          }
+        });
+
+        setAllUsers(users);
+      });
+
+    return () => unsubscribe();
+  }, []);
+
+  const profileNavigationHandler = item => {
+    if (item.userUid == auth().currentUser.uid) {
+      return null;
+    } else {
+      navigation.navigate(navigationStrings.USER_PROFILE, {
+        userUid: item.id,
+      });
+    }
+  };
+
+  const renderItem = ({item, index}) => {
+    return (
+      <TouchableOpacity
+        style={styles.userDataContainer}
+        activeOpacity={0.6}
+        onPress={() => profileNavigationHandler(item)}>
+        <FastImage
+          style={styles.profileImage}
+          source={{
+            uri:
+              item.imageUrl !== ''
+                ? item.imageUrl
+                : 'https://cdn-icons-png.flaticon.com/512/6596/6596121.png',
+          }}
+        />
+        <View style={{marginLeft: 20}}>
+          <Text style={[styles.userNameStyle, {color: theme.text}]}>
+            {item?.fullName}
+          </Text>
+          {item.bio !== '' && (
+            <Text style={[styles.bioText, {color: theme.userFollowerGrayText}]}>
+              {item?.bio.length > 20
+                ? item?.bio.slice(0, 20) + ' ...'
+                : item?.bio}
+            </Text>
+          )}
+          <Text style={[styles.bioText, {color: theme.userFollowerGrayText}]}>
+            {item?.followers.length} Followers
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <>
       <ScreenComponent style={{backgroundColor: theme.background}}>
-        <TopCompoWithHeading
-          title="Search People"
-          onPress={() => navigation.goBack()}
-        />
+        <View style={styles.topHeaderContainer}>
+          <TouchableOpacity
+            style={styles.backIconContainer}
+            onPress={() => navigation.goBack()}>
+            <Image
+              source={require('../assets/back.png')}
+              style={[styles.backIcon, {tintColor: theme.text}]}
+            />
+          </TouchableOpacity>
+          <View
+            style={[
+              styles.searchBarContainer,
+              {backgroundColor: theme.userProfileGray},
+            ]}>
+            <TextInput
+              placeholder="Search"
+              style={[styles.input, {color: theme.text}]}
+              placeholderTextColor={theme.commentGrayText}
+              value={searchText}
+              onChangeText={text => {
+                if (text.trim().length) {
+                  setSearchText(text);
+                  setShowCrossIcon(true);
+                } else {
+                  setSearchText('');
+                  setShowCrossIcon(false);
+                }
+              }}
+              autoCapitalize="none"
+            />
+            {showCrossIcon && (
+              <TouchableOpacity
+                style={{
+                  paddingVertical: 6,
+                  paddingHorizontal: 14,
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  setSearchText('');
+                  setShowCrossIcon(false);
+                }}>
+                <Image
+                  source={require('../assets/close.png')}
+                  style={[
+                    styles.closeIconStyle,
+                    {tintColor: theme.commentGrayText},
+                  ]}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+        {userData.length > 0 && (
+          <View
+            style={{
+              marginTop: 12,
+              height: 0.2,
+              backgroundColor: theme.placeholderColor,
+            }}
+          />
+        )}
+        <View style={{flex: 1, marginTop: 12}}>
+          <FlatList
+            data={userData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={<View style={{marginVertical: 10}} />}
+          />
+        </View>
       </ScreenComponent>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  topHeaderContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingLeft: 8,
+    paddingRight: 20,
+    marginTop: 6,
+  },
+  backIconContainer: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  backIcon: {
+    width: 22,
+    height: 22,
+    resizeMode: 'contain',
+  },
+  input: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    flex: 1,
+  },
+  searchBarContainer: {
+    marginLeft: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 6,
+    flex: 1,
+  },
+  closeIconStyle: {
+    width: 10,
+    height: 10,
+    resizeMode: 'contain',
+  },
+  profileImage: {width: 70, height: 70, borderRadius: 35},
+  userDataContainer: {
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userNameStyle: {
+    fontSize: 14,
+    fontFamily: fontFamily.medium,
+  },
+  bioText: {
+    fontSize: 12,
+    fontWeight: '500',
+    marginTop: 4,
+  },
+});
