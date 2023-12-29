@@ -25,11 +25,11 @@ export default function SettingScreen() {
               {isDarkMode ? 'Dark' : 'Light'} Theme
             </Text>
             <Switch
-              trackColor={{false: '#EDF2FE', true: '#EDF2FE'}}
+              trackColor={{false: '#EDF2FE', true: '#12212F'}}
               thumbColor={isEnabled ? '#12212F' : '#EDF2FE'}
               ios_backgroundColor="#12212F"
               onValueChange={toggleSwitch}
-              value={isEnabled}
+              value={isDarkMode}
               onChange={toggleTheme}
             />
           </View>
