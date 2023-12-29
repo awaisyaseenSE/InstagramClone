@@ -23,10 +23,28 @@ export default function ShowAllUserPostsScreen({route}) {
       .collection('posts')
       .orderBy('time', 'desc')
       .onSnapshot(snap => {
-        const allPostData = snap.docs
-          .map(doc => ({...doc.data(), id: doc.id}))
-          .filter(post => post.userUid === userUid && post.type === 'post');
-        setAllUserPosts(allPostData);
+        // const allPostData = snap.docs
+        //   .map(doc => ({...doc.data(), id: doc.id}))
+        //   .filter(post => post.userUid === userUid && post.type === 'post');
+        if (clickedItem !== undefined) {
+          const allUserPostData = snap.docs
+            .map(doc => ({...doc.data(), id: doc.id}))
+            .filter(
+              post => post.userUid === userUid && post.id !== clickedItem.id,
+            );
+
+          const selectPost = snap.docs
+            .map(doc => ({...doc.data(), id: doc.id}))
+            .filter(post => post.id === clickedItem.id);
+          const finalAllData = selectPost.concat(allUserPostData);
+
+          setAllUserPosts(finalAllData);
+        } else {
+          const allPostData = snap.docs
+            .map(doc => ({...doc.data(), id: doc.id}))
+            .filter(post => post.userUid === userUid);
+          setAllUserPosts(allPostData);
+        }
         setLoading(false);
       });
     return () => unsubscribe();
