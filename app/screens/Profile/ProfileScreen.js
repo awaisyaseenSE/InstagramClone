@@ -218,7 +218,9 @@ export default function ProfileScreen() {
               userUid={auth().currentUser.uid}
             />
           )}
-          {selectedTab === 1 && <ProfileReelCompo />}
+          {selectedTab === 1 && (
+            <ProfileReelCompo userID={auth().currentUser?.uid} />
+          )}
           {selectedTab === 2 && <ProfileUserTagsCompo />}
         </View>
       </ScreenComponent>

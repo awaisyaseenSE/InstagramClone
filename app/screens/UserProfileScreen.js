@@ -299,7 +299,7 @@ export default function UserProfileScreen({route}) {
               userUid={userId}
             />
           )}
-          {selectedTab === 1 && <ProfileReelCompo />}
+          {selectedTab === 1 && <ProfileReelCompo userID={userId} />}
           {selectedTab === 2 && <ProfileUserTagsCompo />}
           {showUserImageModal && (
             <Modal style={{backgroundColor: 'transparent'}}>
