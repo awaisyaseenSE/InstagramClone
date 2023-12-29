@@ -16,7 +16,6 @@ export default function ShowAllUserPostsScreen({route}) {
   const navigation = useNavigation();
   const clickedItem = route.params?.clickedItem;
   const userUid = route.params?.userUid;
-  const userClickedPost = useRef(null);
 
   useEffect(() => {
     setLoading(true);
@@ -33,18 +32,6 @@ export default function ShowAllUserPostsScreen({route}) {
     return () => unsubscribe();
   }, []);
 
-  //   useEffect(() => {
-  //     // userClickedPost.current.scrollToItem({item: clickedItem, animated: true});
-  //     // if (allUserPosts.length > 0) {
-
-  //     // }
-  //   }, []);
-  const scrollToSelectedItem = () => {
-    if (clickedItem !== null || clickedItem !== '') {
-      userClickedPost?.current.scrollToIndex({index: 2, animated: true});
-    }
-  };
-
   return (
     <>
       <ScreenComponent style={{backgroundColor: theme.background}}>
@@ -54,7 +41,6 @@ export default function ShowAllUserPostsScreen({route}) {
         />
         <View style={{flex: 1, marginBottom: 50}}>
           <FlatList
-            ref={userClickedPost}
             data={allUserPosts}
             renderItem={({item}) => (
               <ShowPostsCompo item={item} allUrls={item.medialUrls} />
