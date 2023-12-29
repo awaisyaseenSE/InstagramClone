@@ -133,6 +133,15 @@ export default function SearchPeopleScreen() {
               styles.searchBarContainer,
               {backgroundColor: theme.userProfileGray},
             ]}>
+            <Image
+              source={require('../assets/tab_search_fill.png')}
+              style={{
+                width: 14,
+                height: 14,
+                resizeMode: 'contain',
+                tintColor: theme.commentGrayText,
+              }}
+            />
             <TextInput
               placeholder="Search"
               style={[styles.input, {color: theme.text}]}
@@ -222,6 +231,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 6,
     flex: 1,
+    paddingLeft: 12,
   },
   closeIconStyle: {
     width: 10,
