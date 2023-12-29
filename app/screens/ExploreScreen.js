@@ -18,8 +18,6 @@ export default function ExploreScreen({route}) {
   const navigation = useNavigation();
   const userUid = auth().currentUser?.uid;
   const [allUserPosts, setAllUserPosts] = useState([]);
-  const [selectedPostData, setSelectedPostData] = useState([]);
-  const [finalAllPosts, setFinalAllPosts] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -34,41 +32,12 @@ export default function ExploreScreen({route}) {
         const selectPost = snap.docs
           .map(doc => ({...doc.data(), id: doc.id}))
           .filter(post => post.id === postId && post.type == type);
-
-        const temparr = [];
-        temparr.push(selectPost);
-        temparr.push(allPostData);
-        // setFinalAllPosts(temparr);
-        setFinalAllPosts({
-          ...allPostData,
-          ...selectPost,
-        });
-
-        setAllUserPosts(allPostData);
+        const farr = selectPost.concat(allPostData);
+        setAllUserPosts(farr);
         setLoading(false);
       });
     return () => unsubscribe();
   }, []);
-
-  //   useEffect(() => {
-  //     setLoading(true);
-  //     const unsubscribe = firestore()
-  //       .collection('posts')
-  //       .doc(postId)
-  //       .onSnapshot(snap => {
-  //         if (snap.exists) {
-  //           var data = snap.data();
-  //           var id = snap.id;
-  //           const postData = {...data, id: id};
-  //           setSelectedPostData(postData);
-  //           console.log(postData);
-  //           setLoading(false);
-  //         } else {
-  //           setLoading(false);
-  //         }
-  //       });
-  //     return () => unsubscribe();
-  //   }, []);
 
   return (
     <>
@@ -78,14 +47,6 @@ export default function ExploreScreen({route}) {
           onPress={() => navigation.goBack()}
         />
         <View style={{flex: 1, marginBottom: 50}}>
-          {/* <FlatList
-            data={selectedPostData}
-            renderItem={({item}) => (
-              <ShowPostsCompo item={item} allUrls={item.medialUrls} />
-            )}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-          /> */}
           <FlatList
             data={allUserPosts}
             renderItem={({item}) => (

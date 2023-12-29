@@ -21,6 +21,7 @@ import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
 import ShowPostOptionModal from './ShowPostOptionModal';
 import MyIndicator from '../../components/MyIndicator';
+import Video from 'react-native-video';
 
 const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
   const {theme} = useTheme();
@@ -35,6 +36,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
   const [showOptionModal, setShowOptionModal] = useState(false);
   const [currentUserAlldata, setCurrentUserAllData] = useState(null);
   const [laoding, setLoading] = useState(false);
+  const [pauseVideo, setPauseVideo] = useState(false);
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -188,7 +190,52 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
           </TouchableOpacity>
         </View>
         <View>
-          {allUrls.length > 0 && (
+          {item.type == 'reel' && (
+            <TouchableOpacity onPress={() => setPauseVideo(!pauseVideo)}>
+              <Video
+                style={{width: screenWidth, height: 270}}
+                source={{uri: item.medialUrls[0]}}
+                resizeMode="cover"
+                poster="https://e1.pxfuel.com/desktop-wallpaper/802/816/desktop-wallpaper-black-iphone-7-posted-by-michelle-mercado-black-ios.jpg"
+                posterResizeMode="cover"
+                repeat
+                paused={pauseVideo}
+              />
+              {pauseVideo && (
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 25,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'rgba(0,0,0,0.5)',
+                    }}>
+                    <Image
+                      source={require('../../assets/pause-button.png')}
+                      style={{
+                        width: 20,
+                        height: 20,
+                        resizeMode: 'contain',
+                        tintColor: 'snow',
+                      }}
+                    />
+                  </View>
+                </View>
+              )}
+            </TouchableOpacity>
+          )}
+          {allUrls.length > 0 && item.type == 'post' && (
             <View>
               <FlatList
                 data={allUrls}
