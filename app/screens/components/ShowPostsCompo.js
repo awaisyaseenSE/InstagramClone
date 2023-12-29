@@ -121,7 +121,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
 
   const profileNavigationHandler = () => {
     if (item.userUid == auth().currentUser.uid) {
-      switchToScreen(4);
+      // switchToScreen(4);
     } else {
       navigation.navigate(navigationStrings.USER_PROFILE, {
         userUid: item.userUid,
