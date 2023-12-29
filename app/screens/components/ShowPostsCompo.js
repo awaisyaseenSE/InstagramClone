@@ -60,7 +60,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
     //       err,
     //     );
     //   });
-  }, [postUserData]);
+  }, []);
   useEffect(() => {
     const unsubscribe = firestore()
       .collection('posts')

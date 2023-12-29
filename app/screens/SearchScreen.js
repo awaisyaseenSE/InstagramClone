@@ -106,7 +106,10 @@ export default function SearchScreen() {
                 styles.searchIconsContainer,
                 {backgroundColor: theme.userProfileGray},
               ]}
-              activeOpacity={0.8}>
+              activeOpacity={0.8}
+              onPress={() =>
+                navigation.navigate(navigationStrings.SEARCH_PEOPLE_SCREEN)
+              }>
               <Image
                 source={require('../assets/tab_search.png')}
                 style={[styles.searchIcon, {tintColor: theme.light}]}

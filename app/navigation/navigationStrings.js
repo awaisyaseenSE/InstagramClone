@@ -21,4 +21,6 @@ export default {
   SHOW_GALLERY_REEL: 'ShowGalleryReelScreen',
   CREATE_REEL_SCREEN: 'CreateReelScreen',
   CHAT_SCREEN: 'ChatScreen',
+  SEARCH_PEOPLE_SCREEN: 'SearchPeopleScreen',
+  EXPLORE_SCREEN: 'ExploreScreen',
 };
