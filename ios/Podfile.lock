@@ -1205,6 +1205,8 @@ PODS:
   - RNGestureHandler (2.14.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
+  - RNPermissions (4.0.1):
+    - React-Core
   - RNReanimated (3.6.1):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
@@ -1275,6 +1277,7 @@ DEPENDENCIES:
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -1411,6 +1414,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/storage"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -1492,6 +1497,7 @@ SPEC CHECKSUMS:
   RNFBFirestore: edaf1440a183aefcb887dc5ccee963b5c2a286f7
   RNFBStorage: cce752c3adefd5a9a7e9df3b87ec5b8d32fc5c01
   RNGestureHandler: a5039da2ac028b073ae801289476060b34d559b1
+  RNPermissions: d0f576cb779f84d64b96932268462bd50f5d0e1c
   RNReanimated: 8a6a83984cb4d61ebf1065b6137150b6b31ce609
   RNScreens: 3e56c56bd35436215a56f48a753e30e8ce018a09
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
