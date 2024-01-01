@@ -14,4 +14,17 @@ export default {
   galleryPickImageBg: '#EFEFEF',
   lightBlackTwo: '#808080',
   profileGray: 'rgba(0,0,0,0.4)',
+
+  darkBlue: '#2345D2',
+  LightWhite: '#F9F9F9',
+  lightGrey: '#6C717F',
+  tintColor: '#C6C6C6',
+  lineColor: '#EEEEEE',
+  grey: '#A4A4B4',
+  offWhite: '#FAF9F6',
+  whiteOpacity70: '#FFFFFFB2',
+  lightBlue: '#335AFF1F',
+  inputBorderColor: '#E8E8E8',
+  inputBg: '#F7F7FC',
+  lightOffWhite: '#EDEDED',
 };

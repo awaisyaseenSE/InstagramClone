@@ -31,7 +31,9 @@ const TopHomeCompo = () => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate(navigationStrings.CHAT_SCREEN)}>
+          onPress={() =>
+            navigation.navigate(navigationStrings.CHAT_USERS_LIST_SCREEN)
+          }>
           <Image
             source={require('../../assets/chat.png')}
             style={[

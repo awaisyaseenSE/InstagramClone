@@ -30,11 +30,7 @@ export default function Home({switchToScreen}) {
     const unsubscribe = firestore()
       .collection('posts')
       .orderBy('time', 'desc')
-      // .where('type', '==', 'post')
       .onSnapshot(snap => {
-        // if (snap) {
-
-        // }
         const allPostData = snap.docs.map(doc => ({
           ...doc.data(),
           id: doc.id,

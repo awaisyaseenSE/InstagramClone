@@ -102,6 +102,27 @@ export default function UserProfileScreen({route}) {
     await handleFollowing();
   };
 
+  const generateUserId = (currUser, storedId) => {
+    const sortedIds = [currUser, storedId].sort();
+    const chatID = `${sortedIds[0]}&${sortedIds[1]}`;
+    // console.log('chat id: ', chatID);
+    const routeData = {
+      chatID: chatID,
+    };
+
+    return routeData;
+  };
+
+  const handleNavigationToChat = () => {
+    const currUser = auth().currentUser.uid;
+    if (currUser === userId) {
+      console.log('you click on your own');
+    } else {
+      const routeData = generateUserId(currUser, userId); //calling the function to get user id
+      navigation.navigate(navigationStrings.CHAT_SCREEN, routeData);
+    }
+  };
+
   return (
     <>
       <ScreenComponent style={{backgroundColor: theme.profileBg}}>
@@ -227,7 +248,8 @@ export default function UserProfileScreen({route}) {
               style={[
                 styles.userProfileFollowBtn,
                 {backgroundColor: theme.userProfileGray},
-              ]}>
+              ]}
+              onPress={handleNavigationToChat}>
               <Text style={styles.userProfileFollowText}>Message</Text>
             </TouchableOpacity>
           </View>

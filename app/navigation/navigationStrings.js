@@ -23,4 +23,5 @@ export default {
   CHAT_SCREEN: 'ChatScreen',
   SEARCH_PEOPLE_SCREEN: 'SearchPeopleScreen',
   EXPLORE_SCREEN: 'ExploreScreen',
+  CHAT_USERS_LIST_SCREEN: 'ChatUsersListScreen',
 };

@@ -23,6 +23,7 @@ import CreateReelScreen from '../screens/Reels/CreateReelScreen';
 import ChatScreen from '../screens/Chat/ChatScreen';
 import SearchPeopleScreen from '../screens/SearchPeopleScreen';
 import ExploreScreen from '../screens/ExploreScreen';
+import ChatUsersListScreen from '../screens/Chat/ChatUsersListScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -168,6 +169,11 @@ function AppNavigator() {
       <Stack.Screen
         name="ExploreScreen"
         component={ExploreScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ChatUsersListScreen"
+        component={ChatUsersListScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
