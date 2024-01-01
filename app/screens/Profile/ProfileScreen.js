@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, Modal} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import useAuth from '../../auth/useAuth';
 import auth from '@react-native-firebase/auth';
@@ -24,6 +24,7 @@ export default function ProfileScreen() {
   const [userAllData, setUserAllData] = useState(null);
   const [selectedTab, setSelectedTab] = useState(0);
   const [userPostsLength, setUserPostsLength] = useState(0);
+  const [showUserImageModal, setShowUserImageModal] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -71,15 +72,20 @@ export default function ProfileScreen() {
           </View>
           <View style={styles.userDetailContainer}>
             <View style={styles.profileImageContainer}>
-              <FastImage
-                source={{
-                  uri:
-                    userImageUrl !== ''
-                      ? userImageUrl
-                      : 'https://is3-ssl.mzstatic.com/image/thumb/Purple127/v4/f5/ca/fd/f5cafd96-f3a4-8ec1-37b0-2e82f8bdea77/source/512x512bb.jpg',
-                }}
-                style={styles.profileImageStyle}
-              />
+              <TouchableOpacity
+                onPress={() => {
+                  userImageUrl !== '' && setShowUserImageModal(true);
+                }}>
+                <FastImage
+                  source={{
+                    uri:
+                      userImageUrl !== ''
+                        ? userImageUrl
+                        : 'https://is3-ssl.mzstatic.com/image/thumb/Purple127/v4/f5/ca/fd/f5cafd96-f3a4-8ec1-37b0-2e82f8bdea77/source/512x512bb.jpg',
+                  }}
+                  style={styles.profileImageStyle}
+                />
+              </TouchableOpacity>
             </View>
             <View style={styles.followerContainer}>
               <TouchableOpacity style={styles.followingTextContainer}>
@@ -222,6 +228,27 @@ export default function ProfileScreen() {
             <ProfileReelCompo userID={auth().currentUser?.uid} />
           )}
           {selectedTab === 2 && <ProfileUserTagsCompo />}
+          {showUserImageModal && (
+            <Modal style={{backgroundColor: 'transparent'}}>
+              <ScreenComponent style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                <View style={styles.userImageModalContainer}>
+                  <TouchableOpacity
+                    style={styles.closeIconContainerModal}
+                    onPress={() => setShowUserImageModal(false)}>
+                    <Image
+                      source={require('../../assets/close.png')}
+                      style={styles.closeIconModal}
+                    />
+                  </TouchableOpacity>
+                  <FastImage
+                    source={{uri: userImageUrl}}
+                    style={{width: '96%', height: '90%'}}
+                    resizeMode="contain"
+                  />
+                </View>
+              </ScreenComponent>
+            </Modal>
+          )}
         </View>
       </ScreenComponent>
       <MyIndicator visible={laoding} />
