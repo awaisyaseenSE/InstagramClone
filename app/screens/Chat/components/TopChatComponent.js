@@ -1,46 +1,67 @@
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
-import colors from '../../../styles/colors';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../../themes/ThemeContext';
+import FastImage from 'react-native-fast-image';
+import fontFamily from '../../../styles/fontFamily';
+import navigationStrings from '../../../navigation/navigationStrings';
 
-const TopChatComponent = ({
-  onPressRight,
-  rightIcon = '',
-  label,
-  rightIconStyle,
-  rightIconContainerStyle,
-  labelStyle,
-}) => {
+const TopChatComponent = ({userData = null}) => {
   const navigation = useNavigation();
   const {theme} = useTheme();
   return (
-    <View style={styles.container}>
-      <View style={styles.backIconContainer}>
+    <View style={[styles.container, {borderBottomColor: theme.gray}]}>
+      <View style={styles.profileDetailContainer}>
         <TouchableOpacity
-          style={styles.backIconMainContainer}
+          style={styles.backIconContainer}
           onPress={() => navigation.goBack()}>
           <Image
             source={require('../../../assets/back.png')}
-            style={styles.iconStyle}
+            style={[styles.backIcon, {tintColor: theme.text}]}
           />
         </TouchableOpacity>
-        <Text style={{...styles.text, ...labelStyle, color: theme.text}}>
-          {label}
-        </Text>
+        <TouchableOpacity
+          style={styles.profileImageContainer}
+          onPress={() =>
+            navigation.navigate(navigationStrings.USER_PROFILE, {
+              userUid: userData?.id,
+            })
+          }>
+          <FastImage
+            style={styles.profileImageStyle}
+            source={{
+              uri:
+                userData?.imageUrl !== ''
+                  ? userData?.imageUrl
+                  : 'https://i.pinimg.com/736x/d4/29/1e/d4291ea760fcbf77ef282cb83ab7127b.jpg',
+            }}
+          />
+          <View>
+            <Text style={[styles.userNameStyle, {color: theme.light}]}>
+              {userData?.fullName}
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={{...styles.backIconMainContainer, ...rightIconContainerStyle}}
-        onPress={onPressRight}>
-        <Image
-          source={
-            rightIcon !== ''
-              ? rightIcon
-              : require('../../../assets/tab_search.png')
-          }
-          style={{...styles.iconStyle, ...rightIconStyle}}
-        />
-      </TouchableOpacity>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <TouchableOpacity style={styles.rightIconsContainer}>
+          <Image
+            source={require('../../../assets/call.png')}
+            style={[styles.rightIcons, {tintColor: theme.light}]}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.rightIconsContainer, {marginLeft: 12}]}>
+          <Image
+            source={require('../../../assets/video_call.png')}
+            style={[styles.rightIcons, {tintColor: theme.light, width: 26}]}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -50,41 +71,47 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 6,
+    paddingTop: 6,
+    borderBottomWidth: 0.2,
+    paddingBottom: 12,
+    paddingHorizontal: 12,
+  },
+  backIcon: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
   },
   backIconContainer: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+  profileImageStyle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  profileDetailContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  iconStyle: {
-    width: 18,
-    height: 18,
-    resizeMode: 'contain',
-    tintColor: colors.black,
-  },
-  backIconMainContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // shadowColor: 'grey',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 2,
-    // },
-    // shadowOpacity: 0.5,
-    // shadowRadius: 5,
-    // elevation: 5,
-    borderWidth: 1,
-    borderColor: colors.borderColor,
-  },
-  text: {
+  userNameStyle: {
     fontSize: 14,
-    color: colors.black,
-    marginLeft: 20,
+    fontFamily: fontFamily.medium,
+    marginLeft: 10,
+  },
+  profileImageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 12,
+  },
+  rightIcons: {
+    width: 20,
+    height: 20,
+    resizeMode: 'cover',
+  },
+  rightIconsContainer: {
+    paddingVertical: 6,
+    paddingHorizontal: 4,
   },
 });
 

@@ -19,41 +19,25 @@ const ShowDateMessagesCompo = ({date}) => {
   const {theme} = useTheme();
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}>
-      <View
-        style={{
-          height: 1,
-          backgroundColor: theme.gray,
-          flex: 1,
-        }}
-      />
+    <View style={styles.container}>
       <Text style={[styles.messageDateStyle, {color: theme.gray}]}>
         {dateOfMsg}
       </Text>
-      <View
-        style={{
-          height: 1,
-          backgroundColor: theme.gray,
-          flex: 1,
-        }}
-      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
   messageDateStyle: {
     textAlign: 'center',
     marginVertical: 10,
     marginHorizontal: 12,
-    fontFamily: 'UberMove-Medium',
     color: colors.gray,
-    fontSize: 14,
+    fontSize: 12,
   },
 });
 

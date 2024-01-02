@@ -29,6 +29,7 @@ export const lightTheme = {
   userProfileBlue: '#0395F7',
   userProfileGray: '#EFEFEF',
   userFollowerGrayText: '#6D6D6D',
+  chatTextInputBg: '#EFEFEF',
 };
 
 export const darkTheme = {
@@ -62,4 +63,5 @@ export const darkTheme = {
   userProfileBlue: '#0395F7',
   userProfileGray: '#262626',
   userFollowerGrayText: '#AEAEAE',
+  chatTextInputBg: '#262626',
 };

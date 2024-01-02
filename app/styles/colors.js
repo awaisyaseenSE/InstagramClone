@@ -23,8 +23,9 @@ export default {
   grey: '#A4A4B4',
   offWhite: '#FAF9F6',
   whiteOpacity70: '#FFFFFFB2',
-  lightBlue: '#335AFF1F',
+  lightBlue: '#088BF0',
   inputBorderColor: '#E8E8E8',
   inputBg: '#F7F7FC',
   lightOffWhite: '#EDEDED',
+  purple: '#6837D1',
 };
