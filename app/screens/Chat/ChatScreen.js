@@ -7,6 +7,8 @@ import {
   Image,
   StyleSheet,
   Modal,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ChatStyle from '../style/ChatStyle';
@@ -28,6 +30,10 @@ import askPermissionsEasy from '../../utils/askPermissionsEasy';
 import {launchImageLibrary} from 'react-native-image-picker';
 import colors from '../../styles/colors';
 import Video from 'react-native-video';
+import SoundRecorder from 'react-native-sound-recorder';
+import SoundPlayer from 'react-native-sound-player';
+import BackgroundTimer from 'react-native-background-timer';
+import RecordingComponent from './components/RecordingComponent';
 
 export default function ChatScreen({route}) {
   const routeData = route?.params;
@@ -46,6 +52,8 @@ export default function ChatScreen({route}) {
   const [replyId, setReplyId] = useState('');
   const [sendShow, setSendShow] = useState(false);
   const [showMediaModal, setShowMediaModal] = useState(false);
+  const [recordingModal, setRecordingModal] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const askingPermission = askPermissionsEasy();
   var isMounted = false;
 
@@ -187,6 +195,69 @@ export default function ChatScreen({route}) {
     setShowMediaModal(false);
   };
 
+  const onStartRecord = async () => {
+    if (Platform.OS === 'android') {
+      const grants = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      );
+
+      if (grants === PermissionsAndroid.RESULTS.GRANTED) {
+        SoundRecorder.start(
+          SoundRecorder.PATH_CACHE + '/' + Date.now() + '.mp4',
+        )
+          .then(function () {})
+          .catch(function (error) {
+            console.log('error', error);
+          });
+      }
+    } else {
+      SoundRecorder.start(SoundRecorder.PATH_CACHE + '/' + Date.now() + '.mp4')
+        .then(function () {})
+        .catch(function (error) {
+          console.log('error', error);
+        });
+    }
+  };
+
+  const onStopRecord = async () => {
+    SoundRecorder.stop()
+      .then(function (result) {
+        var path = result.path;
+        let voiceDuration = result.duration;
+
+        // confirmAndSendMesssage(path, '', true);
+        confirmAndSendMesssage(path, voiceDuration, true);
+      })
+      .catch(function (error) {
+        console.log('error', error);
+      });
+  };
+
+  const startPlaying = item => {
+    var temp = messages;
+    temp.forEach(each => {
+      if (item.message === each.message) {
+        each.isPlaying = true;
+      } else {
+        each.isPlaying = false;
+      }
+    });
+
+    setMessages([...temp]);
+  };
+
+  const stopPlaying = item => {
+    var temp = messages;
+    temp.forEach(each => {
+      if (item.message === each.message) {
+        each.isPlaying = false;
+      }
+    });
+    setMessages([...temp]);
+    SoundPlayer.stop();
+    BackgroundTimer.stopBackgroundTimer();
+  };
+
   const confirmAndSendMesssage = (filePath, extraText, ifAudio) => {
     setLoading(true);
     // const childPath = 'chatImages/' + Date.now() + '.png';
@@ -200,7 +271,7 @@ export default function ChatScreen({route}) {
       childPath = 'chatVideos/' + Date.now() + '.mp4';
       mediaType = 'video';
     } else {
-      childPath = '';
+      childPath = 'chatImages/' + Date.now() + '.jpg';
       mediaType = '';
     }
 
@@ -227,7 +298,6 @@ export default function ChatScreen({route}) {
       .catch(e => {
         console.log('uploading image error => ', e);
         setLoading(false);
-        setIsImageLoading(false);
       });
   };
 
@@ -310,6 +380,9 @@ export default function ChatScreen({route}) {
         setLoading(false);
         setNewTextMessage('');
         setSendShow(false);
+        setSelectedMedia('');
+        setSelectedMediaType('');
+        setShowMediaModal(false);
         // setIsModalVisible(false);
         // setselectedMedia('');
         // setShowImageModal(false);
@@ -327,6 +400,7 @@ export default function ChatScreen({route}) {
     <>
       <ScreenComponent style={{backgroundColor: theme.background}}>
         {pickMediaFunction()}
+        {recordingModalFunction()}
         <TopChatComponent userData={receiverData} />
         <View style={myStyles.container}>
           <FlatList
@@ -363,6 +437,7 @@ export default function ChatScreen({route}) {
           setSendShow={setSendShow}
           sendMessage={sendMessage}
           pickImage={pickImage}
+          setRecordingModal={setRecordingModal}
         />
       </ScreenComponent>
       <MyIndicator
@@ -433,11 +508,49 @@ export default function ChatScreen({route}) {
       </Modal>
     );
   }
+
+  function recordingModalFunction() {
+    return (
+      <Modal
+        visible={recordingModal}
+        animationType="slide"
+        transparent={true}
+        style={{
+          height: '100%',
+          width: '100%',
+        }}>
+        <RecordingComponent
+          onPressCancel={() => {
+            SoundRecorder.stop()
+              .then(function (result) {
+                console.log('result', result);
+              })
+              .catch(function (error) {
+                console.log('error', error);
+              });
+            setIsRecording(false);
+            setRecordingModal(false);
+          }}
+          isRecording={isRecording}
+          onPressRecord={() => {
+            setIsRecording(true);
+            onStartRecord();
+          }}
+          onPressSend={() => {
+            onStopRecord();
+            setIsRecording(false);
+            setRecordingModal(false);
+          }}
+        />
+      </Modal>
+    );
+  }
 }
 
 const myStyles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 12,
     // backgroundColor: 'hotpink',
   },
   closeIcon: {

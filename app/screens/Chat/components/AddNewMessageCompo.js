@@ -23,6 +23,7 @@ const AddNewMessageCompo = ({
   setSendShow,
   sendMessage,
   pickImage,
+  setRecordingModal,
 }) => {
   const navigation = useNavigation();
   const {theme} = useTheme();
@@ -62,7 +63,11 @@ const AddNewMessageCompo = ({
             />
             {!sendShow ? (
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <TouchableOpacity style={styles.rightIconsContainer}>
+                <TouchableOpacity
+                  style={styles.rightIconsContainer}
+                  onPress={() => {
+                    setRecordingModal(true);
+                  }}>
                   <Image
                     source={require('../../../assets/microphone.png')}
                     style={[styles.rightIcons, {tintColor: theme.light}]}
