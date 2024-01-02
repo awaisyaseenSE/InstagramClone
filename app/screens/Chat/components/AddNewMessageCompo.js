@@ -24,6 +24,7 @@ const AddNewMessageCompo = ({
   sendMessage,
   pickImage,
   setRecordingModal,
+  captureImage,
 }) => {
   const navigation = useNavigation();
   const {theme} = useTheme();
@@ -40,7 +41,9 @@ const AddNewMessageCompo = ({
               styles.inputContainer,
               {backgroundColor: theme.chatTextInputBg},
             ]}>
-            <TouchableOpacity style={styles.leftIconContainer}>
+            <TouchableOpacity
+              style={styles.leftIconContainer}
+              onPress={captureImage}>
               <Image
                 source={require('../../../assets/fill_camera.png')}
                 style={styles.leftIcon}

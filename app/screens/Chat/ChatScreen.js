@@ -27,7 +27,7 @@ import AddNewMessageCompo from './components/AddNewMessageCompo';
 import ShowMessagesComponent from './components/ShowMessagesComponent';
 import ShowDateMessagesCompo from './components/ShowDateMessagesCompo';
 import askPermissionsEasy from '../../utils/askPermissionsEasy';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import colors from '../../styles/colors';
 import Video from 'react-native-video';
 import SoundRecorder from 'react-native-sound-recorder';
@@ -184,6 +184,41 @@ export default function ChatScreen({route}) {
           setSelectedMediaType(mediaType);
           setLoading(false);
           setShowMediaModal(true);
+        }
+      });
+    }
+  };
+
+  const captureImage = async () => {
+    setLoading(true);
+    // const value = await askingPermission.requestPermissionn();
+    const value = true;
+    if (value) {
+      const options = {
+        title: 'Click Photo or Record Video',
+        storageOptions: {
+          skipBackup: true,
+          path: 'images',
+        },
+        mediaType: 'mixed',
+      };
+
+      launchCamera(options, response => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+          setLoading(false);
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+          setLoading(false);
+        } else {
+          let mediaUri = response.uri || response.assets?.[0]?.uri;
+          let mediaType = response.assets?.[0]?.type;
+          // setSelectedMedia(mediaUri);
+          // setSelectedMediaType(mediaType);
+          console.log('response of capture camera Media Type is: ', mediaType);
+          console.log('response of capture camera Media Uri is: ', mediaUri);
+          setLoading(false);
+          // setShowMediaModal(true);
         }
       });
     }
@@ -438,6 +473,7 @@ export default function ChatScreen({route}) {
           sendMessage={sendMessage}
           pickImage={pickImage}
           setRecordingModal={setRecordingModal}
+          captureImage={captureImage}
         />
       </ScreenComponent>
       <MyIndicator
