@@ -15,7 +15,12 @@ const {height, width} = Dimensions.get('screen');
 
 export default function App() {
   const [splashDone, setSplashDone] = useState(false);
-  LogBox.ignoreLogs(['new NativeEventEmitter']);
+  LogBox.ignoreLogs([
+    'new NativeEventEmitter',
+    'FinishedLoading',
+    'FinishedLoadingURL',
+    'FinishedPlaying',
+  ]);
   useEffect(() => {
     setTimeout(() => {
       setSplashDone(true);
