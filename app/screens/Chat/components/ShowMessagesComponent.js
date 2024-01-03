@@ -278,7 +278,7 @@ const ShowMessagesComponent = ({
                         color:
                           item.senderID === senderId
                             ? colors.white
-                            : colors.black,
+                            : theme.text,
                       },
                     ]}>
                     {item.message}
@@ -391,28 +391,14 @@ const ShowMessagesComponent = ({
                           color:
                             item.senderID === senderId
                               ? colors.white
-                              : colors.text,
-                          marginLeft: 8,
+                              : theme.text,
+                          marginLeft: 4,
                         }}>
                         {millisToMinutesAndSeconds(item.extraText)}
                       </Text>
                     ) : null}
                   </View>
                 ) : null}
-
-                {/* <Text
-            style={[
-              styles.chatTimeText,
-              {
-                alignSelf:
-                  item.senderID === senderId ? 'flex-end' : 'flex-start',
-                marginTop: 3,
-                color:
-                  item.senderID === senderId ? colors.white : colors.black,
-              },
-            ]}>
-            {formatedTime}
-          </Text> */}
               </View>
             )}
           </Animated.View>
