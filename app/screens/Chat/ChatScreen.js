@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  Button,
   FlatList,
   TouchableOpacity,
   Image,
@@ -19,8 +18,6 @@ import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import MyIndicator from '../../components/MyIndicator';
 import {useNavigation} from '@react-navigation/native';
-import fontFamily from '../../styles/fontFamily';
-import navigationStrings from '../../navigation/navigationStrings';
 import {useTheme} from '../../themes/ThemeContext';
 import TopChatComponent from './components/TopChatComponent';
 import AddNewMessageCompo from './components/AddNewMessageCompo';
@@ -41,7 +38,6 @@ export default function ChatScreen({route}) {
   const styles = ChatStyle(theme);
   const [laoding, setLoading] = useState(false);
   const navigation = useNavigation();
-  const [allPostsData, setAllPostsData] = useState();
   const [messages, setMessages] = useState([]);
   const currentUserUid = auth().currentUser.uid;
   const [idForReceiver, setIDForReceiver] = useState('');
