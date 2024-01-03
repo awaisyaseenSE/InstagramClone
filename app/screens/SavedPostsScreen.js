@@ -80,7 +80,11 @@ export default function SavedPostsScreen() {
           )}
         </View>
       </ScreenComponent>
-      <MyIndicator visible={laoding} />
+      <MyIndicator
+        visible={laoding}
+        backgroundColor={theme.loginBackground}
+        size={'large'}
+      />
     </>
   );
 }

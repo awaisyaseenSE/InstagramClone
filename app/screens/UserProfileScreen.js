@@ -346,7 +346,11 @@ export default function UserProfileScreen({route}) {
           )}
         </View>
       </ScreenComponent>
-      <MyIndicator visible={laoding} />
+      <MyIndicator
+        visible={laoding}
+        backgroundColor={theme.loginBackground}
+        size={'large'}
+      />
     </>
   );
 }

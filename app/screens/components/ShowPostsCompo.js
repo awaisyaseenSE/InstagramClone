@@ -399,7 +399,11 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
           handleSavePost={handleSavePost}
         />
       )}
-      <MyIndicator visible={laoding} />
+      <MyIndicator
+        visible={laoding}
+        backgroundColor={theme.loginBackground}
+        size={'large'}
+      />
     </>
   );
 };

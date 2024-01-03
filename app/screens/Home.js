@@ -71,7 +71,11 @@ export default function Home({switchToScreen}) {
           </View>
         </View>
       </ScreenComponent>
-      <MyIndicator laoding={laoding} />
+      <MyIndicator
+        visible={laoding}
+        backgroundColor={theme.loginBackground}
+        size={'large'}
+      />
     </>
   );
 }
