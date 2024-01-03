@@ -17,6 +17,7 @@ import SoundPlayer from 'react-native-sound-player';
 import BackgroundTimer from 'react-native-background-timer';
 import * as Progress from 'react-native-progress';
 import Video from 'react-native-video';
+import RNFetchBlob from 'rn-fetch-blob';
 
 import {
   GestureHandlerRootView,
@@ -34,6 +35,7 @@ import Animated, {
 import ShowReplyMessageCompo from './ShowReplyMessageCompo';
 import ScreenComponent from '../../../components/ScreenComponent';
 import {useTheme} from '../../../themes/ThemeContext';
+import DownloadMediaCompo from './DownloadMediaCompo';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -468,23 +470,13 @@ const ShowMessagesComponent = ({
               onPress={() => {
                 setShowFullImage(false);
               }}
-              style={{
-                position: 'absolute',
-                top: 30,
-                right: 20,
-                backgroundColor: 'white',
-                padding: 10,
-                borderRadius: 20,
-              }}>
+              style={styles.closeIconContainer}>
               <Image
                 source={require('../../../assets/close.png')}
-                style={{
-                  width: 12,
-                  height: 12,
-                  resizeMode: 'contain',
-                }}
+                style={styles.closeIcon}
               />
             </TouchableOpacity>
+            <DownloadMediaCompo url={item.message} mediaType={item.type} />
           </View>
         </ScreenComponent>
       </Modal>
@@ -570,6 +562,19 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  closeIconContainer: {
+    position: 'absolute',
+    top: 10,
+    left: 20,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 20,
+  },
+  closeIcon: {
+    width: 12,
+    height: 12,
+    resizeMode: 'contain',
   },
 });
 
