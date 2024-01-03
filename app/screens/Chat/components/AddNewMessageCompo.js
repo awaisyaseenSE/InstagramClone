@@ -97,7 +97,7 @@ const AddNewMessageCompo = ({
                     }
                     sendMessage(newTextMessage.trim(), 'text');
                   } else {
-                    //   setRecordingModal(true);
+                    setRecordingModal(true);
                   }
                 }}>
                 <Text style={styles.sendTextStyle}>Send</Text>

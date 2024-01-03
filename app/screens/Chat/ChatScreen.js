@@ -213,12 +213,10 @@ export default function ChatScreen({route}) {
         } else {
           let mediaUri = response.uri || response.assets?.[0]?.uri;
           let mediaType = response.assets?.[0]?.type;
-          // setSelectedMedia(mediaUri);
-          // setSelectedMediaType(mediaType);
-          console.log('response of capture camera Media Type is: ', mediaType);
-          console.log('response of capture camera Media Uri is: ', mediaUri);
+          setSelectedMedia(mediaUri);
+          setSelectedMediaType(mediaType);
           setLoading(false);
-          // setShowMediaModal(true);
+          setShowMediaModal(true);
         }
       });
     }
@@ -259,7 +257,6 @@ export default function ChatScreen({route}) {
       .then(function (result) {
         var path = result.path;
         let voiceDuration = result.duration;
-
         // confirmAndSendMesssage(path, '', true);
         confirmAndSendMesssage(path, voiceDuration, true);
       })

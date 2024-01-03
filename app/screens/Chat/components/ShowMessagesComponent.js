@@ -54,29 +54,14 @@ const ShowMessagesComponent = ({
   const screenWidth = Dimensions.get('window').width;
   const [showFullImage, setShowFullImage] = useState(false);
   const {theme} = useTheme();
-
   var isMounted = false;
-  //   useEffect(() => {
-  //     isMounted = true;
-
-  //     async function getDuration() {
-  //       const durationInfo = await SoundPlayer.getInfo();
-  //       console.log('call');
-  //       setDurationTime(durationInfo.duration);
-  //       console.log('dfdf', durationInfo.duration);
-  //     }
-  //     getDuration();
-  //     return () => (isMounted = false);
-  //   }, []);
-
-  //   console.log('item isplaying ', item.isPlaying);
 
   const getInfo = async () => {
     const info = await SoundPlayer.getInfo();
     // console.log('info of voice: ', info);
     if (info.duration !== undefined) {
       // setTotalDuration(Math.ceil(info.duration));
-      //   console.log('voice time duration is: ', Math.ceil(info.duration));
+      // console.log('voice time duration is: ', Math.ceil(info.duration));
     }
     if (info.currentTime !== undefined) {
       if (info.currentTime !== 0) {
