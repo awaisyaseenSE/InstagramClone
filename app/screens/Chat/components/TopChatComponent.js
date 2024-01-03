@@ -37,7 +37,7 @@ const TopChatComponent = ({userData = null}) => {
             }}
           />
           <View>
-            <Text style={[styles.userNameStyle, {color: theme.light}]}>
+            <Text style={[styles.userNameStyle, {color: theme.text}]}>
               {userData?.fullName}
             </Text>
           </View>
@@ -51,14 +51,14 @@ const TopChatComponent = ({userData = null}) => {
         <TouchableOpacity style={styles.rightIconsContainer}>
           <Image
             source={require('../../../assets/call.png')}
-            style={[styles.rightIcons, {tintColor: theme.light}]}
+            style={[styles.rightIcons, {tintColor: theme.text}]}
           />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.rightIconsContainer, {marginLeft: 12}]}>
           <Image
             source={require('../../../assets/video_call.png')}
-            style={[styles.rightIcons, {tintColor: theme.light, width: 26}]}
+            style={[styles.rightIcons, {tintColor: theme.text, width: 26}]}
           />
         </TouchableOpacity>
       </View>

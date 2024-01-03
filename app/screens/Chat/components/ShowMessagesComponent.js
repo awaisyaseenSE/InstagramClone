@@ -205,8 +205,8 @@ const ShowMessagesComponent = ({
                     backgroundColor:
                       item.senderID === senderId
                         ? colors.blue
-                        : colors.LightWhite,
-                    maxWidth: screenWidth / 2,
+                        : theme.chatTextInputBg,
+                    maxWidth: screenWidth / 2.5,
                     minWidth: screenWidth / 3,
                     borderBottomLeftRadius: item.senderID === senderId ? 12 : 0,
                     borderBottomRightRadius:
@@ -289,13 +289,6 @@ const ShowMessagesComponent = ({
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
-                      backgroundColor:
-                        item.senderID === senderId
-                          ? colors.darkBlue
-                          : colors.white,
-                      paddingHorizontal: 10,
-                      paddingVertical: 8,
-                      borderRadius: 6,
                       justifyContent: 'space-between',
                       width: screenWidth / 3,
                     }}>
@@ -318,22 +311,10 @@ const ShowMessagesComponent = ({
                               tintColor:
                                 item.senderID === senderId
                                   ? colors.white
-                                  : colors.black,
+                                  : theme.text,
                             }}
                           />
                         </TouchableOpacity>
-                        {item.extraText !== '' ? (
-                          <Text
-                            style={{
-                              color:
-                                item.senderID === senderId
-                                  ? colors.white
-                                  : colors.black,
-                              marginLeft: 8,
-                            }}>
-                            {millisToMinutesAndSeconds(item.extraText)}
-                          </Text>
-                        ) : null}
                       </View>
                     ) : isAudioLoading ? (
                       <Progress.Circle
@@ -361,7 +342,7 @@ const ShowMessagesComponent = ({
                             tintColor:
                               item.senderID === senderId
                                 ? colors.white
-                                : colors.black,
+                                : theme.text,
                           }}
                         />
                       </TouchableOpacity>
@@ -376,7 +357,7 @@ const ShowMessagesComponent = ({
                               tintColor:
                                 item.senderID === senderId
                                   ? colors.white
-                                  : colors.black,
+                                  : theme.text,
                               marginLeft: 6,
                             },
                           ]}
@@ -386,7 +367,7 @@ const ShowMessagesComponent = ({
                       <View style={{height: 30, justifyContent: 'center'}}>
                         <Progress.Bar
                           progress={currentPlaying}
-                          width={screenWidth / 5}
+                          width={screenWidth / 6}
                           height={4}
                           color={colors.darkBlue}
                           borderColor={
@@ -397,14 +378,25 @@ const ShowMessagesComponent = ({
                           unfilledColor={colors.white}
                           style={{
                             alignSelf: 'center',
-                            // width: screenWidth * 0.2,
-                            width: screenWidth / 5,
-                            marginLeft: 10,
+                            // width: screenWidth / 5,
+                            marginLeft: 4,
                           }}
                         />
                       </View>
                       // <Text>progress bar {currentPlaying}</Text>
                     )}
+                    {item.extraText !== '' ? (
+                      <Text
+                        style={{
+                          color:
+                            item.senderID === senderId
+                              ? colors.white
+                              : colors.text,
+                          marginLeft: 8,
+                        }}>
+                        {millisToMinutesAndSeconds(item.extraText)}
+                      </Text>
+                    ) : null}
                   </View>
                 ) : null}
 
@@ -538,8 +530,9 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   soundImgStyle: {
-    width: 30,
-    height: 30,
+    // width: 30,
+    width: screenWidth / 8,
+    height: 20,
     resizeMode: 'contain',
     tintColor: colors.white,
     // backgroundColor: 'red',
