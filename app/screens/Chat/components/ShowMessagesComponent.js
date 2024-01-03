@@ -206,7 +206,7 @@ const ShowMessagesComponent = ({
                     backgroundColor:
                       item.senderID === senderId
                         ? item.type == 'text'
-                          ? colors.chatBlue
+                          ? colors.purple
                           : colors.purple
                         : theme.chatTextInputBg,
                     maxWidth: screenWidth / 2.5,

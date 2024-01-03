@@ -3,33 +3,33 @@ import React, {useEffect, useState} from 'react';
 import colors from '../../../styles/colors';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import {useTheme} from '../../../themes/ThemeContext';
 const ShowReplyMessageCompo = ({senderId, messageSender, chatId, replyId}) => {
   const [replyData, setReplyData] = useState();
   const [userName, setUserName] = useState('');
   const currenUserUid = auth().currentUser.uid;
+  const {theme} = useTheme();
   useEffect(() => {
-    firestore()
+    const unsubscribe = firestore()
       .collection('chats')
       .doc(chatId)
       .collection('messages')
       .doc(replyId)
-
       .onSnapshot(snapShot => {
         var data = snapShot.data();
-        // console.log('data: ', data);
         setReplyData(data);
-
         firestore()
           .collection('users')
           .doc(data.senderID)
           .get()
           .then(snap => {
             var userData = snap.data();
-            var name = userData.firstName + ' ' + userData.lastName;
+            var name = userData.fullName;
             setUserName(name);
           });
       });
-    // getName
+
+    return () => unsubscribe();
   }, []);
   return (
     <>
@@ -39,9 +39,9 @@ const ShowReplyMessageCompo = ({senderId, messageSender, chatId, replyId}) => {
             styles.replyMessageContainer,
             {
               backgroundColor:
-                messageSender === senderId
-                  ? colors.darkBlue
-                  : colors.lightOffWhite,
+                messageSender === senderId ? '#633FCB' : theme.background,
+              borderLeftColor:
+                messageSender === senderId ? '#262626' : theme.gray,
             },
           ]}>
           <Text
@@ -49,13 +49,9 @@ const ShowReplyMessageCompo = ({senderId, messageSender, chatId, replyId}) => {
               styles.replyheadingText,
               {
                 color:
-                  messageSender === senderId
-                    ? colors.whiteOpacity70
-                    : colors.blue,
+                  messageSender === senderId ? theme.background : theme.text,
               },
             ]}>
-            {/* {replyData.senderID == senderId ? 'You' : userName} */}
-            {/* {messageSender == currenUserUid ? 'You' : userName} */}
             {replyData.senderID == currenUserUid ? 'You' : userName}
           </Text>
           {replyData.type === 'text' ? (
@@ -67,7 +63,7 @@ const ShowReplyMessageCompo = ({senderId, messageSender, chatId, replyId}) => {
                     color:
                       messageSender === senderId
                         ? colors.LightWhite
-                        : colors.black,
+                        : theme.gray,
                   },
                 ]}>
                 {replyData.message.length > 20
@@ -207,7 +203,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingHorizontal: 6,
     borderLeftWidth: 4,
-    borderLeftColor: colors.black,
+
     paddingVertical: 12,
     marginBottom: 6,
     minWidth: 60,
