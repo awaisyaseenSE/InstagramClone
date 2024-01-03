@@ -27,5 +27,7 @@ export default {
   inputBorderColor: '#E8E8E8',
   inputBg: '#F7F7FC',
   lightOffWhite: '#EDEDED',
-  purple: '#6837D1',
+  purple: '#5748D3',
+  chatBlue: '#3D60E0',
+  // purple: '#6837D1',
 };
