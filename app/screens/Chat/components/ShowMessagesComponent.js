@@ -46,7 +46,6 @@ const ShowMessagesComponent = ({
   stopPlaying,
   swipeToReply,
   closeReply,
-  fullName,
 }) => {
   const senderId = auth().currentUser.uid;
   // const formatedTime1 = item.time?.getHours() + ':' + item.time?.getMinutes();
@@ -120,20 +119,20 @@ const ShowMessagesComponent = ({
   let startingPosition = 0;
   const x = useSharedValue(startingPosition);
 
-  // const eventHandler = useAnimatedGestureHandler({
-  //   onStart: (event, ctx) => {},
-  //   onActive: (event, ctx) => {
-  //     //   x.value = item.senderID === senderId ? -50 : 50;
-  //     x.value = 50;
-  //   },
-  //   onEnd: (event, ctx) => {
-  //     x.value = withSpring(startingPosition);
-  //   },
-  // });
+  const eventHandler = useAnimatedGestureHandler({
+    onStart: (event, ctx) => {},
+    onActive: (event, ctx) => {
+      // x.value = item.senderID === senderId ? 50 : -50;
+      x.value = 50;
+    },
+    onEnd: (event, ctx) => {
+      x.value = withSpring(startingPosition);
+    },
+  });
 
-  const eventHandler = () => {
-    console.log('event handler is called');
-  };
+  // const eventHandler = () => {
+  //   console.log('event handler is called');
+  // };
 
   const useAmiStyle = useAnimatedStyle(() => {
     return {
@@ -149,7 +148,7 @@ const ShowMessagesComponent = ({
           onGestureEvent={eventHandler}
           onHandlerStateChange={({nativeEvent}) => {
             if (nativeEvent.state === State.ACTIVE) {
-              // swipeToReply(item);
+              swipeToReply(item);
             }
           }}>
           <Animated.View

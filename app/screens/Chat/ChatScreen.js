@@ -45,11 +45,15 @@ export default function ChatScreen({route}) {
   const [newTextMessage, setNewTextMessage] = useState('');
   const [selectedMedia, setSelectedMedia] = useState('');
   const [selectedMediaType, setSelectedMediaType] = useState('');
+  const [replyText, setReplyText] = useState('');
   const [replyId, setReplyId] = useState('');
+  const [replyMessageType, setReplyMessageType] = useState('');
+  const [replyUserUid, setReplyUserUid] = useState('');
   const [sendShow, setSendShow] = useState(false);
   const [showMediaModal, setShowMediaModal] = useState(false);
   const [recordingModal, setRecordingModal] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [receiverName, setReceiverName] = useState('');
   const askingPermission = askPermissionsEasy();
   var isMounted = false;
 
@@ -110,6 +114,7 @@ export default function ChatScreen({route}) {
           if (documentSnapshot.exists) {
             var doc = documentSnapshot.data();
             setReceiverData({...doc, id: documentSnapshot.id});
+            setReceiverName(doc?.fullName);
             setLoading(false);
           } else {
             setLoading(false);
@@ -286,6 +291,39 @@ export default function ChatScreen({route}) {
     BackgroundTimer.stopBackgroundTimer();
   };
 
+  const swipeToReply = itemReply => {
+    let replyMessage = '';
+    if (itemReply.type === 'text') {
+      setReplyMessageType('text');
+      replyMessage =
+        itemReply.message.length > 20
+          ? itemReply.message.slice(0, 20) + '...'
+          : itemReply.message;
+    } else if (itemReply.type === 'audio') {
+      setReplyMessageType('audio');
+      replyMessage = 'Reply to Vocie!';
+    } else if (itemReply.type === 'image') {
+      setReplyMessageType('image');
+      replyMessage = 'Reply to Image!';
+    } else if (itemReply.type === 'video') {
+      setReplyMessageType('video');
+      replyMessage = 'Reply to Video!';
+    } else {
+      setReplyMessageType('file');
+      replyMessage = 'Reply to file';
+    }
+    setReplyId(itemReply._id);
+    setReplyText(replyMessage);
+    setReplyUserUid(itemReply.senderID);
+  };
+
+  const closeReply = () => {
+    setReplyId('');
+    setReplyText('');
+    setReplyMessageType('');
+    setReplyUserUid('');
+  };
+
   const confirmAndSendMesssage = (filePath, extraText, ifAudio) => {
     setLoading(true);
     // const childPath = 'chatImages/' + Date.now() + '.png';
@@ -411,11 +449,7 @@ export default function ChatScreen({route}) {
         setSelectedMedia('');
         setSelectedMediaType('');
         setShowMediaModal(false);
-        // setIsModalVisible(false);
-        // setselectedMedia('');
-        // setShowImageModal(false);
-        // setCaptionText('');
-        // closeReply();
+        closeReply();
         // setNotification();
       })
       .catch(err => {
@@ -445,9 +479,8 @@ export default function ChatScreen({route}) {
                       startPlaying(item);
                     }}
                     stopPlaying={() => stopPlaying(item)}
-                    // swipeToReply={swipeToReply}
-                    // closeReply={closeReply}
-                    // fullName={fullName}
+                    swipeToReply={swipeToReply}
+                    closeReply={closeReply}
                   />
                 );
               } else {
@@ -467,6 +500,11 @@ export default function ChatScreen({route}) {
           pickImage={pickImage}
           setRecordingModal={setRecordingModal}
           captureImage={captureImage}
+          replyText={replyText}
+          replyUserUid={replyUserUid}
+          closeReply={closeReply}
+          replyMessageType={replyMessageType}
+          receiverName={receiverName}
         />
       </ScreenComponent>
       <MyIndicator

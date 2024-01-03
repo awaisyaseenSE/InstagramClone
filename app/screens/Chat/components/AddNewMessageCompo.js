@@ -5,16 +5,12 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  Alert,
   KeyboardAvoidingView,
 } from 'react-native';
-import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React from 'react';
 import {useTheme} from '../../../themes/ThemeContext';
-import FastImage from 'react-native-fast-image';
-import fontFamily from '../../../styles/fontFamily';
-import navigationStrings from '../../../navigation/navigationStrings';
 import colors from '../../../styles/colors';
+import ShowReplyCompo from './ShowReplyCompo';
 
 const AddNewMessageCompo = ({
   newTextMessage,
@@ -25,8 +21,12 @@ const AddNewMessageCompo = ({
   pickImage,
   setRecordingModal,
   captureImage,
+  replyText,
+  replyUserUid,
+  closeReply,
+  replyMessageType,
+  receiverName,
 }) => {
-  const navigation = useNavigation();
   const {theme} = useTheme();
 
   return (
@@ -36,6 +36,15 @@ const AddNewMessageCompo = ({
         // keyboardVerticalOffset={20}
       >
         <View style={styles.container}>
+          {replyText.length > 0 ? (
+            <ShowReplyCompo
+              replyText={replyText}
+              replyUserUid={replyUserUid}
+              closeReply={closeReply}
+              replyMessageType={replyMessageType}
+              receiverName={receiverName}
+            />
+          ) : null}
           <View
             style={[
               styles.inputContainer,
