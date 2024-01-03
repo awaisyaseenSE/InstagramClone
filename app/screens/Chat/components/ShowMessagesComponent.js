@@ -318,7 +318,7 @@ const ShowMessagesComponent = ({
                       </View>
                     ) : isAudioLoading ? (
                       <Progress.Circle
-                        size={20}
+                        size={18}
                         indeterminate={true}
                         color={
                           item.senderID === senderId
@@ -364,7 +364,7 @@ const ShowMessagesComponent = ({
                         />
                       </>
                     ) : (
-                      <View style={{height: 30, justifyContent: 'center'}}>
+                      <View style={{height: 20, justifyContent: 'center'}}>
                         <Progress.Bar
                           progress={currentPlaying}
                           width={screenWidth / 6}
