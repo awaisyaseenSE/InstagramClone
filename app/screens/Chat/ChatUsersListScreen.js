@@ -98,7 +98,9 @@ export default function ChatUsersListScreen() {
               {backgroundColor: theme.userProfileGray},
             ]}
             activeOpacity={0.8}
-            onPress={() => Alert.alert('Search bar')}>
+            onPress={() =>
+              navigation.navigate(navigationStrings.CHAT_SEARCH_SCREEN)
+            }>
             <Image
               source={require('../../assets/tab_search.png')}
               style={[styles.searchIcon, {tintColor: theme.light}]}

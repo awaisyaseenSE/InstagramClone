@@ -32,7 +32,7 @@ export default function SearchPeopleScreen() {
   const [allUsers, setAllUsers] = useState([]);
   const [showCrossIcon, setShowCrossIcon] = useState(false);
 
-  const searchPost = async () => {
+  const searchPeople = async () => {
     try {
       const filtered = allUsers.filter(user => {
         return user.fullName.toLowerCase().includes(searchText.toLowerCase());
@@ -47,7 +47,7 @@ export default function SearchPeopleScreen() {
   };
   useEffect(() => {
     if (searchText !== '') {
-      searchPost();
+      searchPeople();
     } else {
       setUserData([]);
     }
@@ -73,7 +73,7 @@ export default function SearchPeopleScreen() {
   }, []);
 
   const profileNavigationHandler = item => {
-    if (item.userUid == auth().currentUser.uid) {
+    if (item.id == auth().currentUser.uid) {
       return null;
     } else {
       navigation.navigate(navigationStrings.USER_PROFILE, {
