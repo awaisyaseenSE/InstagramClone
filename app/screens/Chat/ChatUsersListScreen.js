@@ -50,6 +50,24 @@ export default function ChatUsersListScreen() {
     }
   };
 
+  const getGroupData = () => {
+    try {
+      firestore()
+        .collection('chats')
+        .where('members', 'array-contains', auth().currentUser?.uid)
+        .get()
+        .then(res => {
+          res.docs.map(ele => {
+            console.log(ele.data());
+            console.log(ele.id);
+          });
+        })
+        .catch(err => console.log(err));
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  };
+
   const getChatsData = () => {
     try {
       firestore()
@@ -81,6 +99,7 @@ export default function ChatUsersListScreen() {
     isMounted = true;
     getUsersList();
     getChatsData();
+    getGroupData();
     return () => (isMounted = false);
   }, []);
 
