@@ -9,6 +9,7 @@ const TopCompoWithHeading = ({
   onPress,
   rightIcon = '',
   onPressRight,
+  rightIconStyle,
 }) => {
   const {theme} = useTheme();
   return (
@@ -36,7 +37,11 @@ const TopCompoWithHeading = ({
           onPress={onPressRight}>
           <Image
             source={rightIcon}
-            style={[styles.backIcon, {tintColor: theme.commentGrayText}]}
+            style={[
+              styles.backIcon,
+              {tintColor: theme.commentGrayText},
+              rightIconStyle,
+            ]}
           />
         </TouchableOpacity>
       )}

@@ -90,6 +90,11 @@ export default function ChatUsersListScreen() {
         <TopCompoWithHeading
           title={auth().currentUser?.displayName}
           onPress={() => navigation.goBack()}
+          rightIcon={require('../../assets/create-group-icon.png')}
+          rightIconStyle={{width: 28, height: 28, tintColor: theme.text}}
+          onPressRight={() =>
+            navigation.navigate(navigationStrings.CREATE_GROUP_SCREEN)
+          }
         />
         <View style={styles.searchBarContainer}>
           <TouchableOpacity

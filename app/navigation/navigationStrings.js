@@ -25,4 +25,6 @@ export default {
   EXPLORE_SCREEN: 'ExploreScreen',
   CHAT_USERS_LIST_SCREEN: 'ChatUsersListScreen',
   CHAT_SEARCH_SCREEN: 'ChatSearchScreen',
+  CREATE_GROUP_SCREEN: 'CreateGroupScreen',
+  GROUP_CHAT_SCREEN: 'GroupChatScreen',
 };
