@@ -95,7 +95,11 @@ export default function ReelsScreen({switchToScreen}) {
           />
         </TouchableOpacity>
       </View>
-      <MyIndicator visible={laoding} />
+      <MyIndicator
+        visible={laoding}
+        backgroundColor={theme.loginBackground}
+        size={'large'}
+      />
     </>
   );
 }

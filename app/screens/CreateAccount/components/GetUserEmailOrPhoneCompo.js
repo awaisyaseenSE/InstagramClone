@@ -77,6 +77,7 @@ const GetUserEmailOrPhoneCompo = ({
         following: [],
         dateOfJoin: new Date(),
         savedPosts: [],
+        searchPeople: [],
       });
       return true;
     } catch (error) {

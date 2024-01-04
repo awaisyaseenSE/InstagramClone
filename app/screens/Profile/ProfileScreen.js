@@ -251,7 +251,11 @@ export default function ProfileScreen() {
           )}
         </View>
       </ScreenComponent>
-      <MyIndicator visible={laoding} />
+      <MyIndicator
+        visible={laoding}
+        backgroundColor={theme.loginBackground}
+        size={'large'}
+      />
     </>
   );
 }

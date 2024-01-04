@@ -11,6 +11,7 @@ import ChatSearchTopCompo from './components/ChatSearchTopCompo';
 import navigationStrings from '../../navigation/navigationStrings';
 import fontFamily from '../../styles/fontFamily';
 import generateChatId from '../../components/GenerateChatId';
+import ShowPreviousSearchUserCompo from './components/ShowPreviousSearchUserCompo';
 
 export default function ChatSearchScreen() {
   const {theme} = useTheme();
@@ -21,6 +22,38 @@ export default function ChatSearchScreen() {
   const currentUserId = auth().currentUser?.uid;
   const [allUsers, setAllUsers] = useState([]);
   const [showCrossIcon, setShowCrossIcon] = useState(false);
+  const [previousSearched, setPreviousSearched] = useState([]);
+  var isMoundted = false;
+
+  useEffect(() => {
+    isMoundted = true;
+    getPreviousSearchUserList();
+    return () => (isMoundted = false);
+  }, []);
+
+  const getPreviousSearchUserList = () => {
+    try {
+      setLoading(true);
+      setPreviousSearched([]);
+      firestore()
+        .collection('users')
+        .doc(auth().currentUser.uid)
+        .onSnapshot(snap => {
+          if (snap.exists) {
+            var data = snap.data();
+            setPreviousSearched(data.searchPeople);
+            setLoading(false);
+            // console.log('get user data funtion is called');
+          } else {
+            setLoading(false);
+            // console.log('get user data funtion is not called');
+          }
+        });
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
 
   const searchPeople = async () => {
     try {
@@ -140,6 +173,25 @@ export default function ChatSearchScreen() {
           setShowCrossIcon={setShowCrossIcon}
         />
         <View style={{flex: 1, marginTop: 12}}>
+          {searchText === '' && previousSearched.length > 0 && (
+            <>
+              <View style={{paddingHorizontal: 20}}>
+                <Text style={[styles.text, {color: theme.text}]}>Recent</Text>
+                <FlatList
+                  data={previousSearched}
+                  renderItem={({item}) => (
+                    <ShowPreviousSearchUserCompo
+                      item={item}
+                      getPreviousSearchUserList={getPreviousSearchUserList}
+                    />
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
+                  showsVerticalScrollIndicator={false}
+                  ItemSeparatorComponent={<View style={{marginVertical: 10}} />}
+                />
+              </View>
+            </>
+          )}
           <FlatList
             data={userData}
             renderItem={renderItem}
@@ -159,7 +211,7 @@ export default function ChatSearchScreen() {
 }
 
 const styles = StyleSheet.create({
-  profileImage: {width: 70, height: 70, borderRadius: 35},
+  profileImage: {width: 50, height: 50, borderRadius: 25},
   userDataContainer: {
     paddingHorizontal: 20,
     flexDirection: 'row',
@@ -173,5 +225,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     marginTop: 4,
+  },
+  text: {
+    fontSize: 16,
+    fontFamily: fontFamily.semiBold,
+    marginBottom: 20,
   },
 });
