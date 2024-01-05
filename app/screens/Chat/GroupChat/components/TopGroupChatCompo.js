@@ -25,7 +25,7 @@ const TopGroupChatCompo = ({groupData, onPress}) => {
         }
       });
     return () => unsubscribe();
-  }, []);
+  }, [groupData]);
 
   return (
     <View style={styles.container}>

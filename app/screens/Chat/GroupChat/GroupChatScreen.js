@@ -67,7 +67,7 @@ export default function GroupChatScreen({route}) {
             time: doc.data().time.toDate(),
           }));
           setMessages(newMessages);
-          console.log('messages in group is: ', newMessages.length);
+          console.log('Total messages in group is: ', newMessages.length);
           //   formatMessages(newMessages);
           setLoading(false);
         });

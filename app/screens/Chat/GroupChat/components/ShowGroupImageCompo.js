@@ -3,8 +3,6 @@ import React, {useState, useEffect} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import FastImage from 'react-native-fast-image';
-import MyIndicator from '../../../../components/MyIndicator';
-import colors from '../../../../styles/colors';
 import {useTheme} from '../../../../themes/ThemeContext';
 
 const ShowGroupImageCompo = ({userList}) => {
@@ -37,18 +35,11 @@ const ShowGroupImageCompo = ({userList}) => {
         <>
           <View>
             <FastImage
-              style={{width: 50, height: 50, borderRadius: 25}}
+              style={styles.profileImage}
               source={{uri: auth().currentUser?.photoURL}}
             />
             <FastImage
-              style={{
-                width: 54,
-                height: 54,
-                borderRadius: 26,
-                position: 'absolute',
-                top: 10,
-                left: 15,
-              }}
+              style={styles.groupMemberImage}
               source={
                 groupMemberImage === ''
                   ? require('../../../../assets/avatar.png')
@@ -62,6 +53,16 @@ const ShowGroupImageCompo = ({userList}) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  profileImage: {width: 50, height: 50, borderRadius: 25},
+  groupMemberImage: {
+    width: 54,
+    height: 54,
+    borderRadius: 26,
+    position: 'absolute',
+    top: 10,
+    left: 15,
+  },
+});
 
 export default ShowGroupImageCompo;
