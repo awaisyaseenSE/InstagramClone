@@ -217,7 +217,9 @@ export default function ChatScreen({route}) {
           setSelectedMedia(mediaUri);
           setSelectedMediaType(mediaType);
           setLoading(false);
-          setShowMediaModal(true);
+          if (mediaUri !== undefined && mediaUri !== null && mediaUri !== '') {
+            setShowMediaModal(true);
+          }
         }
       });
     }
@@ -461,7 +463,7 @@ export default function ChatScreen({route}) {
   return (
     <>
       <ScreenComponent style={{backgroundColor: theme.background}}>
-        {pickMediaFunction()}
+        {showMediaModal && pickMediaFunction()}
         {recordingModalFunction()}
         <TopChatComponent userData={receiverData} />
         <View style={myStyles.container}>
@@ -540,13 +542,13 @@ export default function ChatScreen({route}) {
                 {backgroundColor: theme.loginBackground},
               ]}>
               <View style={{alignItems: 'center'}}>
-                {selectedMediaType.startsWith('image') && (
+                {selectedMediaType?.startsWith('image') && (
                   <FastImage
                     source={{uri: selectedMedia}}
                     style={myStyles.modalImageStyle}
                   />
                 )}
-                {selectedMediaType.startsWith('video') && (
+                {selectedMediaType?.startsWith('video') && (
                   <Video
                     style={myStyles.modalImageStyle}
                     source={{uri: selectedMedia}}
