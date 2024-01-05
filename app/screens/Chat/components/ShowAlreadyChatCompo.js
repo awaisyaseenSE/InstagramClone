@@ -132,15 +132,21 @@ const ShowAlreadyChatCompo = ({data, onPress}) => {
               </View>
             ) : (
               <View style={{flexDirection: 'row'}}>
-                <Text style={{fontSize: 15, color: colors.black, flex: 1}}>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: theme.gray,
+                    flex: 1,
+                    marginTop: 4,
+                  }}>
                   Tap to start a conversation
                 </Text>
-                <Text
+                {/* <Text
                   style={{
                     color: colors.black,
                   }}>
                   {lastMessageTime}
-                </Text>
+                </Text> */}
               </View>
             )
           ) : (

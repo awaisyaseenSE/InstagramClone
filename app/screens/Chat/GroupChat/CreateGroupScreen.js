@@ -34,6 +34,7 @@ export default function CreateGroupScreen() {
   const currentUserId = auth().currentUser.uid;
   const [allUsers, setAllUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([currentUserId]);
+  const [selectedName, setSelectedName] = useState([]);
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -54,7 +55,7 @@ export default function CreateGroupScreen() {
     return () => unsubscribe();
   }, []);
 
-  const handleAddMemberForGroup = memId => {
+  const handleAddMemberForGroup = (memId, memName) => {
     const uid = memId;
     // Check if the user is already selected, if yes, remove them; otherwise, add them to the selectedUsers array
     if (selectedUsers.includes(uid)) {
@@ -64,6 +65,14 @@ export default function CreateGroupScreen() {
       setSelectedUsers(updatedUsers);
     } else {
       setSelectedUsers([...selectedUsers, uid]);
+    }
+    if (selectedName.includes(memName)) {
+      const updatedUsersName = selectedName.filter(
+        selectedN => selectedN !== memName,
+      );
+      setSelectedName(updatedUsersName);
+    } else {
+      setSelectedName([...selectedName, memName]);
     }
   };
 
@@ -106,13 +115,37 @@ export default function CreateGroupScreen() {
             setGroupName={setGroupName}
             onPress={() => navigation.goBack()}
           />
+          <View style={styles.selectedUsersNamesContainer}>
+            <Text style={[styles.textStyle, {color: theme.lightblack}]}>
+              To:
+            </Text>
+            <FlatList
+              data={selectedName}
+              renderItem={({item}) => (
+                <View
+                  style={[
+                    styles.selectUserContainer,
+                    {backgroundColor: theme.chatTextInputBg},
+                  ]}>
+                  <Text style={[styles.userNameStyle, {color: theme.text}]}>
+                    {item}
+                  </Text>
+                </View>
+              )}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
           <View style={{flex: 1}}>
             <FlatList
               data={allUsers}
               renderItem={({item}) => (
                 <ShowAllUsersCreateGroupCompo
                   item={item}
-                  onPress={() => handleAddMemberForGroup(item.id)}
+                  onPress={() =>
+                    handleAddMemberForGroup(item.id, item.fullName)
+                  }
                   selectedUsers={selectedUsers}
                 />
               )}
@@ -146,5 +179,28 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: 'center',
     paddingVertical: 6,
+  },
+  textStyle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginRight: 12,
+  },
+  userNameStyle: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  selectedUsersNamesContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 40,
+    // backgroundColor: 'red',
+  },
+  selectUserContainer: {
+    marginRight: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    borderRadius: 12,
   },
 });
