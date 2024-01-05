@@ -77,10 +77,11 @@ export default function GroupChatScreen({route}) {
             _id: doc.id,
             isPlaying: false,
             time: doc.data().time.toDate(),
+            groupId: groupId,
+            groupChatId: doc.id,
           }));
           // setMessages(newMessages);
           formatMessages(newMessages);
-          console.log('Total messages in group is: ', newMessages.length);
           setLoading(false);
         });
     } catch (error) {

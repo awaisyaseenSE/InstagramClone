@@ -36,6 +36,9 @@ import ShowReplyMessageCompo from './ShowReplyMessageCompo';
 import ScreenComponent from '../../../components/ScreenComponent';
 import {useTheme} from '../../../themes/ThemeContext';
 import DownloadMediaCompo from './DownloadMediaCompo';
+import firestore from '@react-native-firebase/firestore';
+import {useNavigation} from '@react-navigation/native';
+import navigationStrings from '../../../navigation/navigationStrings';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -59,6 +62,8 @@ const ShowMessagesComponent = ({
   const [isAudioLoading, setIsAudioLoading] = useState(true);
   const [pauseVideo, setPauseVideo] = useState(true);
   const [showFullImage, setShowFullImage] = useState(false);
+  const [senderImageUrl, setSenderImageUrl] = useState('');
+  const navigation = useNavigation();
   const {theme} = useTheme();
   var isMounted = false;
 
@@ -140,6 +145,29 @@ const ShowMessagesComponent = ({
     };
   });
 
+  useEffect(() => {
+    const unsubscribe = firestore()
+      .collection('users')
+      .doc(item.senderID)
+      .onSnapshot(snap => {
+        if (snap.exists) {
+          var data = snap.data();
+          setSenderImageUrl(data.imageUrl);
+        }
+      });
+    return () => unsubscribe();
+  }, []);
+
+  const profileNavigationHandler = uid => {
+    if (uid === senderId) {
+      return null;
+    } else {
+      navigation.navigate(navigationStrings.USER_PROFILE, {
+        userUid: uid,
+      });
+    }
+  };
+
   return (
     <>
       <GestureHandlerRootView>
@@ -159,158 +187,208 @@ const ShowMessagesComponent = ({
               },
               useAmiStyle,
             ]}>
-            {item.type == 'image' ? (
-              <>
-                <TouchableOpacity onPress={() => setShowFullImage(true)}>
-                  <FastImage
-                    source={{uri: item.message}}
-                    style={[styles.imageStyle]}
-                  />
-                </TouchableOpacity>
-              </>
-            ) : null}
-            {item.type == 'video' ? (
-              <>
-                <TouchableOpacity onPress={() => setShowFullImage(true)}>
-                  <Video
-                    style={[styles.imageStyle]}
-                    source={{uri: item.message}}
-                    resizeMode="cover"
-                    poster="https://e1.pxfuel.com/desktop-wallpaper/802/816/desktop-wallpaper-black-iphone-7-posted-by-michelle-mercado-black-ios.jpg"
-                    posterResizeMode="cover"
-                    repeat
-                    paused={pauseVideo}
-                  />
-                  <View style={styles.videoPlayBtnWrapepr}>
-                    <TouchableOpacity
-                      style={styles.videoPlayBtnIconContainer}
-                      onPress={() => setPauseVideo(!pauseVideo)}>
-                      <Image
-                        source={
-                          pauseVideo
-                            ? require('../../../assets/ic_play.png')
-                            : require('../../../assets/pause-button.png')
-                        }
-                        style={styles.videoPlayBtnIcon}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </TouchableOpacity>
-              </>
-            ) : null}
-            {item.type !== 'image' && item.type !== 'video' && (
-              <View
-                style={[
-                  styles.container,
-                  {
-                    backgroundColor:
-                      item.senderID === senderId
-                        ? item.type == 'text'
-                          ? colors.purple
-                          : colors.purple
-                        : theme.chatTextInputBg,
-                    maxWidth: screenWidth / 2.5,
-                    minWidth: screenWidth / 3,
-                    borderBottomLeftRadius: item.senderID === senderId ? 12 : 0,
-                    borderBottomRightRadius:
-                      item.senderID === senderId ? 0 : 12,
-                  },
-                ]}>
-                {item.replyId !== undefined ? (
-                  <ShowReplyMessageCompo
-                    senderId={senderId}
-                    messageSender={item.senderID}
-                    chatId={item.chatID}
-                    replyId={item.replyId}
-                  />
-                ) : null}
-
-                {item.type == 'file' ? (
+            <View style={{flexDirection: 'row'}}>
+              {item.senderID !== senderId &&
+                item.groupId !== undefined &&
+                item.groupId !== null &&
+                item.groupId !== '' && (
                   <TouchableOpacity
-                    onPress={() => {
-                      let properUrl = item.message;
-
-                      if (!/^https?:\/\//i.test(item.message)) {
-                        properUrl = `http://${item.message}`;
-                      }
-
-                      Linking.openURL(properUrl).catch(error => {
-                        console.log(error);
-                      });
-                    }}
-                    style={{
-                      flexDirection: 'row',
-                      paddingRight: 10,
-                    }}>
-                    <Image
-                      source={require('../../../assets/ic_document.png')}
-                      style={[
-                        styles.iconDocument,
-                        {
-                          tintColor:
-                            item.senderID === senderId
-                              ? colors.offWhite
-                              : colors.black,
-                        },
-                      ]}
+                    onPress={() => profileNavigationHandler(item.senderID)}>
+                    <FastImage
+                      source={{
+                        uri:
+                          senderImageUrl !== ''
+                            ? senderImageUrl
+                            : 'https://www.shareicon.net/data/512x512/2015/09/18/103160_man_512x512.png',
+                      }}
+                      style={styles.userProfileImage}
                     />
-
-                    {item.extraText !== '' ? (
-                      <Text
-                        style={[
-                          styles.chatTextStyle,
-                          {
-                            color:
-                              item.senderID === senderId
-                                ? colors.white
-                                : colors.black,
-                            marginLeft: 6,
-                          },
-                        ]}>
-                        {item.extraText}
-                      </Text>
-                    ) : null}
                   </TouchableOpacity>
-                ) : null}
+                )}
+              {item.type == 'image' ? (
+                <>
+                  <TouchableOpacity onPress={() => setShowFullImage(true)}>
+                    <FastImage
+                      source={{uri: item.message}}
+                      style={[styles.imageStyle]}
+                    />
+                  </TouchableOpacity>
+                </>
+              ) : null}
+              {item.type == 'video' ? (
+                <>
+                  <TouchableOpacity onPress={() => setShowFullImage(true)}>
+                    <Video
+                      style={[styles.imageStyle]}
+                      source={{uri: item.message}}
+                      resizeMode="cover"
+                      poster="https://e1.pxfuel.com/desktop-wallpaper/802/816/desktop-wallpaper-black-iphone-7-posted-by-michelle-mercado-black-ios.jpg"
+                      posterResizeMode="cover"
+                      repeat
+                      paused={pauseVideo}
+                    />
+                    <View style={styles.videoPlayBtnWrapepr}>
+                      <TouchableOpacity
+                        style={styles.videoPlayBtnIconContainer}
+                        onPress={() => setPauseVideo(!pauseVideo)}>
+                        <Image
+                          source={
+                            pauseVideo
+                              ? require('../../../assets/ic_play.png')
+                              : require('../../../assets/pause-button.png')
+                          }
+                          style={styles.videoPlayBtnIcon}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
+                </>
+              ) : null}
+              {item.type !== 'image' && item.type !== 'video' && (
+                <View
+                  style={[
+                    styles.container,
+                    {
+                      backgroundColor:
+                        item.senderID === senderId
+                          ? item.type == 'text'
+                            ? colors.purple
+                            : colors.purple
+                          : theme.chatTextInputBg,
+                      maxWidth: screenWidth / 2.5,
+                      minWidth: screenWidth / 3,
+                      borderBottomLeftRadius:
+                        item.senderID === senderId ? 12 : 0,
+                      borderBottomRightRadius:
+                        item.senderID === senderId ? 0 : 12,
+                    },
+                  ]}>
+                  {item.replyId !== undefined ? (
+                    <ShowReplyMessageCompo
+                      senderId={senderId}
+                      messageSender={item.senderID}
+                      chatId={item.chatID}
+                      replyId={item.replyId}
+                    />
+                  ) : null}
 
-                {item.type == 'text' ? (
-                  <Text
-                    style={[
-                      styles.chatTextStyle,
-                      {
-                        color:
-                          item.senderID === senderId
-                            ? colors.white
-                            : theme.text,
-                      },
-                    ]}>
-                    {item.message}
-                  </Text>
-                ) : null}
-                {item.type === 'audio' ? (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      width: screenWidth / 3,
-                    }}>
-                    {item.isPlaying === false ? (
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                  {item.type == 'file' ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        let properUrl = item.message;
+
+                        if (!/^https?:\/\//i.test(item.message)) {
+                          properUrl = `http://${item.message}`;
+                        }
+
+                        Linking.openURL(properUrl).catch(error => {
+                          console.log(error);
+                        });
+                      }}
+                      style={{
+                        flexDirection: 'row',
+                        paddingRight: 10,
+                      }}>
+                      <Image
+                        source={require('../../../assets/ic_document.png')}
+                        style={[
+                          styles.iconDocument,
+                          {
+                            tintColor:
+                              item.senderID === senderId
+                                ? colors.offWhite
+                                : colors.black,
+                          },
+                        ]}
+                      />
+
+                      {item.extraText !== '' ? (
+                        <Text
+                          style={[
+                            styles.chatTextStyle,
+                            {
+                              color:
+                                item.senderID === senderId
+                                  ? colors.white
+                                  : colors.black,
+                              marginLeft: 6,
+                            },
+                          ]}>
+                          {item.extraText}
+                        </Text>
+                      ) : null}
+                    </TouchableOpacity>
+                  ) : null}
+
+                  {item.type == 'text' ? (
+                    <Text
+                      style={[
+                        styles.chatTextStyle,
+                        {
+                          color:
+                            item.senderID === senderId
+                              ? colors.white
+                              : theme.text,
+                        },
+                      ]}>
+                      {item.message}
+                    </Text>
+                  ) : null}
+                  {item.type === 'audio' ? (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: screenWidth / 3,
+                      }}>
+                      {item.isPlaying === false ? (
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setIsAudioLoading(true);
+                              startTimer();
+                              startPlaying();
+                            }}>
+                            <Image
+                              source={require('../../../assets/ic_play.png')}
+                              style={{
+                                height: 16,
+                                width: 16,
+                                //   alignSelf: 'center',
+                                resizeMode: 'contain',
+                                tintColor:
+                                  item.senderID === senderId
+                                    ? colors.white
+                                    : theme.text,
+                              }}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      ) : isAudioLoading ? (
+                        <Progress.Circle
+                          size={18}
+                          indeterminate={true}
+                          color={
+                            item.senderID === senderId
+                              ? colors.white
+                              : colors.black
+                          }
+                        />
+                      ) : (
+                        // <Text>loading</Text>
                         <TouchableOpacity
                           onPress={() => {
-                            setIsAudioLoading(true);
-                            startTimer();
-                            startPlaying();
+                            stopPlaying();
+                            BackgroundTimer.stopBackgroundTimer();
                           }}>
                           <Image
-                            source={require('../../../assets/ic_play.png')}
+                            source={require('../../../assets/pause-button.png')}
                             style={{
-                              height: 16,
-                              width: 16,
-                              //   alignSelf: 'center',
-                              resizeMode: 'contain',
+                              height: 20,
+                              width: 20,
+                              alignSelf: 'center',
                               tintColor:
                                 item.senderID === senderId
                                   ? colors.white
@@ -318,92 +396,62 @@ const ShowMessagesComponent = ({
                             }}
                           />
                         </TouchableOpacity>
-                      </View>
-                    ) : isAudioLoading ? (
-                      <Progress.Circle
-                        size={18}
-                        indeterminate={true}
-                        color={
-                          item.senderID === senderId
-                            ? colors.white
-                            : colors.black
-                        }
-                      />
-                    ) : (
-                      // <Text>loading</Text>
-                      <TouchableOpacity
-                        onPress={() => {
-                          stopPlaying();
-                          BackgroundTimer.stopBackgroundTimer();
-                        }}>
-                        <Image
-                          source={require('../../../assets/pause-button.png')}
+                      )}
+                      {item.isPlaying === false ? (
+                        <>
+                          <Image
+                            source={require('../../../assets/ic_sound.png')}
+                            style={[
+                              styles.soundImgStyle,
+                              {
+                                tintColor:
+                                  item.senderID === senderId
+                                    ? colors.white
+                                    : theme.text,
+                                marginLeft: 6,
+                              },
+                            ]}
+                          />
+                        </>
+                      ) : (
+                        <View style={{height: 20, justifyContent: 'center'}}>
+                          <Progress.Bar
+                            progress={currentPlaying}
+                            width={screenWidth / 6}
+                            height={4}
+                            color={colors.darkBlue}
+                            borderColor={
+                              item.senderID === senderId
+                                ? colors.white
+                                : colors.black
+                            }
+                            unfilledColor={colors.white}
+                            style={{
+                              alignSelf: 'center',
+                              // width: screenWidth / 5,
+                              marginLeft: 4,
+                            }}
+                          />
+                        </View>
+                        // <Text>progress bar {currentPlaying}</Text>
+                      )}
+                      {item.extraText !== '' ? (
+                        <Text
                           style={{
-                            height: 20,
-                            width: 20,
-                            alignSelf: 'center',
-                            tintColor:
+                            color:
                               item.senderID === senderId
                                 ? colors.white
                                 : theme.text,
-                          }}
-                        />
-                      </TouchableOpacity>
-                    )}
-                    {item.isPlaying === false ? (
-                      <>
-                        <Image
-                          source={require('../../../assets/ic_sound.png')}
-                          style={[
-                            styles.soundImgStyle,
-                            {
-                              tintColor:
-                                item.senderID === senderId
-                                  ? colors.white
-                                  : theme.text,
-                              marginLeft: 6,
-                            },
-                          ]}
-                        />
-                      </>
-                    ) : (
-                      <View style={{height: 20, justifyContent: 'center'}}>
-                        <Progress.Bar
-                          progress={currentPlaying}
-                          width={screenWidth / 6}
-                          height={4}
-                          color={colors.darkBlue}
-                          borderColor={
-                            item.senderID === senderId
-                              ? colors.white
-                              : colors.black
-                          }
-                          unfilledColor={colors.white}
-                          style={{
-                            alignSelf: 'center',
-                            // width: screenWidth / 5,
                             marginLeft: 4,
-                          }}
-                        />
-                      </View>
-                      // <Text>progress bar {currentPlaying}</Text>
-                    )}
-                    {item.extraText !== '' ? (
-                      <Text
-                        style={{
-                          color:
-                            item.senderID === senderId
-                              ? colors.white
-                              : theme.text,
-                          marginLeft: 4,
-                        }}>
-                        {millisToMinutesAndSeconds(item.extraText)}
-                      </Text>
-                    ) : null}
-                  </View>
-                ) : null}
-              </View>
-            )}
+                          }}>
+                          {millisToMinutesAndSeconds(item.extraText)}
+                        </Text>
+                      ) : null}
+                    </View>
+                  ) : null}
+                </View>
+              )}
+            </View>
           </Animated.View>
         </FlingGestureHandler>
       </GestureHandlerRootView>
@@ -576,6 +624,12 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     resizeMode: 'contain',
+  },
+  userProfileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
   },
 });
 

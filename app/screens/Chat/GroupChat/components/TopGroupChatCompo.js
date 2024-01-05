@@ -49,7 +49,7 @@ const TopGroupChatCompo = ({groupData, onPress}) => {
           />
           <FastImage
             source={{uri: auth().currentUser?.photoURL}}
-            style={[styles.secondprofileImage, {borderColor: theme.text}]}
+            style={[styles.secondprofileImage]}
           />
         </View>
         <Text style={[styles.groupNameStyle, {color: theme.text}]}>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     left: 8,
     top: 8,
     zIndex: 1,
-    borderWidth: 1,
+    // borderWidth: 1,
   },
 });
 
