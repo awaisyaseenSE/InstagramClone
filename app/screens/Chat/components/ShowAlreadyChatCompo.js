@@ -6,6 +6,7 @@ import firestore from '@react-native-firebase/firestore';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from '../../../themes/ThemeContext';
+import ShowGroupImageCompo from '../GroupChat/components/ShowGroupImageCompo';
 
 const ShowAlreadyChatCompo = ({data, onPress}) => {
   const [imageURL, setImageURL] = useState('');
@@ -38,28 +39,30 @@ const ShowAlreadyChatCompo = ({data, onPress}) => {
   }, [data]);
 
   const getData = () => {
-    var separate = data.chatID.split('&');
-    var id1 = separate[0];
-    var id2 = separate[1];
-    var receiverID = '';
-    if (id1 !== auth().currentUser.uid) {
-      receiverID = id1;
-    } else {
-      receiverID = id2;
-    }
+    if (data.chatID !== undefined) {
+      var separate = data.chatID.split('&');
+      var id1 = separate[0];
+      var id2 = separate[1];
+      var receiverID = '';
+      if (id1 !== auth().currentUser.uid) {
+        receiverID = id1;
+      } else {
+        receiverID = id2;
+      }
 
-    firestore()
-      .collection('users')
-      .doc(receiverID)
-      .onSnapshot(documentSnapshot => {
-        if (documentSnapshot.exists) {
-          var doc = documentSnapshot.data();
-          if (isMounted) {
-            setImageURL(doc.imageUrl);
-            setFullName(doc.fullName);
+      firestore()
+        .collection('users')
+        .doc(receiverID)
+        .onSnapshot(documentSnapshot => {
+          if (documentSnapshot.exists) {
+            var doc = documentSnapshot.data();
+            if (isMounted) {
+              setImageURL(doc.imageUrl);
+              setFullName(doc.fullName);
+            }
           }
-        }
-      });
+        });
+    }
   };
 
   return (
@@ -73,18 +76,30 @@ const ShowAlreadyChatCompo = ({data, onPress}) => {
         justifyContent: 'space-between',
       }}>
       <View style={{flexDirection: 'row', flex: 1}}>
-        <FastImage
-          source={
-            imageURL === ''
-              ? require('../../../assets/avatar.png')
-              : {uri: imageURL}
-          }
-          style={{height: 60, width: 60, borderRadius: 30}}
-        />
+        <View
+          style={{
+            width: 70,
+            height: 70,
+
+            justifyContent: 'center',
+          }}>
+          {data.chatID !== undefined ? (
+            <FastImage
+              source={
+                imageURL === ''
+                  ? require('../../../assets/avatar.png')
+                  : {uri: imageURL}
+              }
+              style={{height: 60, width: 60, borderRadius: 30}}
+            />
+          ) : (
+            <ShowGroupImageCompo userList={data?.members} />
+          )}
+        </View>
         <View
           style={{
             alignSelf: 'center',
-            marginStart: 10,
+            marginStart: 12,
             flex: 1,
           }}>
           <View
@@ -94,7 +109,7 @@ const ShowAlreadyChatCompo = ({data, onPress}) => {
               justifyContent: 'space-between',
             }}>
             <Text style={[styles.nameTextStyle, {color: theme.text}]}>
-              {fullName}
+              {data.chatID !== undefined ? fullName : data.groupName}
             </Text>
             <Text style={[styles.lastMessageTimeStyle, {color: theme.gray}]}>
               {lastMessageTime}

@@ -18,6 +18,7 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import MyIndicator from '../../components/MyIndicator';
 import ShowAlreadyChatCompo from './components/ShowAlreadyChatCompo';
+import ButtonComponent from '../CreateAccount/components/ButtonComponent';
 
 export default function ChatUsersListScreen() {
   const {theme} = useTheme();
@@ -25,6 +26,7 @@ export default function ChatUsersListScreen() {
   const [laoding, setLoading] = useState(false);
   const [usersList, setUsersList] = useState([]);
   const [filteredChatsArray, setFilteredChatsArray] = useState([]);
+  const [allChatsData, setAllChatsData] = useState([]);
   var isMounted = false;
 
   const getUsersList = async () => {
@@ -50,17 +52,25 @@ export default function ChatUsersListScreen() {
     }
   };
 
-  const getGroupData = () => {
+  const getGroupData = chatData => {
     try {
       firestore()
         .collection('chats')
         .where('members', 'array-contains', auth().currentUser?.uid)
         .get()
         .then(res => {
+          let tem = [];
           res.docs.map(ele => {
-            console.log(ele.data());
-            console.log(ele.id);
+            let finalGroupData = {...ele.data(), groupId: ele.id};
+            tem.push(finalGroupData);
           });
+          let mergeArr = chatData.concat(tem);
+          // const timeBasedMes = mergeArr.filter(e => console.log(e.type));
+          const sortedChatData = mergeArr.sort(
+            (a, b) => b.messageTime - a.messageTime,
+          );
+          // console.log('sorted chat data is: ', sortedChatData);
+          setAllChatsData(mergeArr);
         })
         .catch(err => console.log(err));
     } catch (error) {
@@ -87,6 +97,7 @@ export default function ChatUsersListScreen() {
           isMounted = true;
           if (isMounted) {
             setFilteredChatsArray(chattingArray);
+            getGroupData(chattingArray);
             setLoading(false);
           }
         });
@@ -99,7 +110,7 @@ export default function ChatUsersListScreen() {
     isMounted = true;
     getUsersList();
     getChatsData();
-    getGroupData();
+    // getGroupData();
     return () => (isMounted = false);
   }, []);
 
@@ -136,17 +147,28 @@ export default function ChatUsersListScreen() {
         </View>
         <View style={{flex: 1}}>
           <FlatList
-            data={filteredChatsArray}
+            data={allChatsData}
             keyExtractor={(item, index) => index.toString()}
             contentContainerStyle={{width: '100%', paddingBottom: 50}}
             renderItem={({item}) => {
+              // console.log('data is: ', item);
               return (
                 <ShowAlreadyChatCompo
                   data={item}
                   onPress={() => {
-                    navigation.navigate(navigationStrings.CHAT_SCREEN, item);
+                    item.chatID !== undefined
+                      ? navigation.navigate(navigationStrings.CHAT_SCREEN, item)
+                      : navigation.navigate(
+                          navigationStrings.GROUP_CHAT_SCREEN,
+                          {
+                            groupId: item.groupId,
+                          },
+                        );
                   }}
                 />
+                // <Text style={{color: 'white'}}>
+                //   {item.messageTime.toDate().toDateString()}
+                // </Text>
               );
             }}
           />
