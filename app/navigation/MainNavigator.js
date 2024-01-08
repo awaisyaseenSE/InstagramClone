@@ -9,7 +9,11 @@ function MainNavigator(props) {
   const [user, setUser] = useState(null);
 
   const checkUser = () => {
-    if (auth().currentUser !== null && auth().currentUser !== undefined) {
+    if (
+      auth().currentUser?.emailVerified !== null &&
+      auth().currentUser?.emailVerified !== undefined &&
+      auth().currentUser?.emailVerified !== false
+    ) {
       setUser(auth().currentUser);
     }
   };
@@ -20,7 +24,12 @@ function MainNavigator(props) {
   return (
     <AuthsContext.Provider value={{user, setUser}}>
       <NavigationContainer>
-        {user !== null ? <AppNavigator /> : <AuthNavigator />}
+        {/* {user !== null ? <AppNavigator /> : <AuthNavigator />} */}
+        {auth().currentUser?.emailVerified ? (
+          <AppNavigator />
+        ) : (
+          <AuthNavigator />
+        )}
       </NavigationContainer>
     </AuthsContext.Provider>
   );
