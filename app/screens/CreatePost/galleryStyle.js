@@ -171,6 +171,18 @@ const galleryStyle = theme => {
       justifyContent: 'center',
       alignItems: 'center',
     },
+    downIcon: {
+      width: 10,
+      height: 10,
+      resizeMode: 'contain',
+      tintColor: colors.black,
+    },
+    recentAllTextContainer: {
+      marginLeft: 8,
+      paddingHorizontal: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
   });
   return styles;
 };

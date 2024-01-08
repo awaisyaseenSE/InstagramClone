@@ -135,7 +135,7 @@ export default function ShowGalleryStoryScreen() {
       indexOfSelected = ind + 1;
     }
     return (
-      <View>
+      <View style={{paddingHorizontal: 2}}>
         <TouchableOpacity onPress={() => imagePressed(item)}>
           <Image
             source={{uri: item.node.image.uri}}
@@ -206,7 +206,12 @@ export default function ShowGalleryStoryScreen() {
                 <TouchableOpacity
                   style={[styles.cameraMainContainer, {marginLeft: 8}]}
                   onPress={() =>
-                    navigation.navigate(navigationStrings.PHOTO_CAPTURE_SCREEN)
+                    navigation.navigate(
+                      navigationStrings.PHOTO_CAPTURE_SCREEN,
+                      {
+                        screenName: 'story',
+                      },
+                    )
                   }>
                   <Image
                     source={require('../../assets/camera.png')}
@@ -224,10 +229,10 @@ export default function ShowGalleryStoryScreen() {
               showsVerticalScrollIndicator={false}
               numColumns={3}
               ItemSeparatorComponent={<View style={{marginVertical: 2}} />}
-              columnWrapperStyle={{
-                justifyContent: 'space-between',
-                // margin: 4,
-              }}
+              // columnWrapperStyle={{
+              //   justifyContent: 'space-between',
+              //   // margin: 4,
+              // }}
             />
           </View>
         </View>

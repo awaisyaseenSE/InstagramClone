@@ -19,6 +19,7 @@ import ScreenComponent from '../../components/ScreenComponent';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
 import colors from '../../styles/colors';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 export default function GalleryScreen({switchToScreen}) {
   const {theme} = useTheme();
@@ -109,6 +110,26 @@ export default function GalleryScreen({switchToScreen}) {
     savePicture();
   }, []);
 
+  const pickImage = () => {
+    const options = {
+      title: 'Select Photo',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.assets[0].uri) {
+        setPickedImage(response.assets[0].uri);
+      }
+    });
+  };
+
   const handleMultipleMediaSelection = item => {
     if (selectAllUri.includes(item)) {
       const updatedSelection = selectAllUri.filter(
@@ -136,7 +157,7 @@ export default function GalleryScreen({switchToScreen}) {
       indexOfSelected = ind + 1;
     }
     return (
-      <View>
+      <View style={{paddingHorizontal: 2}}>
         <TouchableOpacity onPress={() => imagePressed(item)}>
           <Image
             source={{uri: item.node.image.uri}}
@@ -210,7 +231,9 @@ export default function GalleryScreen({switchToScreen}) {
               <TouchableOpacity
                 style={{paddingHorizontal: 12, paddingVertical: 6}}
                 onPress={() =>
-                  navigation.navigate(navigationStrings.PHOTO_CAPTURE_SCREEN)
+                  navigation.navigate(navigationStrings.PHOTO_CAPTURE_SCREEN, {
+                    screenName: 'gallery',
+                  })
                 }>
                 <Image
                   source={require('../../assets/camera.png')}
@@ -221,7 +244,14 @@ export default function GalleryScreen({switchToScreen}) {
           )}
           {media.length > 0 && (
             <View style={styles.recentTextContainer}>
-              <Text style={styles.recentText}>Recents</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={styles.recentText}>Recents</Text>
+                <TouchableOpacity
+                  style={styles.recentAllTextContainer}
+                  onPress={() => pickImage()}>
+                  <Text style={[styles.recentText]}>All</Text>
+                </TouchableOpacity>
+              </View>
               <View style={styles.cameraContainer}>
                 <TouchableOpacity
                   onPress={() =>
@@ -257,7 +287,12 @@ export default function GalleryScreen({switchToScreen}) {
                 <TouchableOpacity
                   style={[styles.cameraMainContainer, {marginLeft: 8}]}
                   onPress={() =>
-                    navigation.navigate(navigationStrings.PHOTO_CAPTURE_SCREEN)
+                    navigation.navigate(
+                      navigationStrings.PHOTO_CAPTURE_SCREEN,
+                      {
+                        screenName: 'gallery',
+                      },
+                    )
                   }>
                   <Image
                     source={require('../../assets/camera.png')}
@@ -275,10 +310,10 @@ export default function GalleryScreen({switchToScreen}) {
               showsVerticalScrollIndicator={false}
               numColumns={3}
               ItemSeparatorComponent={<View style={{marginVertical: 2}} />}
-              columnWrapperStyle={{
-                justifyContent: 'space-between',
-                // margin: 4,
-              }}
+              // columnWrapperStyle={{
+              //   justifyContent: 'space-between',
+              //   // margin: 4,
+              // }}
             />
           </View>
         </View>
