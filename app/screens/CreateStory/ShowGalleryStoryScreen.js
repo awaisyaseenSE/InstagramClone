@@ -16,6 +16,7 @@ import ScreenComponent from '../../components/ScreenComponent';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
 import colors from '../../styles/colors';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 export default function ShowGalleryStoryScreen() {
   const {theme} = useTheme();
@@ -160,6 +161,31 @@ export default function ShowGalleryStoryScreen() {
     }
   };
 
+  const pickImage = () => {
+    const options = {
+      title: 'Select Photo',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.assets[0].uri) {
+        let imageUri = response.assets[0].uri;
+        let imgs = [];
+        imgs.push(imageUri);
+        navigation.navigate(navigationStrings.CREATE_STORY_SCREEN, {
+          allMedia: imgs,
+        });
+      }
+    });
+  };
+
   return (
     <>
       <ScreenComponent style={{flex: 1, backgroundColor: theme.background}}>
@@ -184,43 +210,51 @@ export default function ShowGalleryStoryScreen() {
               </TouchableOpacity>
             )}
           </View>
-          {media.length > 0 && (
-            <View style={styles.recentTextContainer}>
-              <Text style={styles.recentText}>Recents</Text>
-              <View style={styles.cameraContainer}>
-                <TouchableOpacity
-                  style={[
-                    styles.cameraMainContainer,
-                    {
-                      backgroundColor: selectMultiple
-                        ? colors.blue
-                        : colors.lightBlackTwo,
-                    },
-                  ]}
-                  onPress={() => setSelectMultiple(!selectMultiple)}>
-                  <Image
-                    source={require('../../assets/multiple.png')}
-                    style={styles.cameraIcon}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.cameraMainContainer, {marginLeft: 8}]}
-                  onPress={() =>
-                    navigation.navigate(
-                      navigationStrings.PHOTO_CAPTURE_SCREEN,
-                      {
-                        screenName: 'story',
-                      },
-                    )
-                  }>
-                  <Image
-                    source={require('../../assets/camera.png')}
-                    style={styles.cameraIcon}
-                  />
-                </TouchableOpacity>
-              </View>
+          <View style={styles.recentTextContainer}>
+            <View style={{flexDirection: 'row'}}>
+              {media.length > 0 && (
+                <Text style={[styles.recentText, {color: colors.black}]}>
+                  Recents
+                </Text>
+              )}
+              <TouchableOpacity
+                style={styles.recentAllTextContainer}
+                onPress={() => pickImage()}>
+                <Text style={[styles.recentText, {color: colors.black}]}>
+                  All
+                </Text>
+              </TouchableOpacity>
             </View>
-          )}
+            <View style={styles.cameraContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.cameraMainContainer,
+                  {
+                    backgroundColor: selectMultiple
+                      ? colors.blue
+                      : colors.lightBlackTwo,
+                  },
+                ]}
+                onPress={() => setSelectMultiple(!selectMultiple)}>
+                <Image
+                  source={require('../../assets/multiple.png')}
+                  style={styles.cameraIcon}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.cameraMainContainer, {marginLeft: 8}]}
+                onPress={() =>
+                  navigation.navigate(navigationStrings.PHOTO_CAPTURE_SCREEN, {
+                    screenName: 'story',
+                  })
+                }>
+                <Image
+                  source={require('../../assets/camera.png')}
+                  style={styles.cameraIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
           <View style={{flex: 1, paddingHorizontal: 8, marginTop: 12}}>
             <FlatList
               data={media}

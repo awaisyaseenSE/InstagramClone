@@ -242,66 +242,67 @@ export default function GalleryScreen({switchToScreen}) {
               </TouchableOpacity>
             </View>
           )}
-          {media.length > 0 && (
-            <View style={styles.recentTextContainer}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={styles.recentText}>Recents</Text>
-                <TouchableOpacity
-                  style={styles.recentAllTextContainer}
-                  onPress={() => pickImage()}>
-                  <Text style={[styles.recentText]}>All</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.cameraContainer}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate(navigationStrings.SHOW_GALLERY_STORY)
-                  }>
-                  <Text style={styles.reelStoryText}>Story</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    marginHorizontal: 8,
-                  }}
-                  onPress={() =>
-                    navigation.navigate(navigationStrings.SHOW_GALLERY_REEL)
-                  }>
-                  <Text style={[styles.reelStoryText]}>Reel</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[
-                    styles.cameraMainContainer,
-                    {
-                      backgroundColor: selectMultiple
-                        ? colors.blue
-                        : colors.lightBlackTwo,
-                    },
-                  ]}
-                  onPress={() => setSelectMultiple(!selectMultiple)}>
-                  <Image
-                    source={require('../../assets/multiple.png')}
-                    style={styles.cameraIcon}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.cameraMainContainer, {marginLeft: 8}]}
-                  onPress={() =>
-                    navigation.navigate(
-                      navigationStrings.PHOTO_CAPTURE_SCREEN,
-                      {
-                        screenName: 'gallery',
-                      },
-                    )
-                  }>
-                  <Image
-                    source={require('../../assets/camera.png')}
-                    style={styles.cameraIcon}
-                  />
-                </TouchableOpacity>
-              </View>
+          <View style={styles.recentTextContainer}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              {media.length > 0 && (
+                <Text style={[styles.recentText, {color: colors.black}]}>
+                  Recents
+                </Text>
+              )}
+              <TouchableOpacity
+                style={styles.recentAllTextContainer}
+                onPress={() => pickImage()}>
+                <Text style={[styles.recentText, {color: colors.black}]}>
+                  All
+                </Text>
+              </TouchableOpacity>
             </View>
-          )}
+            <View style={styles.cameraContainer}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate(navigationStrings.SHOW_GALLERY_STORY)
+                }>
+                <Text style={styles.reelStoryText}>Story</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  marginHorizontal: 8,
+                }}
+                onPress={() =>
+                  navigation.navigate(navigationStrings.SHOW_GALLERY_REEL)
+                }>
+                <Text style={[styles.reelStoryText]}>Reel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.cameraMainContainer,
+                  {
+                    backgroundColor: selectMultiple
+                      ? colors.blue
+                      : colors.lightBlackTwo,
+                  },
+                ]}
+                onPress={() => setSelectMultiple(!selectMultiple)}>
+                <Image
+                  source={require('../../assets/multiple.png')}
+                  style={styles.cameraIcon}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.cameraMainContainer, {marginLeft: 8}]}
+                onPress={() =>
+                  navigation.navigate(navigationStrings.PHOTO_CAPTURE_SCREEN, {
+                    screenName: 'gallery',
+                  })
+                }>
+                <Image
+                  source={require('../../assets/camera.png')}
+                  style={styles.cameraIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
           <View style={{flex: 1, paddingHorizontal: 8, marginTop: 12}}>
             <FlatList
               data={media}

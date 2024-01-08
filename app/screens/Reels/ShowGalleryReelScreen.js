@@ -143,7 +143,7 @@ export default function ShowGalleryReelScreen() {
       const options = {
         mediaType: 'video',
         videoQuality: 'medium',
-        durationLimit: 10,
+        durationLimit: 2,
         thumbnail: true,
         allowsEditing: true,
       };
@@ -157,7 +157,11 @@ export default function ShowGalleryReelScreen() {
         } else if (response.customButton) {
           console.warn('User tapped custom button: ', response.customButton);
         } else {
-          console.log('uri of selected video is: ', response.uri);
+          console.log('the response is: ', response);
+          console.log('....uri of selected video is: ', response.uri);
+          if (response?.uri) {
+            Alert.alert('video is recorded');
+          }
         }
       });
     } catch (error) {
@@ -230,14 +234,18 @@ export default function ShowGalleryReelScreen() {
           {media.length > 0 ? (
             <View style={styles.recentTextContainer}>
               <View style={{flexDirection: 'row'}}>
-                <Text style={styles.recentText}>Recents</Text>
+                <Text style={[styles.recentText, {color: colors.black}]}>
+                  Recents
+                </Text>
                 <TouchableOpacity
                   style={{
                     marginLeft: 4,
                     paddingHorizontal: 8,
                   }}
                   onPress={handleGetAllVideos}>
-                  <Text style={[styles.recentText]}>All</Text>
+                  <Text style={[styles.recentText, {color: colors.black}]}>
+                    All
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.cameraContainer}>
