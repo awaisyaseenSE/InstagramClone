@@ -27,4 +27,5 @@ export default {
   CHAT_SEARCH_SCREEN: 'ChatSearchScreen',
   CREATE_GROUP_SCREEN: 'CreateGroupScreen',
   GROUP_CHAT_SCREEN: 'GroupChatScreen',
+  GROUP_DETAIL_SCREEN: 'GroupDetailScreen',
 };

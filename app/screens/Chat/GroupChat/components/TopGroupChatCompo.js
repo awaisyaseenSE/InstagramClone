@@ -1,14 +1,24 @@
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useTheme} from '../../../../themes/ThemeContext';
 import FastImage from 'react-native-fast-image';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import {useNavigation} from '@react-navigation/native';
+import navigationStrings from '../../../../navigation/navigationStrings';
 
 const TopGroupChatCompo = ({groupData, onPress}) => {
   const {theme} = useTheme();
   const [loading, setLoading] = useState(false);
   const [groupMemberImage, setGroupMemberImage] = useState('');
+  const navigation = useNavigation();
 
   useEffect(() => {
     setLoading(true);
@@ -27,6 +37,17 @@ const TopGroupChatCompo = ({groupData, onPress}) => {
     return () => unsubscribe();
   }, [groupData]);
 
+  const handleDetailGroupScreen = () => {
+    try {
+      navigation.navigate(navigationStrings.GROUP_DETAIL_SCREEN, {
+        groupData: groupData,
+        groupMemberImage: groupMemberImage,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backIconContainer} onPress={onPress}>
@@ -35,7 +56,9 @@ const TopGroupChatCompo = ({groupData, onPress}) => {
           style={[styles.backIcon, {tintColor: theme.text}]}
         />
       </TouchableOpacity>
-      <View style={styles.mainContainer}>
+      <TouchableOpacity
+        style={styles.mainContainer}
+        onPress={handleDetailGroupScreen}>
         <View style={{width: 40, height: 40}}>
           <FastImage
             source={{
@@ -55,7 +78,7 @@ const TopGroupChatCompo = ({groupData, onPress}) => {
         <Text style={[styles.groupNameStyle, {color: theme.text}]}>
           {groupData?.groupName}
         </Text>
-      </View>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.rightIconContainer}>
         <Image
           source={require('../../../../assets/call.png')}
@@ -85,7 +108,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    // backgroundColor: 'red',
     flex: 1,
     paddingHorizontal: 10,
   },

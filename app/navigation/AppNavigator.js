@@ -27,6 +27,7 @@ import ChatUsersListScreen from '../screens/Chat/ChatUsersListScreen';
 import ChatSearchScreen from '../screens/Chat/ChatSearchScreen';
 import CreateGroupScreen from '../screens/Chat/GroupChat/CreateGroupScreen';
 import GroupChatScreen from '../screens/Chat/GroupChat/GroupChatScreen';
+import GroupDetailScreen from '../screens/Chat/GroupChat/GroupDetailScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -192,6 +193,11 @@ function AppNavigator() {
       <Stack.Screen
         name="GroupChatScreen"
         component={GroupChatScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="GroupDetailScreen"
+        component={GroupDetailScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
