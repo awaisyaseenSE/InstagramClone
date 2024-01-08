@@ -6,6 +6,8 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  StyleSheet,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import galleryStyle from '../CreatePost/galleryStyle';
@@ -16,6 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
 import colors from '../../styles/colors';
 import {useTheme} from '../../themes/ThemeContext';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 export default function ShowGalleryReelScreen() {
   const {theme} = useTheme();
@@ -135,6 +138,71 @@ export default function ShowGalleryReelScreen() {
 
   const handleNextScreen = () => {};
 
+  const handleRecordVideo = () => {
+    try {
+      const options = {
+        mediaType: 'video',
+        videoQuality: 'medium',
+        durationLimit: 10,
+        thumbnail: true,
+        allowsEditing: true,
+      };
+
+      launchCamera(options, response => {
+        if (response.didCancel) {
+          console.log('User cancelled video picker');
+          return true;
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.warn('User tapped custom button: ', response.customButton);
+        } else {
+          console.log('uri of selected video is: ', response.uri);
+        }
+      });
+    } catch (error) {
+      console.log(
+        'Error while recording video for reel in Gallery Reel Screen: ',
+        error,
+      );
+    }
+  };
+
+  const handleGetAllVideos = () => {
+    try {
+      const options = {
+        title: 'Select Video',
+        storageOptions: {
+          skipBackup: true,
+          path: 'videos',
+        },
+        mediaType: 'video',
+        durationLimit: 60,
+      };
+
+      launchImageLibrary(options, response => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.assets[0].uri) {
+          let videoUri = response?.assets[0]?.uri;
+          console.log('video uri is: ', videoUri);
+          if (videoUri !== undefined && videoUri !== null && videoUri !== '') {
+            navigation.navigate(navigationStrings.CREATE_REEL_SCREEN, {
+              videoPath: videoUri,
+            });
+          }
+        }
+      });
+    } catch (error) {
+      console.log(
+        'Error while recording video for reel in Gallery Reel Screen: ',
+        error,
+      );
+    }
+  };
+
   return (
     <>
       <ScreenComponent style={{flex: 1, backgroundColor: theme.background}}>
@@ -159,21 +227,45 @@ export default function ShowGalleryReelScreen() {
               </TouchableOpacity>
             )}
           </View>
-          {media.length > 0 && (
+          {media.length > 0 ? (
             <View style={styles.recentTextContainer}>
-              <Text style={styles.recentText}>Recents</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styles.recentText}>Recents</Text>
+                <TouchableOpacity
+                  style={{
+                    marginLeft: 4,
+                    paddingHorizontal: 8,
+                  }}
+                  onPress={handleGetAllVideos}>
+                  <Text style={[styles.recentText]}>All</Text>
+                </TouchableOpacity>
+              </View>
               <View style={styles.cameraContainer}>
                 <TouchableOpacity
                   style={[styles.cameraMainContainer, {marginLeft: 8}]}
-                  onPress={() =>
-                    navigation.navigate(navigationStrings.PHOTO_CAPTURE_SCREEN)
-                  }>
+                  // onPress={() =>
+                  //   navigation.navigate(navigationStrings.PHOTO_CAPTURE_SCREEN)
+                  // }
+                  onPress={handleRecordVideo}>
                   <Image
                     source={require('../../assets/camera.png')}
                     style={styles.cameraIcon}
                   />
                 </TouchableOpacity>
               </View>
+            </View>
+          ) : (
+            <View style={myStyles.cameraContainer}>
+              <TouchableOpacity
+                style={myStyles.cameraTouchablOpacticty}
+                onPress={() =>
+                  navigation.navigate(navigationStrings.PHOTO_CAPTURE_SCREEN)
+                }>
+                <Image
+                  source={require('../../assets/camera.png')}
+                  style={[myStyles.cameraIcon, {tintColor: theme.text}]}
+                />
+              </TouchableOpacity>
             </View>
           )}
           <View style={{flex: 1, paddingHorizontal: 8, marginTop: 12}}>
@@ -195,3 +287,19 @@ export default function ShowGalleryReelScreen() {
     </>
   );
 }
+
+const myStyles = StyleSheet.create({
+  cameraContainer: {
+    paddingHorizontal: 12,
+    flexDirection: 'row',
+  },
+  cameraTouchablOpacticty: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+  cameraIcon: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
+  },
+});
