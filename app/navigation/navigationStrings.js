@@ -28,4 +28,5 @@ export default {
   CREATE_GROUP_SCREEN: 'CreateGroupScreen',
   GROUP_CHAT_SCREEN: 'GroupChatScreen',
   GROUP_DETAIL_SCREEN: 'GroupDetailScreen',
+  GROUP_MEMBERS_SCREEN: 'GroupMembersScreen',
 };

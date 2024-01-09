@@ -17,6 +17,7 @@ import {useTheme} from '../../../themes/ThemeContext';
 import MyIndicator from '../../../components/MyIndicator';
 import TopCompoWithHeading from '../../../components/TopCompoWithHeading';
 import fontFamily from '../../../styles/fontFamily';
+import navigationStrings from '../../../navigation/navigationStrings';
 
 export default function GroupDetailScreen({route}) {
   const {theme} = useTheme();
@@ -24,6 +25,38 @@ export default function GroupDetailScreen({route}) {
   const groupMemberImage = route.params?.groupMemberImage;
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+  const currentUserUid = auth().currentUser?.uid;
+  const currentUserName = auth().currentUser?.displayName;
+  const [membersData, setMembersData] = useState([]);
+  var isMounted = false;
+
+  useEffect(() => {
+    isMounted = true;
+    getUsersData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const getUsersData = async () => {
+    try {
+      setLoading(true);
+      const usersList = groupData.members;
+      const usersRef = firestore().collection('users');
+      const querySnapshot = await usersRef
+        .where(firestore.FieldPath.documentId(), 'in', usersList)
+        .get();
+      const usersData = [];
+      querySnapshot.forEach(doc => {
+        usersData.push({...doc.data(), userUid: doc.id});
+      });
+      setMembersData(usersData);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -50,33 +83,77 @@ export default function GroupDetailScreen({route}) {
             {groupData?.groupName}
           </Text>
         </View>
-        <View
-          style={{
-            marginTop: 20,
-            alignItems: 'center',
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}>
+        <View style={styles.iconsContainer}>
           <View style={{alignItems: 'center'}}>
             <Image
-              source={require('../../../assets/profile_user.png')}
-              style={styles.icon}
+              source={require('../../../assets/invite.png')}
+              style={[styles.icon, {tintColor: theme.text}]}
             />
-            <Text style={{color: theme.text}}>Add</Text>
+            <Text style={[styles.iconText, {color: theme.text}]}>Add</Text>
           </View>
           <View style={{alignItems: 'center'}}>
             <Image
-              source={require('../../../assets/profile_user.png')}
-              style={styles.icon}
+              source={require('../../../assets/tab_search.png')}
+              style={[styles.icon, {tintColor: theme.text}]}
             />
-            <Text style={{color: theme.text}}>Search</Text>
+            <Text style={[styles.iconText, {color: theme.text}]}>Search</Text>
           </View>
           <View style={{alignItems: 'center'}}>
             <Image
-              source={require('../../../assets/profile_user.png')}
-              style={styles.icon}
+              source={require('../../../assets/bell.png')}
+              style={[styles.icon, {tintColor: theme.text}]}
             />
-            <Text style={{color: theme.text}}>Remove</Text>
+            <Text style={[styles.iconText, {color: theme.text}]}>Mute</Text>
+          </View>
+          <View style={{alignItems: 'center'}}>
+            <Image
+              source={require('../../../assets/exit.png')}
+              style={[styles.icon, {tintColor: theme.text}]}
+            />
+            <Text style={[styles.iconText, {color: theme.text}]}>Leave</Text>
+          </View>
+        </View>
+        <View style={{marginTop: 40, paddingHorizontal: 20}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={require('../../../assets/invite.png')}
+              style={[styles.icon, {tintColor: theme.text}]}
+            />
+            <TouchableOpacity
+              style={{marginLeft: 14}}
+              onPress={() =>
+                navigation.navigate(navigationStrings.GROUP_MEMBERS_SCREEN, {
+                  groupData: groupData,
+                  membersData: membersData,
+                })
+              }>
+              <Text style={[styles.heading2, {color: theme.text}]}>People</Text>
+              <Text
+                style={[styles.desc, {color: theme.gray}]}
+                numberOfLines={1}>
+                {membersData.map(ele => ele.fullName + ', ')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 20,
+            }}>
+            <Image
+              source={require('../../../assets/lock.png')}
+              style={[styles.icon, {tintColor: theme.text}]}
+            />
+            <TouchableOpacity style={{marginLeft: 14}}>
+              <Text style={[styles.heading2, {color: theme.text}]}>
+                Privacy and safety
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScreenComponent>
@@ -92,19 +169,19 @@ export default function GroupDetailScreen({route}) {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: 14,
   },
   profileImage: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     resizeMode: 'contain',
-    borderRadius: 35,
+    borderRadius: 30,
   },
   profileImagetwo: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     resizeMode: 'contain',
-    borderRadius: 40,
+    borderRadius: 30,
     position: 'absolute',
     top: 20,
     left: 20,
@@ -114,8 +191,29 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
   },
   icon: {
-    width: 20,
-    height: 20,
+    width: 22,
+    height: 22,
     resizeMode: 'contain',
+  },
+  iconText: {
+    fontSize: 12,
+    fontWeight: '500',
+    marginTop: 10,
+  },
+  iconsContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+  },
+  heading2: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  desc: {
+    fontSize: 12,
+    fontWeight: '500',
+    marginTop: 4,
   },
 });
