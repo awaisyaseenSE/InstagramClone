@@ -101,7 +101,11 @@ export default function GroupMembersScreen({route}) {
           title="People"
           rightIcon={require('../../../assets/invite.png')}
           rightIconStyle={{tintColor: theme.text}}
-          onPressRight={() => Alert.alert('helo')}
+          onPressRight={() =>
+            navigation.navigate(navigationStrings.ADD_PEOPLE_GROUP_SCREEN, {
+              groupData: groupData,
+            })
+          }
         />
         <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
           <View style={styles.container}>

@@ -10,6 +10,8 @@ const TopCompoWithHeading = ({
   rightIcon = '',
   onPressRight,
   rightIconStyle,
+  rightTitle = '',
+  onPressRightTitle,
 }) => {
   const {theme} = useTheme();
   return (
@@ -45,6 +47,16 @@ const TopCompoWithHeading = ({
           />
         </TouchableOpacity>
       )}
+      {rightTitle !== '' && (
+        <TouchableOpacity
+          style={{
+            paddingHorizontal: 10,
+            paddingVertical: 6,
+          }}
+          onPress={onPressRightTitle}>
+          <Text style={[styles.righttext]}>{rightTitle}</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -66,6 +78,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: fontFamily.medium,
     marginLeft: 12,
+  },
+  righttext: {
+    fontSize: 14,
+    fontFamily: fontFamily.medium,
+    color: colors.blue,
   },
 });
 
