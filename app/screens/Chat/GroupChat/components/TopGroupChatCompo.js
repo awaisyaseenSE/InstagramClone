@@ -75,7 +75,9 @@ const TopGroupChatCompo = ({groupData, onPress}) => {
             style={[styles.secondprofileImage]}
           />
         </View>
-        <Text style={[styles.groupNameStyle, {color: theme.text}]}>
+        <Text
+          style={[styles.groupNameStyle, {color: theme.text}]}
+          numberOfLines={2}>
           {groupData?.groupName}
         </Text>
       </TouchableOpacity>
@@ -110,6 +112,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     paddingHorizontal: 10,
+    overflow: 'hidden',
   },
   backIconContainer: {
     // backgroundColor: 'pink',
