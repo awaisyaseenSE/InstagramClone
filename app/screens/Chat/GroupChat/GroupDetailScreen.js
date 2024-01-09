@@ -84,13 +84,19 @@ export default function GroupDetailScreen({route}) {
           </Text>
         </View>
         <View style={styles.iconsContainer}>
-          <View style={{alignItems: 'center'}}>
+          <TouchableOpacity
+            style={{alignItems: 'center'}}
+            onPress={() =>
+              navigation.navigate(navigationStrings.ADD_PEOPLE_GROUP_SCREEN, {
+                groupData: groupData,
+              })
+            }>
             <Image
               source={require('../../../assets/invite.png')}
               style={[styles.icon, {tintColor: theme.text}]}
             />
             <Text style={[styles.iconText, {color: theme.text}]}>Add</Text>
-          </View>
+          </TouchableOpacity>
           <View style={{alignItems: 'center'}}>
             <Image
               source={require('../../../assets/tab_search.png')}
