@@ -143,7 +143,7 @@ export default function ShowGalleryReelScreen() {
       const options = {
         mediaType: 'video',
         videoQuality: 'medium',
-        durationLimit: 2,
+        durationLimit: 60,
         thumbnail: true,
         allowsEditing: true,
       };
@@ -157,10 +157,11 @@ export default function ShowGalleryReelScreen() {
         } else if (response.customButton) {
           console.warn('User tapped custom button: ', response.customButton);
         } else {
-          console.log('the response is: ', response);
-          console.log('....uri of selected video is: ', response.uri);
-          if (response?.uri) {
-            Alert.alert('video is recorded');
+          let videoUri = response.uri || response.assets?.[0]?.uri;
+          if (videoUri !== undefined && videoUri !== null && videoUri !== '') {
+            navigation.navigate(navigationStrings.CREATE_REEL_SCREEN, {
+              videoPath: videoUri,
+            });
           }
         }
       });
