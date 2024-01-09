@@ -31,9 +31,27 @@ function CustomDrawer(props) {
   const {logout} = useAuth();
   const navigation = useNavigation();
 
+  // const handleLogout = () => {
+  //   if (auth().currentUser) {
+  //     logout();
+  //   }
+  // };
+
   const handleLogout = () => {
-    if (auth().currentUser) {
-      logout();
+    try {
+      Alert.alert('Logout', 'Are you sure to Logout!', [
+        {
+          text: 'Yes',
+          onPress: logout,
+        },
+        {
+          text: 'No',
+        },
+      ]);
+    } catch (error) {
+      console.log('============ERROR WHILE LOG OUT========================');
+      console.log(error);
+      console.log('====================================');
     }
   };
 

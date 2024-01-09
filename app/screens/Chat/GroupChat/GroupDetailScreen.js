@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import FastImage from 'react-native-fast-image';
@@ -55,6 +56,43 @@ export default function GroupDetailScreen({route}) {
     } catch (error) {
       setLoading(false);
       console.log(error);
+    }
+  };
+
+  const leaveGroup = async () => {
+    try {
+      setLoading(true);
+      const groupmembers = groupData.members;
+      const removeCurrentUser = groupmembers.filter(e => e !== currentUserUid);
+      await firestore().collection('chats').doc(groupData.groupId).update({
+        members: removeCurrentUser,
+      });
+      setLoading(false);
+      navigation.navigate(navigationStrings.CHAT_USERS_LIST_SCREEN);
+    } catch (error) {
+      setLoading(false);
+      console.error('Error creating group:', error);
+      throw error;
+    }
+  };
+
+  const handleLeaveGroup = () => {
+    try {
+      Alert.alert('Warning', 'Are you sure to leave this group!', [
+        {
+          text: 'Yes',
+          onPress: leaveGroup,
+        },
+        {
+          text: 'No',
+        },
+      ]);
+    } catch (error) {
+      console.log(
+        '============ ERROR WHILE Leaving the group in chat ========================',
+      );
+      console.log(error);
+      console.log('====================================');
     }
   };
 
@@ -111,13 +149,15 @@ export default function GroupDetailScreen({route}) {
             />
             <Text style={[styles.iconText, {color: theme.text}]}>Mute</Text>
           </View>
-          <View style={{alignItems: 'center'}}>
+          <TouchableOpacity
+            style={{alignItems: 'center'}}
+            onPress={handleLeaveGroup}>
             <Image
               source={require('../../../assets/exit.png')}
               style={[styles.icon, {tintColor: theme.text}]}
             />
             <Text style={[styles.iconText, {color: theme.text}]}>Leave</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={{marginTop: 40, paddingHorizontal: 20}}>
           <View
