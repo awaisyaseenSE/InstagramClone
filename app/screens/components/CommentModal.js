@@ -151,7 +151,11 @@ const CommentModal = ({
               </View>
               <View style={{flex: 1}}>
                 <View
-                  style={{flex: 1, paddingHorizontal: 20, paddingVertical: 8}}>
+                  style={{
+                    flex: 1,
+                    paddingHorizontal: 20,
+                    paddingVertical: 8,
+                  }}>
                   <FlatList
                     data={commentData}
                     showsVerticalScrollIndicator={false}

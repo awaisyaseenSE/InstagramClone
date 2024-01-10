@@ -1,22 +1,10 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-  Image,
-  Alert,
-} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ScreenComponent from '../../components/ScreenComponent';
 import TopCompoWithHeading from '../../components/TopCompoWithHeading';
 import {useNavigation} from '@react-navigation/native';
-import navigationStrings from '../../navigation/navigationStrings';
 import {useTheme} from '../../themes/ThemeContext';
-import FastImage from 'react-native-fast-image';
-import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-import MyIndicator from '../../components/MyIndicator';
 import {
   ZegoUIKitPrebuiltCall,
   ONE_ON_ONE_VIDEO_CALL_CONFIG,
@@ -27,7 +15,6 @@ export default function VideoCallScreen({route}) {
   const receiverData = route.params?.userData;
   const callID = route.params?.callID;
   const navigation = useNavigation();
-  const [laoding, setLoading] = useState(false);
   const currentUserUid = auth().currentUser.uid;
   const currentUserName = auth().currentUser.displayName;
   const randomUserID = String(Math.floor(Math.random() * 100000));
