@@ -465,7 +465,7 @@ export default function ChatScreen({route}) {
       <ScreenComponent style={{backgroundColor: theme.background}}>
         {showMediaModal && pickMediaFunction()}
         {recordingModalFunction()}
-        <TopChatComponent userData={receiverData} />
+        <TopChatComponent userData={receiverData} chatID={routeData.chatID} />
         <View style={myStyles.container}>
           <FlatList
             inverted={true}

@@ -30,6 +30,7 @@ import GroupChatScreen from '../screens/Chat/GroupChat/GroupChatScreen';
 import GroupDetailScreen from '../screens/Chat/GroupChat/GroupDetailScreen';
 import GroupMembersScreen from '../screens/Chat/GroupChat/GroupMembersScreen';
 import AddPeopleGroupScreen from '../screens/Chat/GroupChat/AddPeopleGroupScreen';
+import VideoCallScreen from '../screens/Chat/VideoCallScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -210,6 +211,11 @@ function AppNavigator() {
       <Stack.Screen
         name="AddPeopleGroupScreen"
         component={AddPeopleGroupScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="VideoCallScreen"
+        component={VideoCallScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

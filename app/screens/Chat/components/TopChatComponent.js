@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image';
 import fontFamily from '../../../styles/fontFamily';
 import navigationStrings from '../../../navigation/navigationStrings';
 
-const TopChatComponent = ({userData = null}) => {
+const TopChatComponent = ({userData = null, chatID}) => {
   const navigation = useNavigation();
   const {theme} = useTheme();
   return (
@@ -55,7 +55,13 @@ const TopChatComponent = ({userData = null}) => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.rightIconsContainer, {marginLeft: 12}]}>
+          style={[styles.rightIconsContainer, {marginLeft: 12}]}
+          onPress={() =>
+            navigation.navigate(navigationStrings.VIDEO_CALL_SCREEN, {
+              userData: userData,
+              callID: chatID,
+            })
+          }>
           <Image
             source={require('../../../assets/video_call.png')}
             style={[styles.rightIcons, {tintColor: theme.text, width: 26}]}

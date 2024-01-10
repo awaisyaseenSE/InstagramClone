@@ -30,4 +30,5 @@ export default {
   GROUP_DETAIL_SCREEN: 'GroupDetailScreen',
   GROUP_MEMBERS_SCREEN: 'GroupMembersScreen',
   ADD_PEOPLE_GROUP_SCREEN: 'AddPeopleGroupScreen',
+  VIDEO_CALL_SCREEN: 'VideoCallScreen',
 };
