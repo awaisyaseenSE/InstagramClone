@@ -340,7 +340,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
               <Image
                 source={
                   currentUserAlldata !== null &&
-                  currentUserAlldata.savedPosts.includes(item.id)
+                  currentUserAlldata?.savedPosts.includes(item.id)
                     ? require('../../assets/saved_fill.png')
                     : require('../../assets/save.png')
                 }

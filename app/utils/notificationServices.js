@@ -1,6 +1,9 @@
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PermissionsAndroid, Platform} from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import constants from '../constants/constants';
 
 export async function requestUserPermission() {
   try {
@@ -30,15 +33,39 @@ export async function requestUserPermission() {
   }
 }
 
+const storeFcmTokenToFirestore = async fcmToken => {
+  try {
+    const userRef = firestore()
+      .collection('users')
+      .doc(auth().currentUser?.uid);
+    const userData = await userRef.get();
+
+    if (userData.exists) {
+      const userDataObj = userData.data(); // Access user data using data() method
+
+      if (userDataObj.hasOwnProperty('fcmToken')) {
+        // If 'fcmToken' field already exists, update it
+        await userRef.update({fcmToken: fcmToken});
+      } else {
+        // If 'fcmToken' field doesn't exist, set it
+        await userRef.set({...userDataObj, fcmToken: fcmToken});
+      }
+    }
+  } catch (error) {
+    console.log('Error while storing fcm to user collection: ', error);
+  }
+};
+
 const getFcmToken = async () => {
-  let fcmToken = await AsyncStorage.getItem('fcmToken');
-  if (!fcmToken) {
+  let oldFcmToken = await AsyncStorage.getItem('fcmToken');
+  if (!oldFcmToken) {
     try {
       const fcmToken = await messaging().getToken();
-      console.log('.....FCM TOken.....', fcmToken);
       if (fcmToken) {
         console.log('new generated fcm token is: ', fcmToken);
         await AsyncStorage.setItem('fcmToken', fcmToken);
+        await storeFcmTokenToFirestore(fcmToken);
+        constants.fcmToken = fcmToken;
       }
     } catch (error) {
       console.log(
@@ -47,7 +74,9 @@ const getFcmToken = async () => {
       );
     }
   } else {
-    // console.log('old fcm token is: ', fcmToken);
+    constants.fcmToken = oldFcmToken;
+    // await storeFcmTokenToFirestore(oldFcmToken);
+    // console.log('Old fcm token is: ', oldFcmToken);
   }
 };
 
@@ -60,12 +89,13 @@ export const notificationListner = async () => {
     );
   });
 
-  // this is for handling notification in foreground state
+  // this is for handling notification in foreground state (mean app is opened)
   messaging().onMessage(async remoteMessage => {
     console.log('Notification foreground:', remoteMessage.notification);
   });
 
   // Check whether an initial notification is available
+  // below code is used for kill mode of app mean app in kill state
   messaging()
     .getInitialNotification()
     .then(remoteMessage => {
