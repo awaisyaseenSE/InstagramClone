@@ -45,7 +45,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
       .onSnapshot(documentSnapshot => {
         if (documentSnapshot.exists) {
           var doc = documentSnapshot.data();
-          setPostUserData(doc);
+          setPostUserData({...doc, id: documentSnapshot.id});
         }
       });
     return () => unsubscribe();
@@ -289,7 +289,11 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
             justifyContent: 'space-between',
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <LikeComponent postId={item.id} postLikes={item.likes} />
+            <LikeComponent
+              postId={item.id}
+              postLikes={item.likes}
+              postUserData={postUserData}
+            />
             <TouchableOpacity
               style={styles.postIconsContainer}
               onPress={() => setShowComment(!showComment)}>

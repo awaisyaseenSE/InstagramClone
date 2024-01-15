@@ -31,6 +31,7 @@ import BackgroundTimer from 'react-native-background-timer';
 import RecordingComponent from '../components/RecordingComponent';
 import {useTheme} from '../../../themes/ThemeContext';
 import TopGroupChatCompo from './components/TopGroupChatCompo';
+import {sendSingleNotification} from '../../../utils/sendNotification';
 
 export default function GroupChatScreen({route}) {
   const groupId = route?.params?.groupId;
@@ -52,6 +53,7 @@ export default function GroupChatScreen({route}) {
   const [recordingModal, setRecordingModal] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [receiverName, setReceiverName] = useState('');
+  const [membersData, setMembersData] = useState([]);
 
   var isMounted = false;
   useEffect(() => {
@@ -103,6 +105,7 @@ export default function GroupChatScreen({route}) {
         .then(res => {
           setGroupData({...res.data(), groupId: res.id});
           setLoading(false);
+          getMembersData(res?.data()?.members);
         })
         .catch(er => {
           setLoading(false);
@@ -117,6 +120,26 @@ export default function GroupChatScreen({route}) {
         "error while fetching members data for group chat message's in Group chat screen: ",
         error,
       );
+    }
+  };
+
+  const getMembersData = async members => {
+    try {
+      setLoading(true);
+      const usersList = members;
+      const usersRef = firestore().collection('users');
+      const querySnapshot = await usersRef
+        .where(firestore.FieldPath.documentId(), 'in', usersList)
+        .get();
+      const usersData = [];
+      querySnapshot.forEach(doc => {
+        usersData.push({...doc.data(), userUid: doc.id});
+      });
+      setMembersData(usersData);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
     }
   };
 
@@ -328,7 +351,6 @@ export default function GroupChatScreen({route}) {
   const confirmAndSendMesssage = (filePath, extraText, ifAudio) => {
     setLoading(true);
     // const childPath = 'chatImages/' + Date.now() + '.png';
-    console.log('media type is: ', selectedMediaType);
     let childPath = '';
     let mediaType = '';
     if (selectedMediaType.startsWith('image')) {
@@ -454,12 +476,43 @@ export default function GroupChatScreen({route}) {
         setSelectedMediaType('');
         setShowMediaModal(false);
         closeReply();
+        handleSendNotification(lastSendMessage, groupId, type);
         // setNotification();
       })
       .catch(err => {
         setLoading(false);
         console.log('Error in uploading messages: ', err);
       });
+  };
+
+  const handleSendNotification = (lastSendMessage, typeID, msgType) => {
+    let bodyOfNotification = '';
+    let messageType = '';
+    if (msgType == 'text') {
+      bodyOfNotification = lastSendMessage;
+      messageType = 'message';
+    } else {
+      bodyOfNotification = msgType;
+      messageType = msgType == 'audio' ? 'voice' : msgType;
+    }
+    const senderID = auth().currentUser?.uid;
+    const body = bodyOfNotification;
+    const imageUrl = auth().currentUser?.photoURL;
+    const type = 'groupMessage';
+    for (const {fcmToken, userUid, fullName} of membersData) {
+      if (fcmToken !== undefined) {
+        sendSingleNotification(
+          senderID,
+          userUid,
+          `${fullName} is send ${messageType} in ${groupData?.groupName}`,
+          body,
+          imageUrl,
+          type,
+          typeID,
+          fcmToken,
+        );
+      }
+    }
   };
 
   return (

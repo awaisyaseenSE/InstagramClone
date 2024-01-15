@@ -3,10 +3,21 @@ import React, {useState, useEffect} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import {
+  sendNotificationToAll,
+  sendSingleNotification,
+} from '../../utils/sendNotification';
 
-const LikeComponent = ({postId, postLikes, iconStyle, iconContianerStyle}) => {
+const LikeComponent = ({
+  postId,
+  postLikes,
+  iconStyle,
+  iconContianerStyle,
+  postUserData,
+}) => {
   const {theme} = useTheme();
   const [liked, setLiked] = useState(false);
+  const [postData, setPostData] = useState(null);
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -15,6 +26,7 @@ const LikeComponent = ({postId, postLikes, iconStyle, iconContianerStyle}) => {
       .onSnapshot(snapshot => {
         if (snapshot.exists) {
           const postData = snapshot.data();
+          setPostData(postData);
           if (
             postData.likes &&
             postData.likes.includes(auth().currentUser.uid)
@@ -48,6 +60,24 @@ const LikeComponent = ({postId, postLikes, iconStyle, iconContianerStyle}) => {
               likes: firestore.FieldValue.arrayUnion(loggedUser.uid),
             });
             setLiked(true);
+            const title = `${postUserData?.fullName} Like your post 101`;
+            const body = '';
+            const imageUrl = postData?.medialUrls[0];
+            const type = 'likePost';
+            const typeID = postId;
+            const senderID = auth()?.currentUser.uid;
+            const receiverID = postUserData?.id;
+            const fcmToken = postUserData?.fcmToken;
+            sendSingleNotification(
+              senderID,
+              receiverID,
+              title,
+              body,
+              imageUrl,
+              type,
+              typeID,
+              fcmToken,
+            );
           }
         }
       }

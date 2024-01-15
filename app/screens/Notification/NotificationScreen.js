@@ -12,10 +12,12 @@ import {
 } from '../../utils/sendNotification';
 import auth from '@react-native-firebase/auth';
 import colors from '../../styles/colors';
+import {onDisplayNotificationNotifee} from '../../utils/notifeeHandler';
 
 export default function NotificationScreen() {
   const {theme} = useTheme();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
 
   // senderID,
   // receiverID,
@@ -26,7 +28,7 @@ export default function NotificationScreen() {
   // classID,
   const senderID = auth().currentUser?.uid;
   const receiverID = 'r1WHmkg9OCQUAH5Y750AQMl9kdw1';
-  const title = 'This is Notification from Local';
+  const title = 'Title This is a Notification for Testing';
   const body = 'body of notification is here';
   const imageUrl =
     'https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3082832_640.jpg';
@@ -48,7 +50,7 @@ export default function NotificationScreen() {
   };
 
   const handleSendAllNotfication = () => {
-    sendNotificationToAll();
+    sendNotificationToAll(title, body, imageUrl, type, typeID);
   };
 
   return (
@@ -68,6 +70,15 @@ export default function NotificationScreen() {
             title="Send Notification To All"
             onPress={() => handleSendAllNotfication()}
             style={{backgroundColor: colors.lightBlack, width: '70%'}}
+          />
+          <ButtonComponent
+            title="Notifee display Notification"
+            onPress={() => onDisplayNotificationNotifee()}
+            style={{
+              backgroundColor: colors.lightGrey,
+              width: '70%',
+              marginTop: 12,
+            }}
           />
         </View>
       </ScreenComponent>

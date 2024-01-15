@@ -14,7 +14,7 @@ import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../../../navigation/navigationStrings';
 
-const TopGroupChatCompo = ({groupData, onPress}) => {
+const TopGroupChatCompo = ({groupData, onPress, onPressRight}) => {
   const {theme} = useTheme();
   const [loading, setLoading] = useState(false);
   const [groupMemberImage, setGroupMemberImage] = useState('');
@@ -87,7 +87,9 @@ const TopGroupChatCompo = ({groupData, onPress}) => {
           style={[styles.rightIcon, {tintColor: theme.text}]}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.rightIconContainer}>
+      <TouchableOpacity
+        style={styles.rightIconContainer}
+        onPress={onPressRight}>
         <Image
           source={require('../../../../assets/video_call.png')}
           style={[

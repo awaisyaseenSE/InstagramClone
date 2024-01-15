@@ -21,6 +21,7 @@ import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import navigationStrings from '../../navigation/navigationStrings';
+import {sendNotificationToAll} from '../../utils/sendNotification';
 
 export default function CreatePostScreen({route}) {
   const {theme} = useTheme();
@@ -30,6 +31,8 @@ export default function CreatePostScreen({route}) {
   const [loading, setLoading] = useState(false);
   const [caption, setCaption] = useState('');
   const [medialUrls, setMediaUrls] = useState([]);
+  const currentUserName = auth().currentUser?.displayName;
+  const currentUserUID = auth().currentUser?.uid;
 
   const handleUploadPost = allUrls => {
     try {
@@ -43,7 +46,18 @@ export default function CreatePostScreen({route}) {
           likes: [],
           type: 'post',
         })
-        .then(() => navigation.navigate('TabRoutes', {screenNo: 3}))
+        .then(docRef => {
+          // Successfully uploaded post, now send notifications
+          const title = `${currentUserName} added new post`;
+          const body = caption !== '' ? caption : 'New post is added';
+          const imageUrl = allUrls[0];
+          const type = 'post';
+          const typeID = docRef.id;
+          sendNotificationToAll(title, body, imageUrl, type, typeID);
+
+          // Navigate to the desired screen
+          navigation.navigate('TabRoutes', {screenNo: 3});
+        })
         .catch(er => {
           console.log('getting error while uploading post to firestore: ', er);
         });

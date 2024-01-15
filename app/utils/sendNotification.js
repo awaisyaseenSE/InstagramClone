@@ -102,18 +102,14 @@ export const sendNotificationToAll = async (
   typeID,
 ) => {
   try {
-    // const list = ['ksdfj', 'sdlkjflk', 'sjdfl', 'lskjdf'];
-    // list.map(ele => {
-    //   console.log(ele + ' ... ');
-    // });
     const fcmList = await getAllUsersFcmToken();
-    console.log('the length of tokens is: ', fcmList);
+    // console.log('the length of tokens is: ', fcmList);
     const currentUserUID = auth().currentUser.uid; // Provide a valid sender ID
-    const title = 'All  Notification is sending';
-    const body = 'All Notification Body';
-    const imageUrl = '';
-    const type = 'Your Notification Type';
-    const typeID = 'Your Class ID';
+    // const title = 'All  Notification is sending';
+    // const body = 'All Notification Body';
+    // const imageUrl = '';
+    // const type = 'Your Notification Type';
+    // const typeID = 'Your Class ID';
     for (const {fcmToken, userID} of fcmList) {
       await sendSingleNotification(
         currentUserUID,
@@ -126,18 +122,6 @@ export const sendNotificationToAll = async (
         fcmToken,
       );
     }
-    // for (const fcmToken of fcmList) {
-    //     await sendSingleNotification(
-    //       senderID,
-    //       receiverID, // You need to provide a receiver ID here
-    //       title,
-    //       body,
-    //       imageUrl,
-    //       type,
-    //       typeID,
-    //       fcmToken
-    //     );
-    //   }
   } catch (error) {
     console.log(error);
   }

@@ -14,6 +14,10 @@ import ProfileUserTagsCompo from './Profile/ProfileUserTagsCompo';
 import FastImage from 'react-native-fast-image';
 import fontFamily from '../styles/fontFamily';
 import auth from '@react-native-firebase/auth';
+import {
+  sendNotificationToAll,
+  sendSingleNotification,
+} from '../utils/sendNotification';
 
 export default function UserProfileScreen({route}) {
   const userId = route.params?.userUid;
@@ -27,6 +31,7 @@ export default function UserProfileScreen({route}) {
   const [selectedTab, setSelectedTab] = useState(0);
   const [userPostsLength, setUserPostsLength] = useState(0);
   const [showUserImageModal, setShowUserImageModal] = useState(false);
+  const [userFcmToken, setUserFcmToken] = useState('');
 
   useEffect(() => {
     setLoading(true);
@@ -39,6 +44,7 @@ export default function UserProfileScreen({route}) {
           setUserAllData(data);
           setUserImageUrl(data.imageUrl);
           setUserName(data.fullName);
+          setUserFcmToken(data?.fcmToken);
           setLoading(false);
         } else {
           setLoading(false);
@@ -63,6 +69,24 @@ export default function UserProfileScreen({route}) {
             ); // Remove like
           } else {
             updatedFollowers.push(loggedUserId); // Add like
+            const title = `${userName} follow you`;
+            const body = 'New user follow you';
+            const imageUrl = userImageUrl;
+            const type = 'follower';
+            const typeID = userId;
+            const senderID = auth()?.currentUser.uid;
+            const receiverID = userId;
+            const fcmToken = userFcmToken;
+            sendSingleNotification(
+              senderID,
+              receiverID,
+              title,
+              body,
+              imageUrl,
+              type,
+              typeID,
+              fcmToken,
+            );
           }
           await userRef.update({followers: updatedFollowers}); // Update the likes
           // setFollowerCount(updatedFollowers.length);

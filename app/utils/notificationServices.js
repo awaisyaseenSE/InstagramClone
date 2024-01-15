@@ -4,6 +4,7 @@ import {PermissionsAndroid, Platform} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import constants from '../constants/constants';
+import {onDisplayNotificationNotifee} from './notifeeHandler';
 
 export async function requestUserPermission() {
   try {
@@ -92,6 +93,7 @@ export const notificationListner = async () => {
   // this is for handling notification in foreground state (mean app is opened)
   messaging().onMessage(async remoteMessage => {
     console.log('Notification foreground:', remoteMessage.notification);
+    await onDisplayNotificationNotifee(remoteMessage?.notification);
   });
 
   // Check whether an initial notification is available

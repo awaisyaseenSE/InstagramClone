@@ -31,6 +31,7 @@ import SoundRecorder from 'react-native-sound-recorder';
 import SoundPlayer from 'react-native-sound-player';
 import BackgroundTimer from 'react-native-background-timer';
 import RecordingComponent from './components/RecordingComponent';
+import {sendSingleNotification} from '../../utils/sendNotification';
 
 export default function ChatScreen({route}) {
   const routeData = route?.params;
@@ -329,7 +330,6 @@ export default function ChatScreen({route}) {
   const confirmAndSendMesssage = (filePath, extraText, ifAudio) => {
     setLoading(true);
     // const childPath = 'chatImages/' + Date.now() + '.png';
-    console.log('media type is: ', selectedMediaType);
     let childPath = '';
     let mediaType = '';
     if (selectedMediaType.startsWith('image')) {
@@ -452,12 +452,54 @@ export default function ChatScreen({route}) {
         setSelectedMediaType('');
         setShowMediaModal(false);
         closeReply();
+        handleSendNotification(
+          lastSendMessage,
+          receiverID,
+          routeData.chatID,
+          type,
+        );
+
         // setNotification();
       })
       .catch(err => {
         setLoading(false);
         console.log('Error in uploading messages: ', err);
       });
+  };
+
+  const handleSendNotification = (
+    lastSendMessage,
+    receiverID,
+    typeID,
+    msgType,
+  ) => {
+    let bodyNotifi = '';
+    let messageType = '';
+    if (msgType == 'text') {
+      bodyNotifi = lastSendMessage;
+      messageType = 'message';
+    } else {
+      bodyNotifi = msgType;
+      messageType = msgType;
+    }
+    const title = `${receiverName} send you ${messageType}`;
+    const body = bodyNotifi;
+    const imageUrl = receiverData?.imageUrl;
+    const type = 'message';
+    // const typeID = typeID;
+    const senderID = auth()?.currentUser.uid;
+    // const receiverID = receiverID;
+    const fcmToken = receiverData?.fcmToken;
+    sendSingleNotification(
+      senderID,
+      receiverID,
+      title,
+      body,
+      imageUrl,
+      type,
+      typeID,
+      fcmToken,
+    );
   };
 
   return (
