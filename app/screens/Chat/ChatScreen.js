@@ -482,9 +482,10 @@ export default function ChatScreen({route}) {
       bodyNotifi = msgType;
       messageType = msgType;
     }
-    const title = `${receiverName} send you ${messageType}`;
+    let senderName = auth().currentUser?.displayName;
+    const title = `${senderName} send you ${messageType}`;
     const body = bodyNotifi;
-    const imageUrl = receiverData?.imageUrl;
+    const imageUrl = auth().currentUser?.photoURL;
     const type = 'message';
     // const typeID = typeID;
     const senderID = auth()?.currentUser.uid;

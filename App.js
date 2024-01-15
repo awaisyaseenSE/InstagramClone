@@ -7,6 +7,7 @@ import SplashScreen from './app/screens/SplashScreen';
 import {
   requestUserPermission,
   notificationListner,
+  handleSetFcmToken,
 } from './app/utils/notificationServices';
 
 export default function App() {

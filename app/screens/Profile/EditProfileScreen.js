@@ -326,6 +326,16 @@ export default function EditProfileScreen({route}) {
                     </View>
                   </View>
                 )}
+                <View>
+                  <Text style={{fontSize: 14, color: theme.text}}>
+                    Fcm Token:{' '}
+                  </Text>
+                  <Text style={{fontSize: 10, color: theme.text}}>
+                    {userData?.fcmToken !== undefined
+                      ? userData?.fcmToken
+                      : 'No fcm token is found'}
+                  </Text>
+                </View>
               </View>
             </View>
           </TouchableWithoutFeedback>

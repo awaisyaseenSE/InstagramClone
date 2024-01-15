@@ -71,12 +71,13 @@ export default function UserProfileScreen({route}) {
             updatedFollowers.push(loggedUserId); // Add like
             const title = `${userName} follow you`;
             const body = 'New user follow you';
-            const imageUrl = userImageUrl;
+            const imageUrl = auth().currentUser?.photoURL;
             const type = 'follower';
             const typeID = userId;
             const senderID = auth()?.currentUser.uid;
             const receiverID = userId;
             const fcmToken = userFcmToken;
+            console.log('fcm token is: ', fcmToken);
             sendSingleNotification(
               senderID,
               receiverID,

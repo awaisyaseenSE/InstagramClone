@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PermissionsAndroid, Platform} from 'react-native';
-import auth from '@react-native-firebase/auth';
+import auth, {firebase} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import constants from '../constants/constants';
 import {onDisplayNotificationNotifee} from './notifeeHandler';
@@ -20,6 +20,7 @@ export async function requestUserPermission() {
           PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
         );
         if (grants === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('permision is grandted for Android');
           getFcmToken();
         }
       } else {
@@ -33,6 +34,17 @@ export async function requestUserPermission() {
     );
   }
 }
+
+export const handleSetFcmToken = async () => {
+  try {
+    const token = await firebase.messaging().getToken();
+    if (token) {
+      await storeFcmTokenToFirestore(token);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const storeFcmTokenToFirestore = async fcmToken => {
   try {
@@ -58,26 +70,32 @@ const storeFcmTokenToFirestore = async fcmToken => {
 };
 
 const getFcmToken = async () => {
-  let oldFcmToken = await AsyncStorage.getItem('fcmToken');
-  if (!oldFcmToken) {
-    try {
-      const fcmToken = await messaging().getToken();
-      if (fcmToken) {
-        console.log('new generated fcm token is: ', fcmToken);
-        await AsyncStorage.setItem('fcmToken', fcmToken);
-        await storeFcmTokenToFirestore(fcmToken);
-        constants.fcmToken = fcmToken;
-      }
-    } catch (error) {
-      console.log(
-        'Error in notificationServices file while setting fcm token to async storage: ',
-        error,
-      );
-    }
-  } else {
-    constants.fcmToken = oldFcmToken;
-    // await storeFcmTokenToFirestore(oldFcmToken);
-    // console.log('Old fcm token is: ', oldFcmToken);
+  // let oldFcmToken = await AsyncStorage.getItem('fcmToken');
+  // if (!oldFcmToken) {
+  //   try {
+  //     const fcmToken = await messaging().getToken();
+  //     if (fcmToken) {
+  //       console.log('new generated fcm token is: ', fcmToken);
+  //       await AsyncStorage.setItem('fcmToken', fcmToken);
+  //       await storeFcmTokenToFirestore(fcmToken);
+  //       constants.fcmToken = fcmToken;
+  //     }
+  //   } catch (error) {
+  //     console.log(
+  //       'Error in notificationServices file while setting fcm token to async storage: ',
+  //       error,
+  //     );
+  //   }
+  // } else {
+  //   constants.fcmToken = oldFcmToken;
+  //   // await storeFcmTokenToFirestore(oldFcmToken);
+  //   console.log('Old fcm token is: ', oldFcmToken)'
+  // }
+  try {
+    const fcmToken = await messaging().getToken();
+    await storeFcmTokenToFirestore(fcmToken);
+  } catch (error) {
+    console.log('Error while getting fcm token');
   }
 };
 

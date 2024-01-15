@@ -15,7 +15,7 @@ import {
   Platform,
 } from 'react-native';
 import colors from '../styles/colors';
-import auth from '@react-native-firebase/auth';
+import auth, {firebase} from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import useAuth from '../auth/useAuth';
 import {useTheme} from '../themes/ThemeContext';
@@ -23,6 +23,8 @@ import ProfileDrawerStyle from './style/ProfileDrawerStyle';
 import fontFamily from '../styles/fontFamily';
 import DrawerItemListCompo from './DrawerItemListCompo';
 import navigationStrings from './navigationStrings';
+import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 
 function CustomDrawer(props) {
   const {theme} = useTheme();
@@ -52,6 +54,40 @@ function CustomDrawer(props) {
       console.log('============ERROR WHILE LOG OUT========================');
       console.log(error);
       console.log('====================================');
+    }
+  };
+
+  const storeFcmTokenToFirestore = async fcmToken => {
+    try {
+      const userRef = firestore()
+        .collection('users')
+        .doc(auth().currentUser?.uid);
+      const userData = await userRef.get();
+
+      if (userData.exists) {
+        const userDataObj = userData.data(); // Access user data using data() method
+
+        if (userDataObj.hasOwnProperty('fcmToken')) {
+          // If 'fcmToken' field already exists, update it
+          await userRef.update({fcmToken: fcmToken});
+        } else {
+          // If 'fcmToken' field doesn't exist, set it
+          await userRef.set({...userDataObj, fcmToken: fcmToken});
+        }
+      }
+    } catch (error) {
+      console.log('Error while storing fcm to user collection: ', error);
+    }
+  };
+
+  const handleSetFcmToken = async () => {
+    try {
+      const token = await firebase.messaging().getToken();
+      if (token) {
+        await storeFcmTokenToFirestore(token);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -112,6 +148,11 @@ function CustomDrawer(props) {
             onPress={() =>
               navigation.navigate(navigationStrings.SETTING_SCREEN)
             }
+          />
+          <DrawerItemListCompo
+            image={require('../assets/forward.png')}
+            title="Set Fcm token"
+            onPress={() => handleSetFcmToken()}
           />
         </View>
       </DrawerContentScrollView>

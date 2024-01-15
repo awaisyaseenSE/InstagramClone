@@ -60,7 +60,7 @@ const LikeComponent = ({
               likes: firestore.FieldValue.arrayUnion(loggedUser.uid),
             });
             setLiked(true);
-            const title = `${postUserData?.fullName} Like your post 101`;
+            const title = `${postUserData?.fullName} Like your post`;
             const body = '';
             const imageUrl = postData?.medialUrls[0];
             const type = 'likePost';

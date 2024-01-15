@@ -28,7 +28,7 @@ export async function onDisplayNotificationNotifee(data) {
       },
       style: {
         type: AndroidStyle.BIGPICTURE,
-        picture: data?.android?.imageUrl,
+        picture: data?.android?.imageUrl || '',
       },
     },
   });
