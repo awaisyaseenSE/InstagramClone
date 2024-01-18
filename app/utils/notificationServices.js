@@ -92,7 +92,7 @@ const getFcmToken = async () => {
   //   console.log('Old fcm token is: ', oldFcmToken)'
   // }
   try {
-    const fcmToken = await messaging().getToken();
+    const fcmToken = await firebase.messaging().getToken();
     await storeFcmTokenToFirestore(fcmToken);
   } catch (error) {
     console.log('Error while getting fcm token');
