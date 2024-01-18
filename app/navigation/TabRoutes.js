@@ -1,17 +1,17 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Image, Platform} from 'react-native';
-import ScreenComponent from '../components/ScreenComponent';
+import React, {useEffect, useState} from 'react';
+import {View, TouchableOpacity, Image, Platform} from 'react-native';
 import {useTheme} from '../themes/ThemeContext';
 import BottomTabStyle from './style/BottomTabStyle';
 import Home from '../screens/Home';
 import SearchScreen from '../screens/SearchScreen';
-import CreatePostScreen from '../screens/CreatePost/CreatePostScreen';
-import NotificationScreen from '../screens/Notification/NotificationScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
 import GalleryScreen from '../screens/CreatePost/GalleryScreen';
 import auth from '@react-native-firebase/auth';
 import FastImage from 'react-native-fast-image';
 import ReelsScreen from '../screens/Reels/ReelsScreen';
+import {useNavigation} from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
+import navigationStrings from './navigationStrings';
 
 const TabRoutes = ({route}) => {
   const screenNo = route.params?.screenNo;
@@ -24,6 +24,48 @@ const TabRoutes = ({route}) => {
   const switchToScreen = screenIndex => {
     setSelectedScreen(screenIndex);
   };
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    handleKillStateNotification();
+  }, []);
+
+  const handleKillStateNotification = () => {
+    // this code is used for kill mode of app mean app in kill state
+    try {
+      messaging()
+        .getInitialNotification()
+        .then(remoteMessage => {
+          if (remoteMessage) {
+            console.log(
+              'Notification from quit state in TAB ROUTES:',
+              remoteMessage,
+            );
+            if (
+              !!remoteMessage?.data &&
+              remoteMessage?.data?.type == 'likePost'
+            ) {
+              console.log('..............Hello..............');
+              const clickedItem = remoteMessage?.data?.typeID;
+              const userUid = auth().currentUser?.uid;
+              setTimeout(() => {
+                navigation.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
+                  clickedItem: clickedItem,
+                  userUid: userUid,
+                });
+              }, 100);
+            }
+          }
+        });
+    } catch (error) {
+      console.log(
+        'Error handling kill state notification in TabRoutes file: ',
+        error,
+      );
+    }
+  };
+
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 1}}>

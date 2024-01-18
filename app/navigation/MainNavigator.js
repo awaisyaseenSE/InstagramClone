@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import AuthsContext from '../auth/AuthsContext';
 import AuthNavigator from './AuthNavigator';
 import AppNavigator from './AppNavigator';
+import NavigationService from './NavigationService';
 
 function MainNavigator(props) {
   const [user, setUser] = useState(null);
@@ -23,7 +24,8 @@ function MainNavigator(props) {
 
   return (
     <AuthsContext.Provider value={{user, setUser}}>
-      <NavigationContainer>
+      <NavigationContainer
+        ref={ref => NavigationService.setTopLevelNavigator(ref)}>
         {/* {user !== null ? <AppNavigator /> : <AuthNavigator />} */}
         {auth().currentUser?.emailVerified ? (
           <AppNavigator />

@@ -61,6 +61,10 @@ export const sendSingleNotification = async (
           body: body,
           image: imageUrl,
         },
+        data: {
+          type: type,
+          typeID: typeID,
+        },
       }),
     });
     if (response.ok) {

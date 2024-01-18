@@ -69,11 +69,11 @@ export default function UserProfileScreen({route}) {
             ); // Remove like
           } else {
             updatedFollowers.push(loggedUserId); // Add like
-            const title = `${userName} follow you`;
+            const title = `${auth().currentUser?.displayName} follow you`;
             const body = 'New user follow you';
             const imageUrl = auth().currentUser?.photoURL;
             const type = 'follower';
-            const typeID = userId;
+            const typeID = auth().currentUser?.uid;
             const senderID = auth()?.currentUser.uid;
             const receiverID = userId;
             const fcmToken = userFcmToken;

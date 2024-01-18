@@ -5,6 +5,8 @@ import auth, {firebase} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import constants from '../constants/constants';
 import {onDisplayNotificationNotifee} from './notifeeHandler';
+import navigationStrings from '../navigation/navigationStrings';
+import NavigationService from '../navigation/NavigationService';
 
 export async function requestUserPermission() {
   try {
@@ -106,6 +108,46 @@ export const notificationListner = async () => {
       'Notification caused app to open from background state:',
       remoteMessage.notification,
     );
+    if (auth().currentUser?.uid) {
+      console.log('user is logged in');
+      if (!!remoteMessage?.data && remoteMessage?.data?.type == 'follower') {
+        setTimeout(() => {
+          NavigationService.navigate(navigationStrings.USER_PROFILE, {
+            userUid: remoteMessage?.data?.typeID,
+          });
+        }, 100);
+      }
+      if (!!remoteMessage?.data && remoteMessage?.data?.type == 'message') {
+        const routeData = {
+          chatID: remoteMessage?.data?.typeID,
+        };
+        setTimeout(() => {
+          NavigationService.navigate(navigationStrings.CHAT_SCREEN, routeData);
+        }, 100);
+      }
+
+      if (
+        !!remoteMessage?.data &&
+        remoteMessage?.data?.type == 'groupMessage'
+      ) {
+        setTimeout(() => {
+          NavigationService.navigate(navigationStrings.GROUP_CHAT_SCREEN, {
+            groupId: remoteMessage?.data?.typeID,
+          });
+        }, 100);
+      }
+
+      if (!!remoteMessage?.data && remoteMessage?.data?.type == 'likePost') {
+        const clickedItem = remoteMessage?.data?.typeID;
+        const userUid = auth().currentUser?.uid;
+        setTimeout(() => {
+          NavigationService.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
+            clickedItem: clickedItem,
+            userUid: userUid,
+          });
+        }, 100);
+      }
+    }
   });
 
   // this is for handling notification in foreground state (mean app is opened)
@@ -116,14 +158,25 @@ export const notificationListner = async () => {
 
   // Check whether an initial notification is available
   // below code is used for kill mode of app mean app in kill state
-  messaging()
-    .getInitialNotification()
-    .then(remoteMessage => {
-      if (remoteMessage) {
-        console.log(
-          'Notification caused app to open from quit state:',
-          remoteMessage.notification,
-        );
-      }
-    });
+  // messaging()
+  //   .getInitialNotification()
+  //   .then(remoteMessage => {
+  //     if (remoteMessage) {
+  //       console.log(
+  //         'Notification caused app to open from quit state:',
+  //         remoteMessage,
+  //       );
+  //       // if (!!remoteMessage?.data && remoteMessage?.data?.type == 'likePost') {
+  //       //   console.log('..............Hello..............');
+  //       //   const clickedItem = remoteMessage?.data?.typeID;
+  //       //   const userUid = auth().currentUser?.uid;
+  //       //   setTimeout(() => {
+  //       //     NavigationService.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
+  //       //       clickedItem: clickedItem,
+  //       //       userUid: userUid,
+  //       //     });
+  //       //   }, 100);
+  //       // }
+  //     }
+  //   });
 };
