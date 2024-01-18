@@ -44,6 +44,38 @@ const TabRoutes = ({route}) => {
             );
             if (
               !!remoteMessage?.data &&
+              remoteMessage?.data?.type == 'follower'
+            ) {
+              setTimeout(() => {
+                navigation.navigate(navigationStrings.USER_PROFILE, {
+                  userUid: remoteMessage?.data?.typeID,
+                });
+              }, 100);
+            }
+            if (
+              !!remoteMessage?.data &&
+              remoteMessage?.data?.type == 'message'
+            ) {
+              const routeData = {
+                chatID: remoteMessage?.data?.typeID,
+              };
+              setTimeout(() => {
+                navigation.navigate(navigationStrings.CHAT_SCREEN, routeData);
+              }, 100);
+            }
+
+            if (
+              !!remoteMessage?.data &&
+              remoteMessage?.data?.type == 'groupMessage'
+            ) {
+              setTimeout(() => {
+                navigation.navigate(navigationStrings.GROUP_CHAT_SCREEN, {
+                  groupId: remoteMessage?.data?.typeID,
+                });
+              }, 100);
+            }
+            if (
+              !!remoteMessage?.data &&
               remoteMessage?.data?.type == 'likePost'
             ) {
               console.log('..............Hello..............');
