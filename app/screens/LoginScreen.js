@@ -8,6 +8,9 @@ import {
   Dimensions,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useState} from 'react';
 import ScreenComponent from '../components/ScreenComponent';
@@ -130,111 +133,130 @@ export default function LoginScreen() {
       <ScreenComponent style={{backgroundColor: theme.loginBackground}}>
         <View
           style={[styles.container, {backgroundColor: theme.loginBackground}]}>
-          <View style={styles.mainContainer}>
-            <View style={{flex: 0.3}} />
-            <Image
-              source={require('../assets/logo.png')}
-              style={[styles.logo, {tintColor: theme.text}]}
-            />
-            <View style={styles.inputContainer}>
-              {showEmailVerify && (
-                <Text
-                  style={[
-                    styles.errorText,
-                    {marginBottom: 6, alignSelf: 'center', color: theme.red},
-                  ]}>
-                  Please Verify Your Email to Login!
-                </Text>
-              )}
-              <TextInput
-                style={[styles.input, {color: theme.text}]}
-                placeholder="Email"
-                value={email}
-                onChangeText={text => setEmail(text)}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                placeholderTextColor={theme.gray}
-              />
-              {emailError !== '' && (
-                <Text style={[styles.errorText, {color: theme.red}]}>
-                  {emailError}
-                </Text>
-              )}
-              <View style={styles.passwordInputContainer}>
-                <TextInput
-                  style={[styles.passwordInput, {color: theme.text}]}
-                  placeholder="Password"
-                  value={password}
-                  onChangeText={text => setPassword(text)}
-                  secureTextEntry={isShowPassword}
-                  placeholderTextColor={theme.gray}
+          <KeyboardAvoidingView
+            style={{flex: 1}}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View style={styles.mainContainer}>
+                <View style={{flex: 0.3}} />
+                <Image
+                  source={require('../assets/logo.png')}
+                  style={[styles.logo, {tintColor: theme.text}]}
                 />
-                {password.length > 0 ? (
-                  <TouchableOpacity
-                    onPress={() => setIsShowPassword(!isShowPassword)}>
-                    <Image
-                      source={
-                        isShowPassword
-                          ? require('../assets/view.png')
-                          : require('../assets/hide.png')
-                      }
-                      style={[styles.showHideIcon, {tintColor: theme.light}]}
+                <View style={styles.inputContainer}>
+                  {showEmailVerify && (
+                    <Text
+                      style={[
+                        styles.errorText,
+                        {
+                          marginBottom: 6,
+                          alignSelf: 'center',
+                          color: theme.red,
+                        },
+                      ]}>
+                      Please Verify Your Email to Login!
+                    </Text>
+                  )}
+                  <TextInput
+                    style={[styles.input, {color: theme.text}]}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={text => setEmail(text)}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    placeholderTextColor={theme.gray}
+                  />
+                  {emailError !== '' && (
+                    <Text style={[styles.errorText, {color: theme.red}]}>
+                      {emailError}
+                    </Text>
+                  )}
+                  <View style={styles.passwordInputContainer}>
+                    <TextInput
+                      style={[styles.passwordInput, {color: theme.text}]}
+                      placeholder="Password"
+                      value={password}
+                      onChangeText={text => setPassword(text)}
+                      secureTextEntry={isShowPassword}
+                      placeholderTextColor={theme.gray}
                     />
+                    {password.length > 0 ? (
+                      <TouchableOpacity
+                        onPress={() => setIsShowPassword(!isShowPassword)}>
+                        <Image
+                          source={
+                            isShowPassword
+                              ? require('../assets/view.png')
+                              : require('../assets/hide.png')
+                          }
+                          style={[
+                            styles.showHideIcon,
+                            {tintColor: theme.light},
+                          ]}
+                        />
+                      </TouchableOpacity>
+                    ) : null}
+                  </View>
+                  {passwordError !== '' && (
+                    <Text style={[styles.errorText, {color: theme.red}]}>
+                      {passwordError}
+                    </Text>
+                  )}
+                </View>
+                <View style={styles.fogotPassContainer}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate(navigationStrings.FORGOT_PASSWORD)
+                    }>
+                    <Text style={styles.forgotText}>Forgot Password?</Text>
                   </TouchableOpacity>
-                ) : null}
+                </View>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.buttonStyle}
+                    onPress={handleLogin}>
+                    {loading ? (
+                      <ActivityIndicator color={colors.white} size={22} />
+                    ) : (
+                      <Text style={styles.buttonText}>Login</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                  style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Image
+                    style={styles.facebookIconStyle}
+                    source={require('../assets/facebook_Icon.png')}
+                  />
+                  <Text style={styles.facebookText}>Log in with Facebook</Text>
+                </TouchableOpacity>
+                <View style={styles.OrTextContainer}>
+                  <View
+                    style={[styles.lineStyle, {backgroundColor: theme.gray}]}
+                  />
+                  <Text style={[styles.orText, {color: theme.gray}]}>OR</Text>
+                  <View
+                    style={[styles.lineStyle, {backgroundColor: theme.gray}]}
+                  />
+                </View>
+                <View style={styles.createAccontContainer}>
+                  <Text
+                    style={[
+                      styles.createAccountText,
+                      {color: theme.lightText},
+                    ]}>
+                    Don’t have an account?
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate(navigationStrings.SIGN_UP_SCREEN)
+                    }>
+                    <Text style={styles.signUpText}>Sign up</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              {passwordError !== '' && (
-                <Text style={[styles.errorText, {color: theme.red}]}>
-                  {passwordError}
-                </Text>
-              )}
-            </View>
-            <View style={styles.fogotPassContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate(navigationStrings.FORGOT_PASSWORD)
-                }>
-                <Text style={styles.forgotText}>Forgot Password?</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={handleLogin}>
-                {loading ? (
-                  <ActivityIndicator color={colors.white} size={22} />
-                ) : (
-                  <Text style={styles.buttonText}>Login</Text>
-                )}
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                style={styles.facebookIconStyle}
-                source={require('../assets/facebook_Icon.png')}
-              />
-              <Text style={styles.facebookText}>Log in with Facebook</Text>
-            </TouchableOpacity>
-            <View style={styles.OrTextContainer}>
-              <View style={[styles.lineStyle, {backgroundColor: theme.gray}]} />
-              <Text style={[styles.orText, {color: theme.gray}]}>OR</Text>
-              <View style={[styles.lineStyle, {backgroundColor: theme.gray}]} />
-            </View>
-            <View style={styles.createAccontContainer}>
-              <Text
-                style={[styles.createAccountText, {color: theme.lightText}]}>
-                Don’t have an account?
-              </Text>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate(navigationStrings.SIGN_UP_SCREEN)
-                }>
-                <Text style={styles.signUpText}>Sign up</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
+            </TouchableWithoutFeedback>
+          </KeyboardAvoidingView>
           <View style={[styles.footer, {borderTopColor: theme.gray}]}>
             <View
               style={{
