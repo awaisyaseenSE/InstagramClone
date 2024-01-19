@@ -23,6 +23,8 @@ export default function NotificationScreen() {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [unReadNotifitions, setUnReadNotifications] = useState([]);
+  const [readNotifitions, setReadNotifications] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -38,6 +40,19 @@ export default function NotificationScreen() {
         //   'Total Notification is: ',
         //   filteredNotificationsData.length,
         // );
+        let unReadArr = [];
+        let readArr = [];
+        filteredNotificationsData.forEach(ele => {
+          if (ele?.isRead == false) {
+            unReadArr.push(ele);
+          } else if (ele?.isRead == true) {
+            readArr.push(ele);
+          } else {
+            null;
+          }
+        });
+        setUnReadNotifications(unReadArr);
+        setReadNotifications(readArr);
         setNotifications(filteredNotificationsData);
         setLoading(false);
       });
@@ -55,7 +70,9 @@ export default function NotificationScreen() {
         <ScrollView
           style={styles.container}
           showsVerticalScrollIndicator={false}>
-          <Text style={[styles.text, {color: theme.text}]}>New</Text>
+          {unReadNotifitions.length > 0 && (
+            <Text style={[styles.text, {color: theme.text}]}>New</Text>
+          )}
           <FlatList
             data={notifications}
             renderItem={({item}) => {
@@ -68,7 +85,9 @@ export default function NotificationScreen() {
             keyExtractor={(item, index) => index.toString()}
             scrollEnabled={false}
           />
-          <Text style={[styles.text, {color: theme.text}]}>Last 30 days</Text>
+          {readNotifitions.length > 0 && (
+            <Text style={[styles.text, {color: theme.text}]}>Previous</Text>
+          )}
           <FlatList
             data={notifications}
             renderItem={({item}) => {
