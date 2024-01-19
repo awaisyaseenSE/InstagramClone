@@ -160,8 +160,8 @@ export default function ChatScreen({route}) {
 
   const pickImage = async () => {
     setLoading(true);
-    // const value = await askingPermission.requestPermissionn();
-    const value = true;
+    const value = await askingPermission.requestPermissionn();
+    // const value = true;
     if (value) {
       const options = {
         title: 'Select Photo',

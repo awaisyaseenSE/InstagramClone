@@ -824,6 +824,8 @@ PODS:
   - nanopb/encode (2.30909.1)
   - Permission-Camera (3.10.1):
     - RNPermissions
+  - Permission-Microphone (3.10.1):
+    - RNPermissions
   - Permission-PhotoLibrary (3.10.1):
     - RNPermissions
   - Permission-PhotoLibraryAddOnly (3.10.1):
@@ -1351,6 +1353,7 @@ DEPENDENCIES:
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
   - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera`)
+  - Permission-Microphone (from `../node_modules/react-native-permissions/ios/Microphone`)
   - Permission-PhotoLibrary (from `../node_modules/react-native-permissions/ios/PhotoLibrary`)
   - Permission-PhotoLibraryAddOnly (from `../node_modules/react-native-permissions/ios/PhotoLibraryAddOnly`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
@@ -1469,6 +1472,8 @@ EXTERNAL SOURCES:
     :tag: hermes-2023-08-07-RNv0.72.4-813b2def12bc9df02654b3e3653ae4a68d0572e0
   Permission-Camera:
     :path: "../node_modules/react-native-permissions/ios/Camera"
+  Permission-Microphone:
+    :path: "../node_modules/react-native-permissions/ios/Microphone"
   Permission-PhotoLibrary:
     :path: "../node_modules/react-native-permissions/ios/PhotoLibrary"
   Permission-PhotoLibraryAddOnly:
@@ -1635,6 +1640,7 @@ SPEC CHECKSUMS:
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   Permission-Camera: 9b70902f34a83c10e198d2d01f0e453e58842776
+  Permission-Microphone: 8d045745c0c12aed0370ba89c36b6bc1ba54d7eb
   Permission-PhotoLibrary: 03c52ed95dadfb0f2ba4c7663786cce0c4e0c978
   Permission-PhotoLibraryAddOnly: c4fbf91806bbdc3ed877049bc09fbe58ad9a7c97
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
@@ -1708,6 +1714,6 @@ SPEC CHECKSUMS:
   zego-uikit-rn: 202d102aa68ee445f0d8fffe8bbef36b3368bcc0
   ZegoExpressEngine: 7ddbd7134c03c45bfdcddb61f4d76a1486518425
 
-PODFILE CHECKSUM: 91f444828bdd6ab195748b99bd462b45c49f8094
+PODFILE CHECKSUM: c2111a2e19fe0ad218fc046e7e5a59e13baf035b
 
 COCOAPODS: 1.14.2

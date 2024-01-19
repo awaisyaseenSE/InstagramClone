@@ -13,7 +13,7 @@ export const getCameraPermission = () => {
   request(
     Platform.OS === 'ios'
       ? PERMISSIONS.IOS.PHOTO_LIBRARY
-      : PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+      : PERMISSIONS.ANDROID.CAMERA,
   ).then(result => {
     // setPermissionResult(result)
     console.log(result);
