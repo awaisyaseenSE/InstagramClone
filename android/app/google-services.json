@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "10428894886",
+    "project_id": "instagramclone-e95ef",
+    "storage_bucket": "instagramclone-e95ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:10428894886:android:49e8faf592423d8d95ee67",
+        "android_client_info": {
+          "package_name": "com.rahaalapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCK9i5ViKhOXR2Ea-sQ49pFgjU5dorg4T4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
