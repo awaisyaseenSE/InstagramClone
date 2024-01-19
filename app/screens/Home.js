@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ScreenComponent from '../components/ScreenComponent';
@@ -52,24 +53,27 @@ export default function Home({switchToScreen}) {
           flex: 1,
         }}
         statusBarBg={theme.bottonTabBg}>
-        <TopHomeCompo />
-        <View style={{flex: 1, backgroundColor: theme.background}}>
-          <StoryComponent />
-          <View style={{flex: 1}}>
-            <FlatList
-              data={postData}
-              renderItem={({item}) => (
-                <ShowPostsCompo
-                  item={item}
-                  allUrls={item.medialUrls}
-                  switchToScreen={switchToScreen}
-                />
-              )}
-              showsVerticalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-            />
+        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+          <TopHomeCompo />
+          <View style={{flex: 1, backgroundColor: theme.background}}>
+            <StoryComponent />
+            <View style={{flex: 1}}>
+              <FlatList
+                data={postData}
+                renderItem={({item}) => (
+                  <ShowPostsCompo
+                    item={item}
+                    allUrls={item.medialUrls}
+                    switchToScreen={switchToScreen}
+                  />
+                )}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={(item, index) => index.toString()}
+                scrollEnabled={false}
+              />
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </ScreenComponent>
       <MyIndicator
         visible={laoding}
