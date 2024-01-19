@@ -25,6 +25,7 @@ import DrawerItemListCompo from './DrawerItemListCompo';
 import navigationStrings from './navigationStrings';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
+import {getCameraPermission} from '../utils/askPermissions';
 
 function CustomDrawer(props) {
   const {theme} = useTheme();
@@ -115,6 +116,7 @@ function CustomDrawer(props) {
           <DrawerItemListCompo
             image={require('../assets/activity.png')}
             title="Your Activity"
+            onPress={getCameraPermission}
           />
           <DrawerItemListCompo
             image={require('../assets/nametag.png')}

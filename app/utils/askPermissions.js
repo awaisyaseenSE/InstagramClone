@@ -12,7 +12,7 @@ import DeviceInfo from 'react-native-device-info';
 export const getCameraPermission = () => {
   request(
     Platform.OS === 'ios'
-      ? PERMISSIONS.IOS.MICROPHONE
+      ? PERMISSIONS.IOS.PHOTO_LIBRARY
       : PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
   ).then(result => {
     // setPermissionResult(result)
