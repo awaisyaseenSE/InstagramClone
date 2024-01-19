@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
@@ -184,6 +177,7 @@ const ShowNotificationCompo = ({data}) => {
             }
             style={styles.userProfileImage}
           />
+          {data?.isRead == false && <View style={styles.readUnReadNotif} />}
         </View>
         <View style={styles.notificationTextContainer}>
           <Text style={[styles.notificationText, {color: theme.text}]}>
@@ -302,6 +296,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     color: colors.white,
+  },
+  readUnReadNotif: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'red',
+    position: 'absolute',
+    top: 4,
+    right: 2,
   },
 });
 

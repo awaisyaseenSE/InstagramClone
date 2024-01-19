@@ -1,4 +1,11 @@
-import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ScreenComponent from '../../components/ScreenComponent';
 import TopCompoWithHeading from '../../components/TopCompoWithHeading';
@@ -45,14 +52,36 @@ export default function NotificationScreen() {
           title="Notification"
           onPress={() => navigation.goBack()}
         />
-        <View style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          showsVerticalScrollIndicator={false}>
+          <Text style={[styles.text, {color: theme.text}]}>New</Text>
           <FlatList
             data={notifications}
-            renderItem={({item}) => <ShowNotificationCompo data={item} />}
+            renderItem={({item}) => {
+              return (
+                item?.isRead == false && <ShowNotificationCompo data={item} />
+              );
+            }}
+            // renderItem={({item}) => <ShowNotificationCompo data={item} />}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
+            scrollEnabled={false}
           />
-        </View>
+          <Text style={[styles.text, {color: theme.text}]}>Last 30 days</Text>
+          <FlatList
+            data={notifications}
+            renderItem={({item}) => {
+              return (
+                item?.isRead == true && <ShowNotificationCompo data={item} />
+              );
+            }}
+            // renderItem={({item}) => <ShowNotificationCompo data={item} />}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            scrollEnabled={false}
+          />
+        </ScrollView>
       </ScreenComponent>
       <MyIndicator
         visible={loading}
@@ -67,5 +96,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 12,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: '600',
+    paddingLeft: 12,
+    marginBottom: 12,
   },
 });
