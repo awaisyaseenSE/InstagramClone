@@ -245,7 +245,7 @@ const ShowNotificationCompo = ({data}) => {
       </TouchableOpacity>
       <MyIndicator
         visible={loading}
-        backgroundColor={theme.loginBackground}
+        backgroundColor={'transparent'}
         size={'small'}
       />
     </>
