@@ -158,25 +158,77 @@ export const notificationListner = async () => {
 
   // Check whether an initial notification is available
   // below code is used for kill mode of app mean app in kill state
-  // messaging()
-  //   .getInitialNotification()
-  //   .then(remoteMessage => {
-  //     if (remoteMessage) {
-  //       console.log(
-  //         'Notification caused app to open from quit state:',
-  //         remoteMessage,
-  //       );
-  //       // if (!!remoteMessage?.data && remoteMessage?.data?.type == 'likePost') {
-  //       //   console.log('..............Hello..............');
-  //       //   const clickedItem = remoteMessage?.data?.typeID;
-  //       //   const userUid = auth().currentUser?.uid;
-  //       //   setTimeout(() => {
-  //       //     NavigationService.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
-  //       //       clickedItem: clickedItem,
-  //       //       userUid: userUid,
-  //       //     });
-  //       //   }, 100);
-  //       // }
-  //     }
-  //   });
+  messaging()
+    .getInitialNotification()
+    .then(remoteMessage => {
+      if (remoteMessage) {
+        console.log(
+          'Notification caused app to open from quit state:',
+          remoteMessage,
+        );
+        // if (!!remoteMessage?.data && remoteMessage?.data?.type == 'likePost') {
+        //   console.log('..............Hello....KILL.....MODE............');
+        //   const clickedItem = remoteMessage?.data?.typeID;
+        //   const userUid = auth().currentUser?.uid;
+        //   setTimeout(() => {
+        //     NavigationService.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
+        //       clickedItem: clickedItem,
+        //       userUid: userUid,
+        //     });
+        //   }, 2000);
+        // }
+        if (auth().currentUser?.uid) {
+          console.log('user is logged in');
+          if (
+            !!remoteMessage?.data &&
+            remoteMessage?.data?.type == 'follower'
+          ) {
+            setTimeout(() => {
+              NavigationService.navigate(navigationStrings.USER_PROFILE, {
+                userUid: remoteMessage?.data?.typeID,
+              });
+            }, 2000);
+          }
+          if (!!remoteMessage?.data && remoteMessage?.data?.type == 'message') {
+            const routeData = {
+              chatID: remoteMessage?.data?.typeID,
+            };
+            setTimeout(() => {
+              NavigationService.navigate(
+                navigationStrings.CHAT_SCREEN,
+                routeData,
+              );
+            }, 2000);
+          }
+
+          if (
+            !!remoteMessage?.data &&
+            remoteMessage?.data?.type == 'groupMessage'
+          ) {
+            setTimeout(() => {
+              NavigationService.navigate(navigationStrings.GROUP_CHAT_SCREEN, {
+                groupId: remoteMessage?.data?.typeID,
+              });
+            }, 2000);
+          }
+
+          if (
+            !!remoteMessage?.data &&
+            remoteMessage?.data?.type == 'likePost'
+          ) {
+            const clickedItem = remoteMessage?.data?.typeID;
+            const userUid = auth().currentUser?.uid;
+            setTimeout(() => {
+              NavigationService.navigate(
+                navigationStrings.SHOW_ALL_USER_POSTS,
+                {
+                  clickedItem: clickedItem,
+                  userUid: userUid,
+                },
+              );
+            }, 2000);
+          }
+        }
+      }
+    });
 };
