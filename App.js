@@ -9,6 +9,7 @@ import {
   notificationListner,
   handleSetFcmToken,
 } from './app/utils/notificationServices';
+import DeepLinkHandler from './app/components/DeepLinkHandler';
 
 export default function App() {
   const [splashDone, setSplashDone] = useState(false);
@@ -29,6 +30,7 @@ export default function App() {
     <>
       <ThemeProvider>
         {splashDone ? <MainNavigator /> : <SplashScreen />}
+        <DeepLinkHandler />
       </ThemeProvider>
     </>
   );

@@ -347,7 +347,7 @@ export default function UserProfileScreen({route}) {
             />
           )}
           {selectedTab === 1 && <ProfileReelCompo userID={userId} />}
-          {selectedTab === 2 && <ProfileUserTagsCompo />}
+          {selectedTab === 2 && <ProfileUserTagsCompo userID={userId} />}
           {showUserImageModal && (
             <Modal style={{backgroundColor: 'transparent'}}>
               <ScreenComponent style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>

@@ -7,6 +7,7 @@ import {
   Dimensions,
   Alert,
   Modal,
+  Share,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
@@ -22,6 +23,8 @@ import navigationStrings from '../../navigation/navigationStrings';
 import ShowPostOptionModal from './ShowPostOptionModal';
 import MyIndicator from '../../components/MyIndicator';
 import Video from 'react-native-video';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import {shareLink} from '../../utils/deepLinking';
 
 const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
   const {theme} = useTheme();
@@ -63,6 +66,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
     //     );
     //   });
   }, []);
+
   useEffect(() => {
     const unsubscribe = firestore()
       .collection('posts')
@@ -150,6 +154,49 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
       }
     } catch (error) {
       console.log('Error in follower function: ', error);
+    }
+  };
+
+  // const generateDeepLink = async () => {
+  //   try {
+  //     const link = await dynamicLinks().buildShortLink(
+  //       {
+  //         link: `https://instaclonedeeplink.page.link/mVFa`,
+  //         domainUriPrefix: 'https://instaclonedeeplink.page.link',
+  //         android: {
+  //           packageName: 'com.rahaalapp',
+  //         },
+  //       },
+  //       dynamicLinks.ShortLinkType.DEFAULT,
+  //     );
+  //     return link;
+  //   } catch (error) {
+  //     console.log(
+  //       'Error while generating deep link in Show Posts Component: ',
+  //       error,
+  //     );
+  //   }
+  // };
+
+  // const shareLink = async () => {
+  //   const getLink = await generateDeepLink();
+  //   try {
+  //     Share.share({
+  //       message: getLink,
+  //     });
+  //   } catch (error) {
+  //     console.log(
+  //       'Error while share link of app in Show Posts Component: ',
+  //       error,
+  //     );
+  //   }
+  // };
+
+  const handleDeepLinking = async () => {
+    try {
+      await shareLink('post', item.id);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -302,7 +349,9 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
                 style={[styles.postIconsStyle, {marginHorizontal: 8}]}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.postIconsContainer}>
+            <TouchableOpacity
+              style={styles.postIconsContainer}
+              onPress={handleDeepLinking}>
               <Image
                 source={require('../../assets/share.png')}
                 style={styles.postIconsStyle}
