@@ -132,10 +132,11 @@ export default function LoginScreen() {
 
   const signInWithGoogle = async () => {
     try {
-      // GoogleSignin.configure({
-      //   offlineAccess: true,
-      //   webClientId: constants.webClientID,
-      // });
+      GoogleSignin.configure({
+        offlineAccess: true,
+        webClientId:
+          '10428894886-8td5vg45o4vnqk396ju99oveoa21a8ti.apps.googleusercontent.com',
+      });
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       const {idToken} = userInfo;

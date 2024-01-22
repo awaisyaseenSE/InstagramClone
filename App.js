@@ -24,10 +24,10 @@ export default function App() {
   useEffect(() => {
     requestUserPermission();
     notificationListner();
-    GoogleSignin.configure({
-      offlineAccess: true,
-      webClientId: constants.webClientID,
-    });
+    // GoogleSignin.configure({
+    //   offlineAccess: true,
+    //   webClientId: constants.webClientID,
+    // });
     setTimeout(() => {
       setSplashDone(true);
     }, 2000);
