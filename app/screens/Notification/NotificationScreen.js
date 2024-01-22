@@ -85,7 +85,7 @@ export default function NotificationScreen() {
             keyExtractor={(item, index) => index.toString()}
             scrollEnabled={false}
           />
-          {readNotifitions.length > 0 && (
+          {readNotifitions.length > 0 && unReadNotifitions.length > 0 && (
             <Text style={[styles.text, {color: theme.text}]}>Previous</Text>
           )}
           <FlatList
@@ -95,7 +95,6 @@ export default function NotificationScreen() {
                 item?.isRead == true && <ShowNotificationCompo data={item} />
               );
             }}
-            // renderItem={({item}) => <ShowNotificationCompo data={item} />}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             scrollEnabled={false}
