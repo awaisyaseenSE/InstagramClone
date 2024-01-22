@@ -23,6 +23,8 @@ import {useTheme} from '../themes/ThemeContext';
 import ButtonComponent from './CreateAccount/components/ButtonComponent';
 import fontFamily from '../styles/fontFamily';
 import storage from '@react-native-firebase/storage';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import constants from '../constants/constants';
 
 export default function LoginScreen() {
   const {theme} = useTheme();
@@ -128,6 +130,38 @@ export default function LoginScreen() {
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      // GoogleSignin.configure({
+      //   offlineAccess: true,
+      //   webClientId: constants.webClientID,
+      // });
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const {idToken} = userInfo;
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      await auth()
+        .signInWithCredential(googleCredential)
+        .then()
+        .catch(err => console.log('-> error', err));
+      return userInfo;
+    } catch (error) {
+      console.log('error while Sign In with Google: ', error);
+      return null;
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const res = await signInWithGoogle();
+      if (!!res) {
+        console.log('Result after google sign In: ', res);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <ScreenComponent style={{backgroundColor: theme.loginBackground}}>
@@ -223,12 +257,13 @@ export default function LoginScreen() {
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity
-                  style={{flexDirection: 'row', alignItems: 'center'}}>
+                  style={{flexDirection: 'row', alignItems: 'center'}}
+                  onPress={handleGoogleSignIn}>
                   <Image
                     style={styles.facebookIconStyle}
-                    source={require('../assets/facebook_Icon.png')}
+                    source={require('../assets/google.png')}
                   />
-                  <Text style={styles.facebookText}>Log in with Facebook</Text>
+                  <Text style={styles.facebookText}>Log in with Google</Text>
                 </TouchableOpacity>
                 <View style={styles.OrTextContainer}>
                   <View

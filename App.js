@@ -10,6 +10,8 @@ import {
   handleSetFcmToken,
 } from './app/utils/notificationServices';
 import DeepLinkHandler from './app/components/DeepLinkHandler';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import constants from './app/constants/constants';
 
 export default function App() {
   const [splashDone, setSplashDone] = useState(false);
@@ -22,6 +24,10 @@ export default function App() {
   useEffect(() => {
     requestUserPermission();
     notificationListner();
+    GoogleSignin.configure({
+      offlineAccess: true,
+      webClientId: constants.webClientID,
+    });
     setTimeout(() => {
       setSplashDone(true);
     }, 2000);
