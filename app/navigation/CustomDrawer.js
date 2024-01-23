@@ -68,9 +68,15 @@ function CustomDrawer(props) {
     }
   };
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
     try {
       if (Platform.OS === 'ios') {
+        const isSigned = await GoogleSignin.isSignedIn();
+        if (isSigned) {
+          console.log('Platform is IOS and Google Sign In is true..', isSigned);
+          await GoogleSignin.revokeAccess();
+          await GoogleSignin.signOut();
+        }
         logout();
       } else {
         handleLogoutAccount();
