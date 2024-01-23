@@ -103,6 +103,39 @@ const ShowPostOptionModal = ({
     await handleFollowing();
   };
 
+  const deletePost = async () => {
+    try {
+      await firestore().collection('posts').doc(postId).delete();
+      setShowOptionModal(!showOptionModal);
+    } catch (error) {
+      console.log(
+        'Error while Deleting the post in Show-Post-Option-Modal Component: ',
+        error,
+      );
+    }
+  };
+
+  const handleDeletePost = async () => {
+    try {
+      if (currenUserUid === postUserUid) {
+        Alert.alert('Warning', 'Are you sure to delete this post!', [
+          {
+            text: 'Yes',
+            onPress: deletePost,
+          },
+          {
+            text: 'No',
+          },
+        ]);
+      }
+    } catch (error) {
+      console.log(
+        'Error while Deleting the post in ALERT Modal Show-Post-Option-Modal Component: ',
+        error,
+      );
+    }
+  };
+
   return (
     <>
       <Modal visible={showOptionModal} style={{flex: 1}} transparent>
@@ -253,7 +286,9 @@ const ShowPostOptionModal = ({
                     </TouchableOpacity>
                   )}
                   {postUserUid === currenUserUid && (
-                    <TouchableOpacity style={[mystyles.iconTextContainer]}>
+                    <TouchableOpacity
+                      style={[mystyles.iconTextContainer]}
+                      onPress={() => handleDeletePost()}>
                       <Image
                         source={require('../../assets/delete.png')}
                         style={[mystyles.saveIcon, {tintColor: theme.red}]}
