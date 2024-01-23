@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "10428894886-ahrmh0fr79p122pg1mt6iacq1q1tm13c.apps.googleusercontent.com",
+          "client_id": "10428894886-bfjfivij6ggqp6o0e74hq0o2tor36nvf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.rahaalapp",
-            "certificate_hash": "27a2cfcb6d6fe15ffb5f47f26d7f9832be133eab"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {

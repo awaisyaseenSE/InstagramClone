@@ -23,8 +23,12 @@ import {useTheme} from '../themes/ThemeContext';
 import ButtonComponent from './CreateAccount/components/ButtonComponent';
 import fontFamily from '../styles/fontFamily';
 import storage from '@react-native-firebase/storage';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 import constants from '../constants/constants';
+import {handleGoogleSignIn} from '../utils/googleSignIn';
 
 export default function LoginScreen() {
   const {theme} = useTheme();
@@ -130,36 +134,88 @@ export default function LoginScreen() {
     }
   };
 
-  const signInWithGoogle = async () => {
-    try {
-      GoogleSignin.configure({
-        offlineAccess: true,
-        webClientId:
-          '10428894886-8td5vg45o4vnqk396ju99oveoa21a8ti.apps.googleusercontent.com',
-      });
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      const {idToken} = userInfo;
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      await auth()
-        .signInWithCredential(googleCredential)
-        .then()
-        .catch(err => console.log('-> error', err));
-      return userInfo;
-    } catch (error) {
-      console.log('error while Sign In with Google: ', error);
-      return null;
-    }
-  };
+  // const signInWithGoogle = async () => {
+  //   try {
+  //     GoogleSignin.configure({
+  //       offlineAccess: true,
+  //       webClientId:
+  //         '10428894886-8td5vg45o4vnqk396ju99oveoa21a8ti.apps.googleusercontent.com',
+  //     });
+  //     await GoogleSignin.hasPlayServices();
+  //     const userInfo = await GoogleSignin.signIn();
+  //     const {idToken} = userInfo;
+  //     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+  //     await auth()
+  //       .signInWithCredential(googleCredential)
+  //       .then()
+  //       .catch(err => console.log('-> error', err));
+  //     return userInfo;
+  //   } catch (error) {
+  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+  //       // user cancelled the login flow
+  //       console.log('error SIGN_IN_CANCELLED in google signIn: ', error.code);
+  //       return null;
+  //     } else if (error.code === statusCodes.IN_PROGRESS) {
+  //       // operation (e.g. sign in) is in progress already
+  //       console.log('error IN_PROGRESS in google signIn: ', error.code);
+  //       return null;
+  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+  //       // play services not available or outdated
+  //       console.log(
+  //         'error PLAY_SERVICES_NOT_AVAILABLE in google signIn: ',
+  //         error.code,
+  //       );
+  //       return null;
+  //     } else {
+  //       // some other error happened
+  //       console.log('Error while in signIn with Google: ', error);
+  //       return null;
+  //     }
+  //   }
+  // };
 
-  const handleGoogleSignIn = async () => {
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     const res = await signInWithGoogle();
+  //     if (!!res) {
+  //       console.log('User data is: ', res?.user);
+  //       setSignInGoogleUserInfo(res.user);
+  //       let name = res.user.name;
+  //       let userEmail = res.user.email;
+  //       let image = res.user.photo;
+  //       let splitName = name.split(' ');
+  //       let fName = '';
+  //       let lName = '';
+  //       if (splitName.length > 0) {
+  //         fName = splitName[0];
+  //       }
+  //       if (splitName.length > 1) {
+  //         lName = splitName[1];
+  //       }
+  //       if (auth().currentUser) {
+  //         addGoogleSignInToFireStore(fName, lName, userEmail, image);
+  //         setUser(auth().currentUser);
+  //       } else {
+  //         console.log('User is not authenticated.');
+  //       }
+  //     }
+  //     // console.log('Result after SignIn with Google: ', res.user.name);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const handleSignINWithGoogle = async () => {
     try {
-      const res = await signInWithGoogle();
-      if (!!res) {
-        console.log('Result after google sign In: ', res);
+      const res = await handleGoogleSignIn();
+      if (res) {
+        setUser(auth().currentUser);
       }
     } catch (error) {
-      console.log(error);
+      console.log(
+        'Error in Login Screen inside handleSignINWithGoogle: ',
+        error,
+      );
     }
   };
 
@@ -259,7 +315,7 @@ export default function LoginScreen() {
                 </View>
                 <TouchableOpacity
                   style={{flexDirection: 'row', alignItems: 'center'}}
-                  onPress={handleGoogleSignIn}>
+                  onPress={handleSignINWithGoogle}>
                   <Image
                     style={styles.facebookIconStyle}
                     source={require('../assets/google.png')}

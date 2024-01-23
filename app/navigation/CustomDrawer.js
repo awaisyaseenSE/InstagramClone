@@ -26,6 +26,7 @@ import navigationStrings from './navigationStrings';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
 import {getCameraPermission} from '../utils/askPermissions';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 function CustomDrawer(props) {
   const {theme} = useTheme();
@@ -34,18 +35,42 @@ function CustomDrawer(props) {
   const {logout} = useAuth();
   const navigation = useNavigation();
 
-  // const handleLogout = () => {
-  //   if (auth().currentUser) {
-  //     logout();
-  //   }
-  // };
+  const handleLogoutAccount = async () => {
+    try {
+      const isSigned = await GoogleSignin.isSignedIn();
+      // if (isSigned) await GoogleSignin.signOut();
+      if (isSigned) {
+        console.log('Google SigIN is ON..');
+        GoogleSignin.configure({
+          offlineAccess: true,
+          webClientId:
+            '10428894886-8td5vg45o4vnqk396ju99oveoa21a8ti.apps.googleusercontent.com',
+        });
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+        if (auth().currentUser) {
+          logout();
+        }
+      } else {
+        console.log('Google SigIN is OFF..');
+        if (auth().currentUser) {
+          logout();
+        }
+      }
+    } catch (error) {
+      console.log(
+        'Error in checking google signIn is activate or not: ',
+        error,
+      );
+    }
+  };
 
   const handleLogout = () => {
     try {
       Alert.alert('Logout', 'Are you sure to Logout!', [
         {
           text: 'Yes',
-          onPress: logout,
+          onPress: handleLogoutAccount,
         },
         {
           text: 'No',
@@ -92,6 +117,23 @@ function CustomDrawer(props) {
     }
   };
 
+  const checkGoogleSignIn = async () => {
+    try {
+      const isSigned = await GoogleSignin.isSignedIn();
+      // if (isSigned) await GoogleSignin.signOut();
+      if (isSigned) {
+        console.log('Google SigIN is ON..');
+      } else {
+        console.log('Google SigIN is OFF..');
+      }
+    } catch (error) {
+      console.log(
+        'Error in checking google signIn is activate or not: ',
+        error,
+      );
+    }
+  };
+
   return (
     <>
       <DrawerContentScrollView
@@ -121,6 +163,7 @@ function CustomDrawer(props) {
           <DrawerItemListCompo
             image={require('../assets/nametag.png')}
             title="Nametag"
+            onPress={checkGoogleSignIn}
           />
           <DrawerItemListCompo
             image={require('../assets/save.png')}
