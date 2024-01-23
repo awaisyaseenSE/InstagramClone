@@ -38,6 +38,8 @@ const ShowPostOptionModal = ({
   postUserData,
   currentUserAlldata,
   handleSavePost,
+  allUrls,
+  preCaption,
 }) => {
   const {theme} = useTheme();
   const styles = CommentStyle(theme);
@@ -133,6 +135,22 @@ const ShowPostOptionModal = ({
         'Error while Deleting the post in ALERT Modal Show-Post-Option-Modal Component: ',
         error,
       );
+    }
+  };
+
+  const handleEditPost = () => {
+    setShowOptionModal(!showOptionModal);
+    try {
+      if (currenUserUid === postUserUid) {
+        navigation.navigate(navigationStrings.CREATE_POST_SCREEN, {
+          allMedia: allUrls,
+          preCaption: preCaption,
+          screenTitle: 'Edit',
+          postId: postId,
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -288,6 +306,19 @@ const ShowPostOptionModal = ({
                   {postUserUid === currenUserUid && (
                     <TouchableOpacity
                       style={[mystyles.iconTextContainer]}
+                      onPress={() => handleEditPost()}>
+                      <Image
+                        source={require('../../assets/edit.png')}
+                        style={[mystyles.saveIcon, {tintColor: theme.text}]}
+                      />
+                      <Text style={[mystyles.textStyle, {color: theme.text}]}>
+                        Edit
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  {postUserUid === currenUserUid && (
+                    <TouchableOpacity
+                      style={[mystyles.iconTextContainer, {marginVertical: 20}]}
                       onPress={() => handleDeletePost()}>
                       <Image
                         source={require('../../assets/delete.png')}

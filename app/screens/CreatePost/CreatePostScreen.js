@@ -9,6 +9,8 @@ import {
   Keyboard,
   Platform,
   TouchableWithoutFeedback,
+  StyleSheet,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import ScreenComponent from '../../components/ScreenComponent';
@@ -27,12 +29,18 @@ export default function CreatePostScreen({route}) {
   const {theme} = useTheme();
   const styles = galleryStyle(theme);
   const navigation = useNavigation();
-  const allMedia = route?.params.allMedia;
+  // const allMedia = route?.params.allMedia;
+  const preCaption = route?.params?.preCaption;
+  const screenTitle = route?.params?.screenTitle;
+  const postId = route?.params?.postId;
   const [loading, setLoading] = useState(false);
-  const [caption, setCaption] = useState('');
+  const [caption, setCaption] = useState(
+    preCaption !== undefined ? preCaption : '',
+  );
   const [medialUrls, setMediaUrls] = useState([]);
   const currentUserName = auth().currentUser?.displayName;
   const currentUserUID = auth().currentUser?.uid;
+  const [allMedia, setAllMedia] = useState(route?.params.allMedia || []);
 
   const handleUploadPost = allUrls => {
     try {
@@ -91,10 +99,27 @@ export default function CreatePostScreen({route}) {
 
   const handleSharePost = async () => {
     try {
-      await uploadImages(allMedia);
+      if (preCaption !== undefined && screenTitle == 'Edit') {
+        await firestore().collection('posts').doc(postId).update({
+          caption,
+          medialUrls: allMedia,
+        });
+        navigation.navigate('TabRoutes');
+      } else {
+        await uploadImages(allMedia);
+      }
     } catch (error) {
       console.log('error in handleSharePost funtion: ', error);
     }
+  };
+
+  const deletePostImage = index => {
+    // Create a copy of the array and remove the element at the specified index
+    const updatedMedia = [...allMedia];
+    updatedMedia.splice(index, 1);
+
+    // Update the state with the modified array
+    setAllMedia(updatedMedia);
   };
 
   return (
@@ -111,14 +136,28 @@ export default function CreatePostScreen({route}) {
               style={styles.closeIconStyle}
             />
           </TouchableOpacity>
-          <Text style={styles.heading}>Create Post</Text>
+          <Text style={styles.heading}>
+            {screenTitle !== undefined ? screenTitle : 'Create'} Post
+          </Text>
         </View>
         <View>
           <FlatList
             data={allMedia}
-            renderItem={({item}) => {
+            renderItem={({item, index}) => {
               return (
-                <Image source={{uri: item}} style={styles.createPostImages} />
+                <View>
+                  <Image source={{uri: item}} style={styles.createPostImages} />
+                  {allMedia.length > 1 && (
+                    <TouchableOpacity
+                      style={myStyles.deleteIconContainer}
+                      onPress={() => deletePostImage(index)}>
+                      <Image
+                        source={require('../../assets/delete.png')}
+                        style={myStyles.delIcon}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
               );
             }}
             horizontal
@@ -172,3 +211,23 @@ export default function CreatePostScreen({route}) {
     </>
   );
 }
+
+const myStyles = StyleSheet.create({
+  deleteIconContainer: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+  },
+  delIcon: {
+    width: 14,
+    height: 14,
+    resizeMode: 'contain',
+    tintColor: 'snow',
+  },
+});

@@ -450,6 +450,8 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
           currentUserAlldata={currentUserAlldata}
           postId={item.id}
           handleSavePost={handleSavePost}
+          allUrls={allUrls}
+          preCaption={item.caption}
         />
       )}
       <MyIndicator
