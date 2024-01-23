@@ -83,6 +83,7 @@ const ProfileReelCompo = ({userID}) => {
           keyExtractor={(item, index) => index.toString()}
           numColumns={3}
           showsVerticalScrollIndicator={false}
+          scrollEnabled={false}
         />
       </View>
       <MyIndicator visible={laoding} />

@@ -45,6 +45,9 @@ function CustomDrawer(props) {
           offlineAccess: true,
           webClientId:
             '10428894886-8td5vg45o4vnqk396ju99oveoa21a8ti.apps.googleusercontent.com',
+          // Platform.OS === 'android'
+          //   ? '10428894886-8td5vg45o4vnqk396ju99oveoa21a8ti.apps.googleusercontent.com'
+          //   : '10428894886-0m6qd5po00g8qv29eta001uo0nbhu21n.apps.googleusercontent.com',
         });
         await GoogleSignin.revokeAccess();
         await GoogleSignin.signOut();
@@ -65,12 +68,24 @@ function CustomDrawer(props) {
     }
   };
 
+  const logoutHandler = () => {
+    try {
+      if (Platform.OS === 'ios') {
+        logout();
+      } else {
+        handleLogoutAccount();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleLogout = () => {
     try {
       Alert.alert('Logout', 'Are you sure to Logout!', [
         {
           text: 'Yes',
-          onPress: handleLogoutAccount,
+          onPress: logoutHandler,
         },
         {
           text: 'No',

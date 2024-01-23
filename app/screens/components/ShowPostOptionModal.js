@@ -252,6 +252,17 @@ const ShowPostOptionModal = ({
                       </Text>
                     </TouchableOpacity>
                   )}
+                  {postUserUid === currenUserUid && (
+                    <TouchableOpacity style={[mystyles.iconTextContainer]}>
+                      <Image
+                        source={require('../../assets/delete.png')}
+                        style={[mystyles.saveIcon, {tintColor: theme.red}]}
+                      />
+                      <Text style={[mystyles.textStyle, {color: theme.red}]}>
+                        Delete
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             </View>

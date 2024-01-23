@@ -63,10 +63,11 @@ const addGoogleSignInToFireStore = async (userName, userEmail, userImage) => {
   try {
     const checkUserAlreadyExisted = await isUserAlreadyExisted();
     if (checkUserAlreadyExisted) {
-      await auth().currentUser.updateProfile({
-        displayName: userName,
-        photoURL: userImage,
-      });
+      // await auth().currentUser.updateProfile({
+      //   displayName: userName,
+      //   photoURL: userImage,
+      // });
+      return null;
     } else {
       await auth().currentUser.updateProfile({
         displayName: userName,

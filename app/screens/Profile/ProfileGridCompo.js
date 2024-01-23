@@ -104,6 +104,7 @@ const ProfileGridCompo = ({setUserPostsLength, userUid}) => {
           keyExtractor={(item, index) => index.toString()}
           numColumns={3}
           showsVerticalScrollIndicator={false}
+          scrollEnabled={false}
         />
       </View>
       <MyIndicator visible={laoding} />
