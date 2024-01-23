@@ -166,17 +166,6 @@ export const notificationListner = async () => {
           'Notification caused app to open from quit state:',
           remoteMessage,
         );
-        // if (!!remoteMessage?.data && remoteMessage?.data?.type == 'likePost') {
-        //   console.log('..............Hello....KILL.....MODE............');
-        //   const clickedItem = remoteMessage?.data?.typeID;
-        //   const userUid = auth().currentUser?.uid;
-        //   setTimeout(() => {
-        //     NavigationService.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
-        //       clickedItem: clickedItem,
-        //       userUid: userUid,
-        //     });
-        //   }, 2000);
-        // }
         if (auth().currentUser?.uid) {
           console.log('user is logged in');
           if (
