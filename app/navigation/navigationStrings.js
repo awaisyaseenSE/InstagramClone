@@ -32,4 +32,5 @@ export default {
   ADD_PEOPLE_GROUP_SCREEN: 'AddPeopleGroupScreen',
   VIDEO_CALL_SCREEN: 'VideoCallScreen',
   ONBOARDING_SCREEN: 'OnbordingScreen',
+  BOTTOM_SHEET_SCREEN: 'BottomSheetScreen',
 };

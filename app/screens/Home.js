@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   ScrollView,
+  Modal,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ScreenComponent from '../components/ScreenComponent';
@@ -20,11 +21,15 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import MyIndicator from '../components/MyIndicator';
 import ShowPostsCompo from './components/ShowPostsCompo';
+import ButtonComponent from './CreateAccount/components/ButtonComponent';
+import BottomSheetComponent from '../components/BottomSheetComponent';
 
 export default function Home({switchToScreen}) {
   const {theme} = useTheme();
   const [postData, setPostData] = useState([]);
   const [laoding, setLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [commentPostID, setCommentPostID] = useState('');
 
   useEffect(() => {
     setLoading(true);
@@ -65,6 +70,8 @@ export default function Home({switchToScreen}) {
                     item={item}
                     allUrls={item.medialUrls}
                     switchToScreen={switchToScreen}
+                    setOpenModal={setOpenModal}
+                    setCommentPostID={setCommentPostID}
                   />
                 )}
                 showsVerticalScrollIndicator={false}
@@ -74,6 +81,15 @@ export default function Home({switchToScreen}) {
             </View>
           </View>
         </ScrollView>
+        <Modal visible={openModal} style={{flex: 1}} transparent>
+          <BottomSheetComponent
+            setOpenModal={setOpenModal}
+            showComment={openModal}
+            setShowComment={setOpenModal}
+            postId={commentPostID}
+            switchToScreen={switchToScreen}
+          />
+        </Modal>
       </ScreenComponent>
       <MyIndicator
         visible={laoding}

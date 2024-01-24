@@ -26,7 +26,13 @@ import Video from 'react-native-video';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {shareLink} from '../../utils/deepLinking';
 
-const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
+const ShowPostsCompo = ({
+  item,
+  allUrls,
+  switchToScreen,
+  setOpenModal,
+  setCommentPostID,
+}) => {
   const {theme} = useTheme();
   const styles = ShowPostStyle(theme);
   const navigation = useNavigation();
@@ -200,6 +206,11 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
     }
   };
 
+  const handleCommentSheet = () => {
+    setCommentPostID(item.id);
+    setOpenModal(true);
+  };
+
   return (
     <>
       <View>
@@ -357,6 +368,14 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
                 style={styles.postIconsStyle}
               />
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.postIconsContainer}
+              onPress={() => handleCommentSheet()}>
+              <Image
+                source={require('../../assets/IGTV.png')}
+                style={styles.postIconsStyle}
+              />
+            </TouchableOpacity>
           </View>
           {allUrls.length > 1 && (
             <FlatList
@@ -454,6 +473,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
           preCaption={item.caption}
         />
       )}
+
       <MyIndicator
         visible={laoding}
         backgroundColor={theme.loginBackground}

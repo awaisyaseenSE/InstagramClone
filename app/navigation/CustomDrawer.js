@@ -211,6 +211,13 @@ function CustomDrawer(props) {
               navigation.navigate(navigationStrings.ONBOARDING_SCREEN)
             }
           />
+          <DrawerItemListCompo
+            image={require('../assets/IGTV.png')}
+            title="Bottom Sheet Screen"
+            onPress={() =>
+              navigation.navigate(navigationStrings.BOTTOM_SHEET_SCREEN)
+            }
+          />
         </View>
       </DrawerContentScrollView>
       <View
