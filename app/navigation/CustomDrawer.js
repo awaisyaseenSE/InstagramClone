@@ -1,30 +1,14 @@
-import React, {useState} from 'react';
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
-import {
-  Alert,
-  Image,
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  Platform,
-} from 'react-native';
-import colors from '../styles/colors';
+import React from 'react';
+import {DrawerContentScrollView} from '@react-navigation/drawer';
+import {Alert, View, Text, Platform} from 'react-native';
 import auth, {firebase} from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import useAuth from '../auth/useAuth';
 import {useTheme} from '../themes/ThemeContext';
 import ProfileDrawerStyle from './style/ProfileDrawerStyle';
-import fontFamily from '../styles/fontFamily';
 import DrawerItemListCompo from './DrawerItemListCompo';
 import navigationStrings from './navigationStrings';
 import firestore from '@react-native-firebase/firestore';
-import messaging from '@react-native-firebase/messaging';
 import {getCameraPermission} from '../utils/askPermissions';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
