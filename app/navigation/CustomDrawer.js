@@ -220,6 +220,13 @@ function CustomDrawer(props) {
             title="Set Fcm token"
             onPress={() => handleSetFcmToken()}
           />
+          <DrawerItemListCompo
+            image={require('../assets/grid.png')}
+            title="Onboarding Screen"
+            onPress={() =>
+              navigation.navigate(navigationStrings.ONBOARDING_SCREEN)
+            }
+          />
         </View>
       </DrawerContentScrollView>
       <View

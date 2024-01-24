@@ -30,4 +30,9 @@ export default {
   purple: '#5748D3',
   chatBlue: '#3D60E0',
   // purple: '#6837D1',
+  // below colors used for onboarding screen
+  lightGreen: '#e6ffef',
+  btnColor: '#D2FFE2',
+  onbordingTextColor: '#676464',
+  primaryGreen: '#39CE6A',
 };
