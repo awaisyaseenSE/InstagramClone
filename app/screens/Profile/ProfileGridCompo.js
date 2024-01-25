@@ -1,18 +1,16 @@
 import {
   View,
-  Text,
   FlatList,
   TouchableOpacity,
   Dimensions,
   Image,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import auth from '@react-native-firebase/auth';
 import FastImage from 'react-native-fast-image';
 import firestore from '@react-native-firebase/firestore';
 import {useTheme} from '../../themes/ThemeContext';
-import MyIndicator from '../../components/MyIndicator';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
 import Video from 'react-native-video';
@@ -98,16 +96,19 @@ const ProfileGridCompo = ({setUserPostsLength, userUid}) => {
   return (
     <>
       <View style={{paddingVertical: 12, flex: 1, marginBottom: 50}}>
-        <FlatList
-          data={allUserPosts}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          numColumns={3}
-          showsVerticalScrollIndicator={false}
-          scrollEnabled={false}
-        />
+        {!!laoding ? (
+          <ActivityIndicator size={24} color={theme.gray} />
+        ) : (
+          <FlatList
+            data={allUserPosts}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            numColumns={3}
+            showsVerticalScrollIndicator={false}
+            scrollEnabled={false}
+          />
+        )}
       </View>
-      <MyIndicator visible={laoding} />
     </>
   );
 };

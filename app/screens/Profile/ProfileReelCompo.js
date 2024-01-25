@@ -1,24 +1,17 @@
 import {
   View,
-  Text,
   TouchableOpacity,
   Image,
-  Alert,
-  Modal,
   StyleSheet,
   Dimensions,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
 import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import MyIndicator from '../../components/MyIndicator';
-import ProfileStyle from '../style/ProfileStyle';
 import navigationStrings from '../../navigation/navigationStrings';
-import FastImage from 'react-native-fast-image';
-import fontFamily from '../../styles/fontFamily';
-import auth from '@react-native-firebase/auth';
 import Video from 'react-native-video';
 
 const screenWidth = Dimensions.get('screen').width;
@@ -77,16 +70,19 @@ const ProfileReelCompo = ({userID}) => {
   return (
     <>
       <View style={{paddingVertical: 12, flex: 1, marginBottom: 50}}>
-        <FlatList
-          data={allReel}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          numColumns={3}
-          showsVerticalScrollIndicator={false}
-          scrollEnabled={false}
-        />
+        {!!laoding ? (
+          <ActivityIndicator size={24} color={theme.gray} />
+        ) : (
+          <FlatList
+            data={allReel}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            numColumns={3}
+            showsVerticalScrollIndicator={false}
+            scrollEnabled={false}
+          />
+        )}
       </View>
-      <MyIndicator visible={laoding} />
     </>
   );
 };
