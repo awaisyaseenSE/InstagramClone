@@ -186,7 +186,6 @@ const ShowMessagesComponent = ({
 
   const handleDeleteMessage = () => {
     try {
-      // console.log('data is: ', item);
       if (item?.senderID === auth().currentUser?.uid) {
         Alert.alert('Warning', 'Are you sure to Delete this Message!', [
           {
