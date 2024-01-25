@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
 import ScreenComponent from '../components/ScreenComponent';
@@ -20,14 +21,7 @@ import navigationStrings from '../navigation/navigationStrings';
 import useAuth from '../auth/useAuth';
 import auth from '@react-native-firebase/auth';
 import {useTheme} from '../themes/ThemeContext';
-import ButtonComponent from './CreateAccount/components/ButtonComponent';
 import fontFamily from '../styles/fontFamily';
-import storage from '@react-native-firebase/storage';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-import constants from '../constants/constants';
 import {handleGoogleSignIn} from '../utils/googleSignIn';
 
 export default function LoginScreen() {
@@ -134,77 +128,6 @@ export default function LoginScreen() {
     }
   };
 
-  // const signInWithGoogle = async () => {
-  //   try {
-  //     GoogleSignin.configure({
-  //       offlineAccess: true,
-  //       webClientId:
-  //         '10428894886-8td5vg45o4vnqk396ju99oveoa21a8ti.apps.googleusercontent.com',
-  //     });
-  //     await GoogleSignin.hasPlayServices();
-  //     const userInfo = await GoogleSignin.signIn();
-  //     const {idToken} = userInfo;
-  //     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-  //     await auth()
-  //       .signInWithCredential(googleCredential)
-  //       .then()
-  //       .catch(err => console.log('-> error', err));
-  //     return userInfo;
-  //   } catch (error) {
-  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-  //       // user cancelled the login flow
-  //       console.log('error SIGN_IN_CANCELLED in google signIn: ', error.code);
-  //       return null;
-  //     } else if (error.code === statusCodes.IN_PROGRESS) {
-  //       // operation (e.g. sign in) is in progress already
-  //       console.log('error IN_PROGRESS in google signIn: ', error.code);
-  //       return null;
-  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-  //       // play services not available or outdated
-  //       console.log(
-  //         'error PLAY_SERVICES_NOT_AVAILABLE in google signIn: ',
-  //         error.code,
-  //       );
-  //       return null;
-  //     } else {
-  //       // some other error happened
-  //       console.log('Error while in signIn with Google: ', error);
-  //       return null;
-  //     }
-  //   }
-  // };
-
-  // const handleGoogleSignIn = async () => {
-  //   try {
-  //     const res = await signInWithGoogle();
-  //     if (!!res) {
-  //       console.log('User data is: ', res?.user);
-  //       setSignInGoogleUserInfo(res.user);
-  //       let name = res.user.name;
-  //       let userEmail = res.user.email;
-  //       let image = res.user.photo;
-  //       let splitName = name.split(' ');
-  //       let fName = '';
-  //       let lName = '';
-  //       if (splitName.length > 0) {
-  //         fName = splitName[0];
-  //       }
-  //       if (splitName.length > 1) {
-  //         lName = splitName[1];
-  //       }
-  //       if (auth().currentUser) {
-  //         addGoogleSignInToFireStore(fName, lName, userEmail, image);
-  //         setUser(auth().currentUser);
-  //       } else {
-  //         console.log('User is not authenticated.');
-  //       }
-  //     }
-  //     // console.log('Result after SignIn with Google: ', res.user.name);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const handleSignINWithGoogle = async () => {
     try {
       const res = await handleGoogleSignIn();
@@ -222,14 +145,16 @@ export default function LoginScreen() {
   return (
     <>
       <ScreenComponent style={{backgroundColor: theme.loginBackground}}>
+        {/* <ScrollView style={{flex: 1}}> */}
         <View
           style={[styles.container, {backgroundColor: theme.loginBackground}]}>
           <KeyboardAvoidingView
             style={{flex: 1}}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            behavior={Platform.OS === 'ios' ? 'padding' : null}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={styles.mainContainer}>
-                <View style={{flex: 0.3}} />
+                <View style={{marginTop: 50}} />
+                {/* <View style={{flex: 0.3}} /> */}
                 <Image
                   source={require('../assets/logo.png')}
                   style={[styles.logo, {tintColor: theme.text}]}
@@ -362,6 +287,7 @@ export default function LoginScreen() {
             </View>
           </View>
         </View>
+        {/* </ScrollView> */}
       </ScreenComponent>
     </>
   );
@@ -383,7 +309,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    flex: 0.1,
+    // flex: 0.1,
+    height: 60,
     borderTopWidth: 1.2,
     borderColor: colors.gray,
     // alignItems: 'center',
