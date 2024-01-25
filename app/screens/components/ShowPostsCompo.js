@@ -369,7 +369,7 @@ const ShowPostsCompo = ({
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.postIconsContainer}
+              style={[styles.postIconsContainer, {marginLeft: 8}]}
               onPress={() => handleCommentSheet()}>
               <Image
                 source={require('../../assets/IGTV.png')}
