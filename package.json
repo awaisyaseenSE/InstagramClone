@@ -36,6 +36,7 @@
     "react-native-document-picker": "^9.1.0",
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-fast-image": "^8.6.3",
+    "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.14.0",
     "react-native-image-picker": "^7.0.3",
     "react-native-insta-story": "^1.1.9",
