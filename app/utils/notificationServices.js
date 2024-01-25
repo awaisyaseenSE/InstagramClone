@@ -16,7 +16,7 @@ export async function requestUserPermission() {
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      //   console.log('Authorization status:', authStatus);
+      // console.log('Authorization status:', authStatus);
       if (Platform.OS === 'android') {
         const grants = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
