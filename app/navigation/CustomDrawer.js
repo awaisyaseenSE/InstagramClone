@@ -9,7 +9,6 @@ import ProfileDrawerStyle from './style/ProfileDrawerStyle';
 import DrawerItemListCompo from './DrawerItemListCompo';
 import navigationStrings from './navigationStrings';
 import firestore from '@react-native-firebase/firestore';
-import {getCameraPermission} from '../utils/askPermissions';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 function CustomDrawer(props) {
@@ -163,7 +162,6 @@ function CustomDrawer(props) {
           <DrawerItemListCompo
             image={require('../assets/activity.png')}
             title="Your Activity"
-            onPress={getCameraPermission}
           />
           <DrawerItemListCompo
             image={require('../assets/nametag.png')}

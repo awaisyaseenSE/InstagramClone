@@ -10,7 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../../themes/ThemeContext';
 import FollowingStyle from '../style/FollowingStyle';
 
-const ShowFollowerFollowingCompo = ({item}) => {
+const ShowFollowerFollowingCompo = ({item, screenName, getUsersData}) => {
   const [userName, setUserName] = useState('');
   const [userImageUrl, setUserImageUrl] = useState('');
   const [userAllData, setUserAllData] = useState(null);
@@ -88,6 +88,10 @@ const ShowFollowerFollowingCompo = ({item}) => {
   const handleFollow = async () => {
     await handleFollower();
     await handleFollowing();
+    if (screenName !== undefined && screenName == 'discover') {
+      console.log('helo');
+      getUsersData();
+    }
   };
 
   const profileNavigationHandler = () => {

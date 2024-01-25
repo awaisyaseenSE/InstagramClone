@@ -170,15 +170,26 @@ const ShowMessagesComponent = ({
 
   const deleteMessageHandler = async () => {
     try {
-      await firestore()
-        .collection('chats')
-        .doc(item?.chatID)
-        .collection('messages')
-        .doc(item?._id)
-        .delete();
+      if (item?.chatID !== undefined) {
+        await firestore()
+          .collection('chats')
+          .doc(item?.chatID)
+          .collection('messages')
+          .doc(item?._id)
+          .delete();
+      } else if (item?.groupId !== undefined) {
+        await firestore()
+          .collection('chats')
+          .doc(item?.groupId)
+          .collection('messages')
+          .doc(item?._id)
+          .delete();
+      } else {
+        return null;
+      }
     } catch (error) {
       console.log(
-        'Error while deleting message in chat screen component name is Show Mwssages component: ',
+        'Error while deleting message in Show Mwssages component: ',
         error,
       );
     }
