@@ -42,7 +42,7 @@ export default function Home({switchToScreen}) {
       const position = await getLocation();
 
       if (position !== undefined && position !== null) {
-        console.log('Location of user is: ', position);
+        // console.log('Location of user is: ', position);
       }
     } catch (error) {
       console.log('Error in handleGetLocation in Home screen: ', error);

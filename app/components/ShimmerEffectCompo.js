@@ -50,7 +50,9 @@ const ShimmerEffectCompo = ({laoding}) => {
 
   return (
     <>
-      <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{flex: 1, marginTop: 12, paddingHorizontal: 4}}
+        showsVerticalScrollIndicator={false}>
         <FlatList
           data={[1, 2, 3, 4, 5, 6]}
           renderItem={renderItem}

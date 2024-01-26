@@ -5,9 +5,6 @@ import {
   Image,
   FlatList,
   Dimensions,
-  Alert,
-  Modal,
-  Share,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
@@ -23,7 +20,6 @@ import navigationStrings from '../../navigation/navigationStrings';
 import ShowPostOptionModal from './ShowPostOptionModal';
 import MyIndicator from '../../components/MyIndicator';
 import Video from 'react-native-video';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {shareLink} from '../../utils/deepLinking';
 
 const ShowPostsCompo = ({
