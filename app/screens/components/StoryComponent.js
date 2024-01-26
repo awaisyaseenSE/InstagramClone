@@ -33,9 +33,7 @@ const StoryComponent = () => {
   }, []);
 
   const getData = () => {
-    // const currentDate = new Date();
-    // const currentTime = currentDate.getTime();
-    const currentDate = new Date(); // get current date and time
+    const currentDate = new Date();
     // const twentyFourHoursAgo = new Date(currentDate - 24 * 60 * 60 * 1000);
     const currentTime = new Date();
     const twentyFourHoursAgo = new Date(
@@ -52,48 +50,16 @@ const StoryComponent = () => {
           var doc = snap.docs;
 
           doc.forEach(each => {
-            // var tempObj = {
-            //   user_image:
-            //     'https://pbs.twimg.com/profile_images/1222140802475773952/61OmyINj.jpg',
-            //   user_name: 'Ahmet Çağlar Durmuş',
-            //   // user_id: 1,
-            // };
-
-            // tempObj.stories = each.data().stories;
-
-            // temp.push(tempObj);
             if (each.data().userUid === auth().currentUser.uid) {
               setShowCreateStory(false);
             }
             temp.push(each.data());
           });
-
-          // console.log(' => ', temp[0]);
           setLoading(false);
           setAllStoriesData(temp);
         }
       });
   };
-
-  // const renderItem = ({item}) => {
-  //   return (
-  //     <View style={styles.container}>
-  //       <View
-  //         style={[
-  //           styles.imageContainer,
-  //           {borderColor: theme.storyBg, backgroundColor: theme.background},
-  //         ]}>
-  //         <TouchableOpacity style={styles}>
-  //           <FastImage
-  //             source={{uri: item.imageUrl}}
-  //             style={styles.imageStyle}
-  //           />
-  //         </TouchableOpacity>
-  //       </View>
-  //       <Text style={[styles.text, {color: theme.text}]}>{item.userName}</Text>
-  //     </View>
-  //   );
-  // };
 
   return (
     <View
@@ -103,13 +69,6 @@ const StoryComponent = () => {
         borderBottomColor: theme.bottonTabBorderColor,
         flexDirection: 'row',
       }}>
-      {/* <FlatList
-        data={storyData}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      /> */}
       {showCreateStory && (
         <View style={styles.container}>
           <View
