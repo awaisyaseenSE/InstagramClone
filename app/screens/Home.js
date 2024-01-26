@@ -18,6 +18,7 @@ export default function Home({switchToScreen}) {
   const [laoding, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [commentPostID, setCommentPostID] = useState('');
+  // const MemoShowPostsCompo = React.memo(ShowPostsCompo);
 
   useEffect(() => {
     setLoading(true);
