@@ -10,6 +10,7 @@ import ShowPostsCompo from './components/ShowPostsCompo';
 import BottomSheetComponent from '../components/BottomSheetComponent';
 import {getLocation} from '../utils/getUserLocation';
 import fontFamily from '../styles/fontFamily';
+import ShimmerEffectCompo from '../components/ShimmerEffectCompo';
 
 export default function Home({switchToScreen}) {
   const {theme} = useTheme();
@@ -66,21 +67,25 @@ export default function Home({switchToScreen}) {
           <View style={{flex: 1, backgroundColor: theme.background}}>
             <StoryComponent />
             <View style={{flex: 1}}>
-              <FlatList
-                data={postData}
-                renderItem={({item}) => (
-                  <ShowPostsCompo
-                    item={item}
-                    allUrls={item.medialUrls}
-                    switchToScreen={switchToScreen}
-                    setOpenModal={setOpenModal}
-                    setCommentPostID={setCommentPostID}
-                  />
-                )}
-                showsVerticalScrollIndicator={false}
-                keyExtractor={(item, index) => index.toString()}
-                scrollEnabled={false}
-              />
+              {!laoding ? (
+                <FlatList
+                  data={postData}
+                  renderItem={({item}) => (
+                    <ShowPostsCompo
+                      item={item}
+                      allUrls={item.medialUrls}
+                      switchToScreen={switchToScreen}
+                      setOpenModal={setOpenModal}
+                      setCommentPostID={setCommentPostID}
+                    />
+                  )}
+                  showsVerticalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  scrollEnabled={false}
+                />
+              ) : (
+                <ShimmerEffectCompo />
+              )}
             </View>
           </View>
         </ScrollView>
@@ -94,11 +99,11 @@ export default function Home({switchToScreen}) {
           />
         </Modal>
       </ScreenComponent>
-      <MyIndicator
+      {/* <MyIndicator
         visible={laoding}
         backgroundColor={theme.loginBackground}
         size={'large'}
-      />
+      /> */}
     </>
   );
 }
