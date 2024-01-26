@@ -216,6 +216,15 @@ function CustomDrawer(props) {
               navigation.navigate(navigationStrings.BOTTOM_SHEET_SCREEN)
             }
           />
+          <DrawerItemListCompo
+            image={require('../assets/about.png')}
+            title="About"
+            onPress={() =>
+              navigation.navigate(navigationStrings.ABOUT_ACCOUNT_SCREEN, {
+                userUid: auth().currentUser?.uid,
+              })
+            }
+          />
         </View>
       </DrawerContentScrollView>
       <View

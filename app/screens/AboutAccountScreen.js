@@ -59,7 +59,11 @@ export default function AboutAccountScreen({route}) {
     <>
       <ScreenComponent style={{backgroundColor: theme.background}}>
         <TopCompoWithHeading
-          title="About this account"
+          title={
+            userUid === auth().currentUser?.uid
+              ? 'About your account'
+              : 'About this account'
+          }
           onPress={() => navigation.goBack()}
         />
         <View style={{alignItems: 'center', marginTop: 14, marginBottom: 12}}>
@@ -91,19 +95,23 @@ export default function AboutAccountScreen({route}) {
               </Text>
             </View>
           </View>
+          {userUid !== auth().currentUser?.uid && (
+            <View style={{flexDirection: 'row', marginTop: 16}}>
+              <Image
+                source={require('../assets/location.png')}
+                style={[styles.iconStyle, {tintColor: theme.lightText}]}
+              />
 
-          <View style={{flexDirection: 'row', marginTop: 16}}>
-            <Image
-              source={require('../assets/location.png')}
-              style={[styles.iconStyle, {tintColor: theme.lightText}]}
-            />
-            <View style={{marginLeft: 12}}>
-              <Text style={[styles.txt, {color: theme.lightText}]}>
-                Account based in
-              </Text>
-              <Text style={[styles.descTxt, {color: theme.gray}]}>unkown</Text>
+              <View style={{marginLeft: 12}}>
+                <Text style={[styles.txt, {color: theme.lightText}]}>
+                  Account based in
+                </Text>
+                <Text style={[styles.descTxt, {color: theme.gray}]}>
+                  unkown
+                </Text>
+              </View>
             </View>
-          </View>
+          )}
         </View>
       </ScreenComponent>
       <MyIndicator />
