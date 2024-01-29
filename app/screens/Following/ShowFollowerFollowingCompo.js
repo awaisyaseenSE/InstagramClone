@@ -31,7 +31,7 @@ const ShowFollowerFollowingCompo = ({item, screenName, getUsersData}) => {
         }
       });
     return () => unsubscribe();
-  }, []);
+  }, [item]);
 
   const handleFollower = async () => {
     const userId = item;
@@ -89,7 +89,6 @@ const ShowFollowerFollowingCompo = ({item, screenName, getUsersData}) => {
     await handleFollower();
     await handleFollowing();
     if (screenName !== undefined && screenName == 'discover') {
-      console.log('helo');
       getUsersData();
     }
   };
