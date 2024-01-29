@@ -33,4 +33,5 @@ export default {
   VIDEO_CALL_SCREEN: 'VideoCallScreen',
   ONBOARDING_SCREEN: 'OnbordingScreen',
   BOTTOM_SHEET_SCREEN: 'BottomSheetScreen',
+  FAVOURITE_USERS_SCREEN: 'FavouriteUsersScreen',
 };

@@ -22,8 +22,9 @@ import SearchStyle from './style/SearchStyle';
 import fontFamily from '../styles/fontFamily';
 import navigationStrings from '../navigation/navigationStrings';
 import {useTheme} from '../themes/ThemeContext';
+const {height, width} = Dimensions.get('screen');
 
-export default function SearchPeopleScreen() {
+export default function SearchPeopleScreen({route}) {
   const navigation = useNavigation();
   const {theme} = useTheme();
   const [searchText, setSearchText] = useState('');
@@ -31,6 +32,8 @@ export default function SearchPeopleScreen() {
   const currentUserId = auth().currentUser?.uid;
   const [allUsers, setAllUsers] = useState([]);
   const [showCrossIcon, setShowCrossIcon] = useState(false);
+  const [currentUserData, setCurrentUserData] = useState(null);
+  const screenName = route?.params?.screenName;
 
   const searchPeople = async () => {
     try {
@@ -64,6 +67,9 @@ export default function SearchPeopleScreen() {
           if (userId !== currentUserId) {
             users.push({...userData, id: userId});
           }
+          if (userId == currentUserId) {
+            setCurrentUserData({...userData, id: userId});
+          }
         });
 
         setAllUsers(users);
@@ -79,6 +85,37 @@ export default function SearchPeopleScreen() {
       navigation.navigate(navigationStrings.USER_PROFILE, {
         userUid: item.id,
       });
+    }
+  };
+
+  const handleAddToFavorite = async otherUserUid => {
+    try {
+      const loggedUserId = auth().currentUser?.uid;
+      const userRef = firestore().collection('users').doc(loggedUserId);
+      const fuserRef = await userRef.get();
+      if (fuserRef.exists) {
+        const fuserData = fuserRef.data();
+
+        if (fuserData.hasOwnProperty('favourites')) {
+          let updatedFavouriteUsers = [...fuserData.favourites]; // Create a new array
+          if (fuserData.favourites.includes(otherUserUid)) {
+            updatedFavouriteUsers = updatedFavouriteUsers.filter(
+              id => id !== otherUserUid,
+            ); // Remove User id
+          } else {
+            updatedFavouriteUsers.push(otherUserUid); // Add User id
+          }
+          await userRef.update({favourites: updatedFavouriteUsers}); // Update the User id
+        } else {
+          // If 'fcmToken' field doesn't exist, set it
+          await userRef.set({...fuserData, favourites: [otherUserUid]});
+        }
+      }
+    } catch (error) {
+      console.log(
+        'Error in handleAddToFavorite function in ShowPostOption Modal compo: ',
+        error,
+      );
     }
   };
 
@@ -112,6 +149,20 @@ export default function SearchPeopleScreen() {
             {item?.followers.length} Followers
           </Text>
         </View>
+        {screenName !== undefined && screenName == 'FavouriteUsersScreen' && (
+          <View style={styles.addRemoveIconContainer}>
+            <TouchableOpacity
+              onPress={() => handleAddToFavorite(item.id)}
+              style={[styles.addRemoveBtn, {backgroundColor: theme.gray2}]}>
+              <Text style={{color: theme.text}}>
+                {!!currentUserData &&
+                currentUserData?.favourites.includes(item.id)
+                  ? 'Remove'
+                  : 'Add'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </TouchableOpacity>
     );
   };
@@ -252,5 +303,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     marginTop: 4,
+  },
+  addRemoveIconContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  addRemoveBtn: {
+    // paddingHorizontal: 12,
+    // paddingVertical: 8,
+    borderRadius: 6,
+    width: width / 4.5,
+    height: height * 0.04,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

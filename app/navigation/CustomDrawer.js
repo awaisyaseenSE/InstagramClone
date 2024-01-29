@@ -198,6 +198,13 @@ function CustomDrawer(props) {
             }
           />
           <DrawerItemListCompo
+            image={require('../assets/favorite.png')}
+            title="Favourites"
+            onPress={() =>
+              navigation.navigate(navigationStrings.FAVOURITE_USERS_SCREEN)
+            }
+          />
+          <DrawerItemListCompo
             image={require('../assets/forward.png')}
             title="Set Fcm token"
             onPress={() => handleSetFcmToken()}
@@ -211,7 +218,7 @@ function CustomDrawer(props) {
           />
           <DrawerItemListCompo
             image={require('../assets/IGTV.png')}
-            title="Bottom Sheet Screen"
+            title="Shimmer effect"
             onPress={() =>
               navigation.navigate(navigationStrings.BOTTOM_SHEET_SCREEN)
             }

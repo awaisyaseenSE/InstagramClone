@@ -231,17 +231,37 @@ const ShowPostsCompo = ({
               <Text style={styles.userDetailText}>{postUserData?.email}</Text>
             </View>
           </View>
-          <TouchableOpacity
+          <View
             style={{
-              paddingHorizontal: 8,
-              paddingVertical: 6,
-            }}
-            onPress={() => setShowOptionModal(!showOptionModal)}>
-            <Image
-              source={require('../../assets/three_dot.png')}
-              style={styles.threeDotIcon}
-            />
-          </TouchableOpacity>
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            {!!currentUserAlldata &&
+              currentUserAlldata?.favourites.includes(postUserData.id) && (
+                <TouchableOpacity
+                  style={{
+                    paddingHorizontal: 8,
+                    paddingVertical: 6,
+                    marginRight: 2,
+                  }}>
+                  <Image
+                    source={require('../../assets/star.png')}
+                    style={styles.starIcon}
+                  />
+                </TouchableOpacity>
+              )}
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 8,
+                paddingVertical: 6,
+              }}
+              onPress={() => setShowOptionModal(!showOptionModal)}>
+              <Image
+                source={require('../../assets/three_dot.png')}
+                style={styles.threeDotIcon}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         <View>
           {item.type == 'reel' && (

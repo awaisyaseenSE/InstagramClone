@@ -154,6 +154,37 @@ const ShowPostOptionModal = ({
     }
   };
 
+  const handleAddToFavorite = async () => {
+    try {
+      const loggedUserId = auth().currentUser?.uid;
+      const userRef = firestore().collection('users').doc(loggedUserId);
+      const fuserRef = await userRef.get();
+      if (fuserRef.exists) {
+        const fuserData = fuserRef.data();
+
+        if (fuserData.hasOwnProperty('favourites')) {
+          let updatedFavouriteUsers = [...fuserData.favourites]; // Create a new array
+          if (fuserData.favourites.includes(postUserUid)) {
+            updatedFavouriteUsers = updatedFavouriteUsers.filter(
+              id => id !== postUserUid,
+            ); // Remove User id
+          } else {
+            updatedFavouriteUsers.push(postUserUid); // Add User id
+          }
+          await userRef.update({favourites: updatedFavouriteUsers}); // Update the User id
+        } else {
+          // If 'fcmToken' field doesn't exist, set it
+          await userRef.set({...fuserData, favourites: [postUserUid]});
+        }
+      }
+    } catch (error) {
+      console.log(
+        'Error in handleAddToFavorite function in ShowPostOption Modal compo: ',
+        error,
+      );
+    }
+  };
+
   return (
     <>
       <Modal visible={showOptionModal} style={{flex: 1}} transparent>
@@ -228,15 +259,26 @@ const ShowPostOptionModal = ({
                       borderBottomColor: theme.lightText,
                     },
                   ]}>
-                  <TouchableOpacity style={mystyles.iconTextContainer}>
-                    <Image
-                      source={require('../../assets/favorite.png')}
-                      style={[mystyles.saveIcon, {tintColor: theme.text}]}
-                    />
-                    <Text style={[mystyles.textStyle, {color: theme.text}]}>
-                      Add to Favourites
-                    </Text>
-                  </TouchableOpacity>
+                  {postUserUid !== currenUserUid && (
+                    <TouchableOpacity
+                      style={mystyles.iconTextContainer}
+                      onPress={handleAddToFavorite}>
+                      <Image
+                        source={
+                          !currentUserAlldata?.favourites?.includes(postUserUid)
+                            ? require('../../assets/favorite.png')
+                            : require('../../assets/remove-star.png')
+                        }
+                        style={[mystyles.saveIcon, {tintColor: theme.text}]}
+                      />
+                      <Text style={[mystyles.textStyle, {color: theme.text}]}>
+                        {currentUserAlldata?.favourites?.includes(postUserUid)
+                          ? 'Remove from'
+                          : 'Add to'}{' '}
+                        Favourites
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                   {postUserUid !== currenUserUid &&
                     postUserData.followers.includes(currenUserUid) && (
                       <TouchableOpacity

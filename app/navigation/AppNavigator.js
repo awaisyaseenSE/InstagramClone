@@ -33,6 +33,7 @@ import AddPeopleGroupScreen from '../screens/Chat/GroupChat/AddPeopleGroupScreen
 import VideoCallScreen from '../screens/Chat/VideoCallScreen';
 import OnbordingScreen from '../screens/OnbordingScreen';
 import BottomSheetScreen from '../screens/BottomSheetScreen';
+import FavouriteUsersScreen from '../screens/FavouriteUsersScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -228,6 +229,11 @@ function AppNavigator() {
       <Stack.Screen
         name="BottomSheetScreen"
         component={BottomSheetScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="FavouriteUsersScreen"
+        component={FavouriteUsersScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

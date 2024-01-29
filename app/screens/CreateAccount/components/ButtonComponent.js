@@ -19,7 +19,8 @@ const ButtonComponent = ({
     <TouchableOpacity
       style={{...styles.buttonContainer, ...style}}
       activeOpacity={0.5}
-      onPress={onPress}>
+      onPress={onPress}
+      disabled={loading}>
       {loading ? (
         <ActivityIndicator size={16} color={colors.white} />
       ) : (
