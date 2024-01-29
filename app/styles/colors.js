@@ -14,6 +14,7 @@ export default {
   galleryPickImageBg: '#EFEFEF',
   lightBlackTwo: '#808080',
   profileGray: 'rgba(0,0,0,0.4)',
+  blue2: '#0093FB',
 
   darkBlue: '#2345D2',
   LightWhite: '#F9F9F9',

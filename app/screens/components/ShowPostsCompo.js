@@ -21,6 +21,7 @@ import ShowPostOptionModal from './ShowPostOptionModal';
 import MyIndicator from '../../components/MyIndicator';
 import Video from 'react-native-video';
 import {shareLink} from '../../utils/deepLinking';
+import FavouriteModalCompo from '../../components/FavouriteModalCompo';
 
 const ShowPostsCompo = ({
   item,
@@ -42,6 +43,7 @@ const ShowPostsCompo = ({
   const [currentUserAlldata, setCurrentUserAllData] = useState(null);
   const [laoding, setLoading] = useState(false);
   const [pauseVideo, setPauseVideo] = useState(false);
+  const [showFavouriteModal, setShowFavouriteModal] = useState(false);
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -243,7 +245,8 @@ const ShowPostsCompo = ({
                     paddingHorizontal: 8,
                     paddingVertical: 6,
                     marginRight: 2,
-                  }}>
+                  }}
+                  onPress={() => setShowFavouriteModal(true)}>
                   <Image
                     source={require('../../assets/star.png')}
                     style={styles.starIcon}
@@ -487,6 +490,13 @@ const ShowPostsCompo = ({
           handleSavePost={handleSavePost}
           allUrls={allUrls}
           preCaption={item.caption}
+        />
+      )}
+
+      {showFavouriteModal && (
+        <FavouriteModalCompo
+          showFavouriteModal={showFavouriteModal}
+          setShowFavouriteModal={setShowFavouriteModal}
         />
       )}
 
