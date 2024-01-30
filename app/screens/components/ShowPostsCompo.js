@@ -5,8 +5,6 @@ import {
   Image,
   FlatList,
   Dimensions,
-  Alert,
-  Modal,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
@@ -22,8 +20,16 @@ import navigationStrings from '../../navigation/navigationStrings';
 import ShowPostOptionModal from './ShowPostOptionModal';
 import MyIndicator from '../../components/MyIndicator';
 import Video from 'react-native-video';
+import {shareLink} from '../../utils/deepLinking';
+import FavouriteModalCompo from '../../components/FavouriteModalCompo';
 
-const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
+const ShowPostsCompo = ({
+  item,
+  allUrls,
+  switchToScreen,
+  setOpenModal,
+  setCommentPostID,
+}) => {
   const {theme} = useTheme();
   const styles = ShowPostStyle(theme);
   const navigation = useNavigation();
@@ -37,6 +43,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
   const [currentUserAlldata, setCurrentUserAllData] = useState(null);
   const [laoding, setLoading] = useState(false);
   const [pauseVideo, setPauseVideo] = useState(false);
+  const [showFavouriteModal, setShowFavouriteModal] = useState(false);
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -63,6 +70,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
     //     );
     //   });
   }, []);
+
   useEffect(() => {
     const unsubscribe = firestore()
       .collection('posts')
@@ -122,6 +130,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
   const profileNavigationHandler = () => {
     if (item.userUid == auth().currentUser.uid) {
       // switchToScreen(4);
+      navigation.navigate('MainTabRoutes');
     } else {
       navigation.navigate(navigationStrings.USER_PROFILE, {
         userUid: item.userUid,
@@ -153,6 +162,54 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
     }
   };
 
+  // const generateDeepLink = async () => {
+  //   try {
+  //     const link = await dynamicLinks().buildShortLink(
+  //       {
+  //         link: `https://instaclonedeeplink.page.link/mVFa`,
+  //         domainUriPrefix: 'https://instaclonedeeplink.page.link',
+  //         android: {
+  //           packageName: 'com.rahaalapp',
+  //         },
+  //       },
+  //       dynamicLinks.ShortLinkType.DEFAULT,
+  //     );
+  //     return link;
+  //   } catch (error) {
+  //     console.log(
+  //       'Error while generating deep link in Show Posts Component: ',
+  //       error,
+  //     );
+  //   }
+  // };
+
+  // const shareLink = async () => {
+  //   const getLink = await generateDeepLink();
+  //   try {
+  //     Share.share({
+  //       message: getLink,
+  //     });
+  //   } catch (error) {
+  //     console.log(
+  //       'Error while share link of app in Show Posts Component: ',
+  //       error,
+  //     );
+  //   }
+  // };
+
+  const handleDeepLinking = async () => {
+    try {
+      await shareLink('post', item.id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCommentSheet = () => {
+    setCommentPostID(item.id);
+    setOpenModal(true);
+  };
+
   return (
     <>
       <View>
@@ -177,17 +234,38 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
               <Text style={styles.userDetailText}>{postUserData?.email}</Text>
             </View>
           </View>
-          <TouchableOpacity
+          <View
             style={{
-              paddingHorizontal: 8,
-              paddingVertical: 6,
-            }}
-            onPress={() => setShowOptionModal(!showOptionModal)}>
-            <Image
-              source={require('../../assets/three_dot.png')}
-              style={styles.threeDotIcon}
-            />
-          </TouchableOpacity>
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            {!!currentUserAlldata &&
+              currentUserAlldata?.favourites?.includes(postUserData.id) && (
+                <TouchableOpacity
+                  style={{
+                    paddingHorizontal: 8,
+                    paddingVertical: 6,
+                    marginRight: 2,
+                  }}
+                  onPress={() => setShowFavouriteModal(true)}>
+                  <Image
+                    source={require('../../assets/star.png')}
+                    style={styles.starIcon}
+                  />
+                </TouchableOpacity>
+              )}
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 8,
+                paddingVertical: 6,
+              }}
+              onPress={() => setShowOptionModal(!showOptionModal)}>
+              <Image
+                source={require('../../assets/three_dot.png')}
+                style={styles.threeDotIcon}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         <View>
           {item.type == 'reel' && (
@@ -302,9 +380,19 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
                 style={[styles.postIconsStyle, {marginHorizontal: 8}]}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.postIconsContainer}>
+            <TouchableOpacity
+              style={styles.postIconsContainer}
+              onPress={handleDeepLinking}>
               <Image
                 source={require('../../assets/share.png')}
+                style={styles.postIconsStyle}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.postIconsContainer, {marginLeft: 8}]}
+              onPress={() => handleCommentSheet()}>
+              <Image
+                source={require('../../assets/IGTV.png')}
                 style={styles.postIconsStyle}
               />
             </TouchableOpacity>
@@ -401,8 +489,18 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
           currentUserAlldata={currentUserAlldata}
           postId={item.id}
           handleSavePost={handleSavePost}
+          allUrls={allUrls}
+          preCaption={item.caption}
         />
       )}
+
+      {showFavouriteModal && (
+        <FavouriteModalCompo
+          showFavouriteModal={showFavouriteModal}
+          setShowFavouriteModal={setShowFavouriteModal}
+        />
+      )}
+
       <MyIndicator
         visible={laoding}
         backgroundColor={theme.loginBackground}

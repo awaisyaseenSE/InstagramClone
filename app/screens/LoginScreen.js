@@ -8,6 +8,10 @@ import {
   Dimensions,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
 import ScreenComponent from '../components/ScreenComponent';
@@ -17,9 +21,8 @@ import navigationStrings from '../navigation/navigationStrings';
 import useAuth from '../auth/useAuth';
 import auth from '@react-native-firebase/auth';
 import {useTheme} from '../themes/ThemeContext';
-import ButtonComponent from './CreateAccount/components/ButtonComponent';
 import fontFamily from '../styles/fontFamily';
-import storage from '@react-native-firebase/storage';
+import {handleGoogleSignIn} from '../utils/googleSignIn';
 
 export default function LoginScreen() {
   const {theme} = useTheme();
@@ -125,116 +128,146 @@ export default function LoginScreen() {
     }
   };
 
+  const handleSignINWithGoogle = async () => {
+    try {
+      const res = await handleGoogleSignIn();
+      if (res) {
+        setUser(auth().currentUser);
+      }
+    } catch (error) {
+      console.log(
+        'Error in Login Screen inside handleSignINWithGoogle: ',
+        error,
+      );
+    }
+  };
+
   return (
     <>
       <ScreenComponent style={{backgroundColor: theme.loginBackground}}>
+        {/* <ScrollView style={{flex: 1}}> */}
         <View
           style={[styles.container, {backgroundColor: theme.loginBackground}]}>
-          <View style={styles.mainContainer}>
-            <View style={{flex: 0.3}} />
-            <Image
-              source={require('../assets/logo.png')}
-              style={[styles.logo, {tintColor: theme.text}]}
-            />
-            <View style={styles.inputContainer}>
-              {showEmailVerify && (
-                <Text
-                  style={[
-                    styles.errorText,
-                    {marginBottom: 6, alignSelf: 'center', color: theme.red},
-                  ]}>
-                  Please Verify Your Email to Login!
-                </Text>
-              )}
-              <TextInput
-                style={[styles.input, {color: theme.text}]}
-                placeholder="Email"
-                value={email}
-                onChangeText={text => setEmail(text)}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                placeholderTextColor={theme.gray}
+          {/* <KeyboardAvoidingView
+            style={{flex: 1}}
+            behavior={Platform.OS === 'ios' ? 'padding' : null}> */}
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.mainContainer}>
+              <View style={{marginTop: '20%'}} />
+              {/* <View style={{flex: 0.3}} /> */}
+              <Image
+                source={require('../assets/logo.png')}
+                style={[styles.logo, {tintColor: theme.text}]}
               />
-              {emailError !== '' && (
-                <Text style={[styles.errorText, {color: theme.red}]}>
-                  {emailError}
-                </Text>
-              )}
-              <View style={styles.passwordInputContainer}>
+              <View style={styles.inputContainer}>
+                {showEmailVerify && (
+                  <Text
+                    style={[
+                      styles.errorText,
+                      {
+                        marginBottom: 6,
+                        alignSelf: 'center',
+                        color: theme.red,
+                      },
+                    ]}>
+                    Please Verify Your Email to Login!
+                  </Text>
+                )}
                 <TextInput
-                  style={[styles.passwordInput, {color: theme.text}]}
-                  placeholder="Password"
-                  value={password}
-                  onChangeText={text => setPassword(text)}
-                  secureTextEntry={isShowPassword}
+                  style={[styles.input, {color: theme.text}]}
+                  placeholder="Email"
+                  value={email}
+                  onChangeText={text => setEmail(text)}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                   placeholderTextColor={theme.gray}
                 />
-                {password.length > 0 ? (
-                  <TouchableOpacity
-                    onPress={() => setIsShowPassword(!isShowPassword)}>
-                    <Image
-                      source={
-                        isShowPassword
-                          ? require('../assets/view.png')
-                          : require('../assets/hide.png')
-                      }
-                      style={[styles.showHideIcon, {tintColor: theme.light}]}
-                    />
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-              {passwordError !== '' && (
-                <Text style={[styles.errorText, {color: theme.red}]}>
-                  {passwordError}
-                </Text>
-              )}
-            </View>
-            <View style={styles.fogotPassContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate(navigationStrings.FORGOT_PASSWORD)
-                }>
-                <Text style={styles.forgotText}>Forgot Password?</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={handleLogin}>
-                {loading ? (
-                  <ActivityIndicator color={colors.white} size={22} />
-                ) : (
-                  <Text style={styles.buttonText}>Login</Text>
+                {emailError !== '' && (
+                  <Text style={[styles.errorText, {color: theme.red}]}>
+                    {emailError}
+                  </Text>
                 )}
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                style={styles.facebookIconStyle}
-                source={require('../assets/facebook_Icon.png')}
-              />
-              <Text style={styles.facebookText}>Log in with Facebook</Text>
-            </TouchableOpacity>
-            <View style={styles.OrTextContainer}>
-              <View style={[styles.lineStyle, {backgroundColor: theme.gray}]} />
-              <Text style={[styles.orText, {color: theme.gray}]}>OR</Text>
-              <View style={[styles.lineStyle, {backgroundColor: theme.gray}]} />
-            </View>
-            <View style={styles.createAccontContainer}>
-              <Text
-                style={[styles.createAccountText, {color: theme.lightText}]}>
-                Don’t have an account?
-              </Text>
+                <View style={styles.passwordInputContainer}>
+                  <TextInput
+                    style={[styles.passwordInput, {color: theme.text}]}
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={text => setPassword(text)}
+                    secureTextEntry={isShowPassword}
+                    placeholderTextColor={theme.gray}
+                  />
+                  {password.length > 0 ? (
+                    <TouchableOpacity
+                      onPress={() => setIsShowPassword(!isShowPassword)}>
+                      <Image
+                        source={
+                          isShowPassword
+                            ? require('../assets/view.png')
+                            : require('../assets/hide.png')
+                        }
+                        style={[styles.showHideIcon, {tintColor: theme.light}]}
+                      />
+                    </TouchableOpacity>
+                  ) : null}
+                </View>
+                {passwordError !== '' && (
+                  <Text style={[styles.errorText, {color: theme.red}]}>
+                    {passwordError}
+                  </Text>
+                )}
+              </View>
+              <View style={styles.fogotPassContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate(navigationStrings.FORGOT_PASSWORD)
+                  }>
+                  <Text style={styles.forgotText}>Forgot Password?</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.buttonStyle}
+                  onPress={handleLogin}>
+                  {loading ? (
+                    <ActivityIndicator color={colors.white} size={22} />
+                  ) : (
+                    <Text style={styles.buttonText}>Login</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate(navigationStrings.SIGN_UP_SCREEN)
-                }>
-                <Text style={styles.signUpText}>Sign up</Text>
+                style={{flexDirection: 'row', alignItems: 'center'}}
+                onPress={handleSignINWithGoogle}>
+                <Image
+                  style={styles.facebookIconStyle}
+                  source={require('../assets/google.png')}
+                />
+                <Text style={styles.facebookText}>Log in with Google</Text>
               </TouchableOpacity>
+              <View style={styles.OrTextContainer}>
+                <View
+                  style={[styles.lineStyle, {backgroundColor: theme.gray}]}
+                />
+                <Text style={[styles.orText, {color: theme.gray}]}>OR</Text>
+                <View
+                  style={[styles.lineStyle, {backgroundColor: theme.gray}]}
+                />
+              </View>
+              <View style={styles.createAccontContainer}>
+                <Text
+                  style={[styles.createAccountText, {color: theme.lightText}]}>
+                  Don’t have an account?
+                </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate(navigationStrings.SIGN_UP_SCREEN)
+                  }>
+                  <Text style={styles.signUpText}>Sign up</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-
+          </TouchableWithoutFeedback>
+          {/* </KeyboardAvoidingView> */}
           <View style={[styles.footer, {borderTopColor: theme.gray}]}>
             <View
               style={{
@@ -248,6 +281,7 @@ export default function LoginScreen() {
             </View>
           </View>
         </View>
+        {/* </ScrollView> */}
       </ScreenComponent>
     </>
   );
@@ -269,7 +303,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    flex: 0.1,
+    // flex: 0.1,
+    height: 60,
     borderTopWidth: 1.2,
     borderColor: colors.gray,
     // alignItems: 'center',

@@ -101,7 +101,7 @@ const TabRoutes = ({route}) => {
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 1}}>
-        {selectedScreen === 0 && <Home switchToScreen={switchToScreen} />}
+        {/* {selectedScreen === 0 && <Home switchToScreen={switchToScreen} />}
         {selectedScreen === 1 && <SearchScreen />}
         {selectedScreen === 2 && (
           <GalleryScreen switchToScreen={switchToScreen} />
@@ -109,7 +109,18 @@ const TabRoutes = ({route}) => {
         {selectedScreen === 3 && (
           <ReelsScreen switchToScreen={switchToScreen} />
         )}
-        {selectedScreen === 4 && <ProfileScreen />}
+        {selectedScreen === 4 && <ProfileScreen />} */}
+        {selectedScreen === 0 ? (
+          <Home switchToScreen={switchToScreen} />
+        ) : selectedScreen === 1 ? (
+          <SearchScreen />
+        ) : selectedScreen === 2 ? (
+          <GalleryScreen switchToScreen={switchToScreen} />
+        ) : selectedScreen === 3 ? (
+          <ReelsScreen switchToScreen={switchToScreen} />
+        ) : selectedScreen === 4 ? (
+          <ProfileScreen />
+        ) : null}
       </View>
       <View style={styles.bottomTabContainer}>
         <TouchableOpacity

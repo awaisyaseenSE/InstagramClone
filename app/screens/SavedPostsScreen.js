@@ -8,6 +8,7 @@ import TopCompoWithHeading from '../components/TopCompoWithHeading';
 import ShowPostsCompo from './components/ShowPostsCompo';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '../themes/ThemeContext';
+import ShimmerEffectCompo from '../components/ShimmerEffectCompo';
 
 export default function SavedPostsScreen() {
   const {theme} = useTheme();
@@ -68,15 +69,19 @@ export default function SavedPostsScreen() {
           onPress={() => navigation.goBack()}
         />
         <View style={{flex: 1, marginBottom: 50}}>
-          {postsData.length > 0 && (
-            <FlatList
-              data={postsData.reverse()}
-              renderItem={({item}) => (
-                <ShowPostsCompo item={item} allUrls={item.medialUrls} />
-              )}
-              showsVerticalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-            />
+          {!laoding ? (
+            postsData.length > 0 && (
+              <FlatList
+                data={postsData.reverse()}
+                renderItem={({item}) => (
+                  <ShowPostsCompo item={item} allUrls={item.medialUrls} />
+                )}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            )
+          ) : (
+            <ShimmerEffectCompo />
           )}
         </View>
       </ScreenComponent>

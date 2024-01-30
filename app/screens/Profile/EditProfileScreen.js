@@ -169,6 +169,7 @@ export default function EditProfileScreen({route}) {
       UpdateWithImage();
     }
   };
+
   return (
     <>
       <ScreenComponent style={{backgroundColor: theme.background}}>
@@ -207,9 +208,17 @@ export default function EditProfileScreen({route}) {
                   activeOpacity={0.8}
                   onPress={handleNewProfileImageSelection}>
                   <FastImage
+                    // source={{
+                    //   uri:
+                    //     userNewImage !== '' ? userNewImage : userData?.imageUrl,
+                    // }}
                     source={{
                       uri:
-                        userNewImage !== '' ? userNewImage : userData?.imageUrl,
+                        userNewImage !== ''
+                          ? userNewImage
+                          : userData?.imageUrl !== ''
+                          ? userData?.imageUrl
+                          : 'https://static.thenounproject.com/png/363640-200.png',
                     }}
                     style={styles.userImageStyle}
                   />

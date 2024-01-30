@@ -9,6 +9,7 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import FastImage from 'react-native-fast-image';
 import fontFamily from '../styles/fontFamily';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default function AboutAccountScreen({route}) {
   const userUid = route.params?.userUid;
@@ -58,53 +59,67 @@ export default function AboutAccountScreen({route}) {
   return (
     <>
       <ScreenComponent style={{backgroundColor: theme.background}}>
-        <TopCompoWithHeading
-          title="About this account"
-          onPress={() => navigation.goBack()}
-        />
-        <View style={{alignItems: 'center', marginTop: 14, marginBottom: 12}}>
-          <FastImage source={{uri: userImageUrl}} style={styles.image} />
-          <Text style={[styles.userNameStyle, {color: theme.text}]}>
-            {userName}
-          </Text>
-          <Text style={[styles.desc, {color: theme.gray}]}>
-            To help keep our community authentic, we're showing infomation about
-            accounts on instagram.
-            <Text style={{color: theme.lightText}}>
-              {' '}
-              See why this information is important.
+        <LinearGradient
+          style={{flex: 1}}
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.2)']}
+          start={{x: 0.2, y: 0.4}}
+          end={{x: 1, y: 0.8}}>
+          <TopCompoWithHeading
+            title={
+              userUid === auth().currentUser?.uid
+                ? 'About your account'
+                : 'About this account'
+            }
+            onPress={() => navigation.goBack()}
+          />
+          <View style={{alignItems: 'center', marginTop: 14, marginBottom: 12}}>
+            <FastImage source={{uri: userImageUrl}} style={styles.image} />
+            <Text style={[styles.userNameStyle, {color: theme.text}]}>
+              {userName}
             </Text>
-          </Text>
-        </View>
-        <View style={{paddingHorizontal: 6}}>
-          <View style={{flexDirection: 'row'}}>
-            <Image
-              source={require('../assets/ic_datepicker.png')}
-              style={[styles.iconStyle, {tintColor: theme.lightText}]}
-            />
-            <View style={{marginLeft: 12}}>
-              <Text style={[styles.txt, {color: theme.lightText}]}>
-                Date Joined
+            <Text style={[styles.desc, {color: theme.gray}]}>
+              To help keep our community authentic, we're showing infomation
+              about accounts on instagram.
+              <Text style={{color: theme.lightText}}>
+                {' '}
+                See why this information is important.
               </Text>
-              <Text style={[styles.descTxt, {color: theme.gray}]}>
-                {userDateOfJoin !== null && handleFormateDate(userDateOfJoin)}
-              </Text>
-            </View>
+            </Text>
           </View>
+          <View style={{paddingHorizontal: 6}}>
+            <View style={{flexDirection: 'row'}}>
+              <Image
+                source={require('../assets/ic_datepicker.png')}
+                style={[styles.iconStyle, {tintColor: theme.lightText}]}
+              />
+              <View style={{marginLeft: 12}}>
+                <Text style={[styles.txt, {color: theme.lightText}]}>
+                  Date Joined
+                </Text>
+                <Text style={[styles.descTxt, {color: theme.gray}]}>
+                  {userDateOfJoin !== null && handleFormateDate(userDateOfJoin)}
+                </Text>
+              </View>
+            </View>
+            {userUid !== auth().currentUser?.uid && (
+              <View style={{flexDirection: 'row', marginTop: 16}}>
+                <Image
+                  source={require('../assets/location.png')}
+                  style={[styles.iconStyle, {tintColor: theme.lightText}]}
+                />
 
-          <View style={{flexDirection: 'row', marginTop: 16}}>
-            <Image
-              source={require('../assets/location.png')}
-              style={[styles.iconStyle, {tintColor: theme.lightText}]}
-            />
-            <View style={{marginLeft: 12}}>
-              <Text style={[styles.txt, {color: theme.lightText}]}>
-                Account based in
-              </Text>
-              <Text style={[styles.descTxt, {color: theme.gray}]}>unkown</Text>
-            </View>
+                <View style={{marginLeft: 12}}>
+                  <Text style={[styles.txt, {color: theme.lightText}]}>
+                    Account based in
+                  </Text>
+                  <Text style={[styles.descTxt, {color: theme.gray}]}>
+                    unkown
+                  </Text>
+                </View>
+              </View>
+            )}
           </View>
-        </View>
+        </LinearGradient>
       </ScreenComponent>
       <MyIndicator />
     </>

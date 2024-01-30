@@ -86,7 +86,7 @@ const ShowNotificationCompo = ({data}) => {
       } else if (data?.type == 'post') {
         navigation.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
           clickedItem: data?.typeID,
-          userUid: data?.receiverID,
+          userUid: data?.senderID,
         });
       } else if (data?.type == 'message') {
         const routeData = {
@@ -245,7 +245,7 @@ const ShowNotificationCompo = ({data}) => {
       </TouchableOpacity>
       <MyIndicator
         visible={loading}
-        backgroundColor={theme.loginBackground}
+        backgroundColor={'transparent'}
         size={'small'}
       />
     </>

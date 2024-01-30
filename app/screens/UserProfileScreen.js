@@ -1,4 +1,12 @@
-import {View, Text, TouchableOpacity, Image, Alert, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Alert,
+  Modal,
+  ScrollView,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ScreenComponent from '../components/ScreenComponent';
 import {useTheme} from '../themes/ThemeContext';
@@ -155,221 +163,223 @@ export default function UserProfileScreen({route}) {
           title={userName}
           onPress={() => navigation.goBack()}
         />
-        <View style={styles.container}>
-          <View style={styles.userDetailContainer}>
-            <View style={styles.profileImageContainer}>
+        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+          <View style={styles.container}>
+            <View style={styles.userDetailContainer}>
+              <View style={styles.profileImageContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    userImageUrl !== '' && setShowUserImageModal(true);
+                  }}>
+                  <FastImage
+                    source={{
+                      uri:
+                        userImageUrl !== ''
+                          ? userImageUrl
+                          : 'https://is3-ssl.mzstatic.com/image/thumb/Purple127/v4/f5/ca/fd/f5cafd96-f3a4-8ec1-37b0-2e82f8bdea77/source/512x512bb.jpg',
+                    }}
+                    style={styles.profileImageStyle}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.followerContainer}>
+                <TouchableOpacity
+                  style={styles.followingTextContainer}
+                  onPress={() =>
+                    navigation.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
+                      userUid: userId,
+                    })
+                  }>
+                  <Text style={styles.followingContentText}>
+                    {userPostsLength}
+                  </Text>
+                  <Text style={styles.followingContentText1}>Posts</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.followingTextContainer}
+                  onPress={() => {
+                    userAllData !== null && userAllData.followers.length > 0
+                      ? navigation.navigate(
+                          navigationStrings.FOLLOWER_FOLLOWING_SCREEN,
+                          {
+                            followingList: userAllData.following,
+                            followerList: userAllData.followers,
+                            userName: userName,
+                            selectedIndex: 'followers',
+                            totalFollowers: userAllData.followers.length,
+                            totalFollowing: userAllData.following.length,
+                          },
+                        )
+                      : null;
+                  }}>
+                  <Text style={styles.followingContentText}>
+                    {userAllData !== null ? userAllData.followers.length : '22'}
+                  </Text>
+                  <Text style={styles.followingContentText1}>Followers</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.followingTextContainer}
+                  onPress={() => {
+                    userAllData !== null && userAllData.following.length > 0
+                      ? navigation.navigate(
+                          navigationStrings.FOLLOWER_FOLLOWING_SCREEN,
+                          {
+                            followingList: userAllData.following,
+                            followerList: userAllData.followers,
+                            userName: userName,
+                            selectedIndex: 'following',
+                            totalFollowers: userAllData.followers.length,
+                            totalFollowing: userAllData.following.length,
+                          },
+                        )
+                      : null;
+                  }}>
+                  <Text style={styles.followingContentText}>
+                    {userAllData !== null ? userAllData.following.length : '22'}
+                  </Text>
+                  <Text style={styles.followingContentText1}>Following</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.bioContainer}>
+              <Text style={styles.bioText}>
+                {userAllData !== null ? userAllData.bio : ''}
+              </Text>
+            </View>
+            <View style={styles.userProfileFollowBtnContainer}>
               <TouchableOpacity
-                onPress={() => {
-                  userImageUrl !== '' && setShowUserImageModal(true);
-                }}>
-                <FastImage
-                  source={{
-                    uri:
-                      userImageUrl !== ''
-                        ? userImageUrl
-                        : 'https://is3-ssl.mzstatic.com/image/thumb/Purple127/v4/f5/ca/fd/f5cafd96-f3a4-8ec1-37b0-2e82f8bdea77/source/512x512bb.jpg',
-                  }}
-                  style={styles.profileImageStyle}
+                style={[
+                  styles.userProfileFollowBtn,
+                  {
+                    backgroundColor:
+                      userAllData !== null &&
+                      userAllData.followers.includes(auth().currentUser?.uid)
+                        ? theme.userProfileGray
+                        : theme.userProfileBlue,
+                  },
+                ]}
+                onPress={handleFollow}
+                activeOpacity={0.6}>
+                <Text
+                  style={[
+                    styles.userProfileFollowText,
+                    {
+                      color:
+                        userAllData !== null &&
+                        userAllData.followers.includes(auth().currentUser?.uid)
+                          ? theme.text
+                          : 'white',
+                    },
+                  ]}>
+                  {userAllData !== null &&
+                  userAllData.followers.includes(auth().currentUser?.uid)
+                    ? 'Following'
+                    : 'follow'}
+                </Text>
+              </TouchableOpacity>
+              <View style={{marginHorizontal: 4}} />
+              <TouchableOpacity
+                style={[
+                  styles.userProfileFollowBtn,
+                  {backgroundColor: theme.userProfileGray},
+                ]}
+                onPress={handleNavigationToChat}>
+                <Text style={styles.userProfileFollowText}>Message</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.profileTabContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.profileTabsIconContainer,
+                  {
+                    borderColor:
+                      selectedTab === 0 ? theme.text : theme.profileImgBorder,
+                  },
+                ]}
+                onPress={() => setSelectedTab(0)}>
+                <Image
+                  source={require('../assets/grid.png')}
+                  style={[
+                    styles.profileTabsIconStyle,
+                    {
+                      tintColor:
+                        selectedTab === 0 ? theme.text : theme.profileGray,
+                    },
+                  ]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.profileTabsIconContainer,
+                  {
+                    borderColor:
+                      selectedTab === 1 ? theme.text : theme.profileImgBorder,
+                  },
+                ]}
+                onPress={() => setSelectedTab(1)}>
+                <Image
+                  source={require('../assets/reel.png')}
+                  style={[
+                    styles.profileTabsIconStyle,
+                    {
+                      tintColor:
+                        selectedTab === 1 ? theme.text : theme.profileGray,
+                    },
+                  ]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.profileTabsIconContainer,
+                  {
+                    borderColor:
+                      selectedTab === 2 ? theme.text : theme.profileImgBorder,
+                  },
+                ]}
+                onPress={() => setSelectedTab(2)}>
+                <Image
+                  source={require('../assets/user_two.png')}
+                  style={[
+                    styles.profileTabsIconStyle,
+                    {
+                      tintColor:
+                        selectedTab === 2 ? theme.text : theme.profileGray,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
             </View>
-            <View style={styles.followerContainer}>
-              <TouchableOpacity
-                style={styles.followingTextContainer}
-                onPress={() =>
-                  navigation.navigate(navigationStrings.SHOW_ALL_USER_POSTS, {
-                    userUid: userId,
-                  })
-                }>
-                <Text style={styles.followingContentText}>
-                  {userPostsLength}
-                </Text>
-                <Text style={styles.followingContentText1}>Posts</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.followingTextContainer}
-                onPress={() => {
-                  userAllData !== null && userAllData.followers.length > 0
-                    ? navigation.navigate(
-                        navigationStrings.FOLLOWER_FOLLOWING_SCREEN,
-                        {
-                          followingList: userAllData.following,
-                          followerList: userAllData.followers,
-                          userName: userName,
-                          selectedIndex: 'followers',
-                          totalFollowers: userAllData.followers.length,
-                          totalFollowing: userAllData.following.length,
-                        },
-                      )
-                    : null;
-                }}>
-                <Text style={styles.followingContentText}>
-                  {userAllData !== null ? userAllData.followers.length : '22'}
-                </Text>
-                <Text style={styles.followingContentText1}>Followers</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.followingTextContainer}
-                onPress={() => {
-                  userAllData !== null && userAllData.following.length > 0
-                    ? navigation.navigate(
-                        navigationStrings.FOLLOWER_FOLLOWING_SCREEN,
-                        {
-                          followingList: userAllData.following,
-                          followerList: userAllData.followers,
-                          userName: userName,
-                          selectedIndex: 'following',
-                          totalFollowers: userAllData.followers.length,
-                          totalFollowing: userAllData.following.length,
-                        },
-                      )
-                    : null;
-                }}>
-                <Text style={styles.followingContentText}>
-                  {userAllData !== null ? userAllData.following.length : '22'}
-                </Text>
-                <Text style={styles.followingContentText1}>Following</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.bioContainer}>
-            <Text style={styles.bioText}>
-              {userAllData !== null ? userAllData.bio : ''}
-            </Text>
-          </View>
-          <View style={styles.userProfileFollowBtnContainer}>
-            <TouchableOpacity
-              style={[
-                styles.userProfileFollowBtn,
-                {
-                  backgroundColor:
-                    userAllData !== null &&
-                    userAllData.followers.includes(auth().currentUser?.uid)
-                      ? theme.userProfileGray
-                      : theme.userProfileBlue,
-                },
-              ]}
-              onPress={handleFollow}
-              activeOpacity={0.6}>
-              <Text
-                style={[
-                  styles.userProfileFollowText,
-                  {
-                    color:
-                      userAllData !== null &&
-                      userAllData.followers.includes(auth().currentUser?.uid)
-                        ? theme.text
-                        : 'white',
-                  },
-                ]}>
-                {userAllData !== null &&
-                userAllData.followers.includes(auth().currentUser?.uid)
-                  ? 'Following'
-                  : 'follow'}
-              </Text>
-            </TouchableOpacity>
-            <View style={{marginHorizontal: 4}} />
-            <TouchableOpacity
-              style={[
-                styles.userProfileFollowBtn,
-                {backgroundColor: theme.userProfileGray},
-              ]}
-              onPress={handleNavigationToChat}>
-              <Text style={styles.userProfileFollowText}>Message</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.profileTabContainer}>
-            <TouchableOpacity
-              style={[
-                styles.profileTabsIconContainer,
-                {
-                  borderColor:
-                    selectedTab === 0 ? theme.text : theme.profileImgBorder,
-                },
-              ]}
-              onPress={() => setSelectedTab(0)}>
-              <Image
-                source={require('../assets/grid.png')}
-                style={[
-                  styles.profileTabsIconStyle,
-                  {
-                    tintColor:
-                      selectedTab === 0 ? theme.text : theme.profileGray,
-                  },
-                ]}
+            {selectedTab === 0 && (
+              <ProfileGridCompo
+                setUserPostsLength={setUserPostsLength}
+                userUid={userId}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.profileTabsIconContainer,
-                {
-                  borderColor:
-                    selectedTab === 1 ? theme.text : theme.profileImgBorder,
-                },
-              ]}
-              onPress={() => setSelectedTab(1)}>
-              <Image
-                source={require('../assets/reel.png')}
-                style={[
-                  styles.profileTabsIconStyle,
-                  {
-                    tintColor:
-                      selectedTab === 1 ? theme.text : theme.profileGray,
-                  },
-                ]}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.profileTabsIconContainer,
-                {
-                  borderColor:
-                    selectedTab === 2 ? theme.text : theme.profileImgBorder,
-                },
-              ]}
-              onPress={() => setSelectedTab(2)}>
-              <Image
-                source={require('../assets/user_two.png')}
-                style={[
-                  styles.profileTabsIconStyle,
-                  {
-                    tintColor:
-                      selectedTab === 2 ? theme.text : theme.profileGray,
-                  },
-                ]}
-              />
-            </TouchableOpacity>
-          </View>
-          {selectedTab === 0 && (
-            <ProfileGridCompo
-              setUserPostsLength={setUserPostsLength}
-              userUid={userId}
-            />
-          )}
-          {selectedTab === 1 && <ProfileReelCompo userID={userId} />}
-          {selectedTab === 2 && <ProfileUserTagsCompo />}
-          {showUserImageModal && (
-            <Modal style={{backgroundColor: 'transparent'}}>
-              <ScreenComponent style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
-                <View style={styles.userImageModalContainer}>
-                  <TouchableOpacity
-                    style={styles.closeIconContainerModal}
-                    onPress={() => setShowUserImageModal(false)}>
-                    <Image
-                      source={require('../assets/close.png')}
-                      style={styles.closeIconModal}
+            )}
+            {selectedTab === 1 && <ProfileReelCompo userID={userId} />}
+            {selectedTab === 2 && <ProfileUserTagsCompo userID={userId} />}
+            {showUserImageModal && (
+              <Modal style={{backgroundColor: 'transparent'}}>
+                <ScreenComponent style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                  <View style={styles.userImageModalContainer}>
+                    <TouchableOpacity
+                      style={styles.closeIconContainerModal}
+                      onPress={() => setShowUserImageModal(false)}>
+                      <Image
+                        source={require('../assets/close.png')}
+                        style={styles.closeIconModal}
+                      />
+                    </TouchableOpacity>
+                    <FastImage
+                      source={{uri: userImageUrl}}
+                      style={{width: '96%', height: '90%'}}
+                      resizeMode="contain"
                     />
-                  </TouchableOpacity>
-                  <FastImage
-                    source={{uri: userImageUrl}}
-                    style={{width: '96%', height: '90%'}}
-                    resizeMode="contain"
-                  />
-                </View>
-              </ScreenComponent>
-            </Modal>
-          )}
-        </View>
+                  </View>
+                </ScreenComponent>
+              </Modal>
+            )}
+          </View>
+        </ScrollView>
       </ScreenComponent>
       <MyIndicator
         visible={laoding}

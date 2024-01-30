@@ -1,12 +1,39 @@
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../navigation/navigationStrings';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 const TopHomeCompo = () => {
   const {theme} = useTheme();
   const navigation = useNavigation();
+  const [unReadNotifitions, setUnReadNotifications] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = firestore()
+      .collection('notifications')
+      .orderBy('time', 'desc')
+      .onSnapshot(snap => {
+        const allNotificationsData = snap.docs.map(doc => ({...doc.data()}));
+        const filteredNotificationsData = allNotificationsData.filter(
+          ele => ele.receiverID === auth().currentUser?.uid,
+        );
+        let unReadArr = [];
+        filteredNotificationsData.forEach(ele => {
+          if (ele?.isRead == false) {
+            unReadArr.push(ele);
+          } else {
+            null;
+          }
+        });
+        setUnReadNotifications(unReadArr);
+      });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <View
       style={[
@@ -29,6 +56,7 @@ const TopHomeCompo = () => {
             source={require('../../assets/tab_heart.png')}
             style={[styles.iconstyle, {tintColor: theme.bottonTabIconColor}]}
           />
+          {unReadNotifitions.length > 0 && <View style={styles.dotIcon} />}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
@@ -65,6 +93,15 @@ const styles = StyleSheet.create({
     width: 90,
     height: 34,
     resizeMode: 'contain',
+  },
+  dotIcon: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'red',
+    position: 'absolute',
+    top: 1,
+    right: 2,
   },
 });
 

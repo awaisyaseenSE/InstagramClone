@@ -81,7 +81,7 @@ const TopGroupChatCompo = ({groupData, onPress, onPressRight}) => {
           {groupData?.groupName}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.rightIconContainer}>
+      {/* <TouchableOpacity style={styles.rightIconContainer}>
         <Image
           source={require('../../../../assets/call.png')}
           style={[styles.rightIcon, {tintColor: theme.text}]}
@@ -97,7 +97,7 @@ const TopGroupChatCompo = ({groupData, onPress, onPressRight}) => {
             {tintColor: theme.text, width: 26, height: 26, marginLeft: 6},
           ]}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

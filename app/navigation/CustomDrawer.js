@@ -1,30 +1,15 @@
-import React, {useState} from 'react';
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
-import {
-  Alert,
-  Image,
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  Platform,
-} from 'react-native';
-import colors from '../styles/colors';
+import React from 'react';
+import {DrawerContentScrollView} from '@react-navigation/drawer';
+import {Alert, View, Text, Platform} from 'react-native';
 import auth, {firebase} from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import useAuth from '../auth/useAuth';
 import {useTheme} from '../themes/ThemeContext';
 import ProfileDrawerStyle from './style/ProfileDrawerStyle';
-import fontFamily from '../styles/fontFamily';
 import DrawerItemListCompo from './DrawerItemListCompo';
 import navigationStrings from './navigationStrings';
 import firestore from '@react-native-firebase/firestore';
-import messaging from '@react-native-firebase/messaging';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 function CustomDrawer(props) {
   const {theme} = useTheme();
@@ -33,18 +18,63 @@ function CustomDrawer(props) {
   const {logout} = useAuth();
   const navigation = useNavigation();
 
-  // const handleLogout = () => {
-  //   if (auth().currentUser) {
-  //     logout();
-  //   }
-  // };
+  const handleLogoutAccount = async () => {
+    try {
+      const isSigned = await GoogleSignin.isSignedIn();
+      // if (isSigned) await GoogleSignin.signOut();
+      if (isSigned) {
+        console.log('Google SigIN is ON..');
+        GoogleSignin.configure({
+          offlineAccess: true,
+          webClientId:
+            '10428894886-8td5vg45o4vnqk396ju99oveoa21a8ti.apps.googleusercontent.com',
+          // Platform.OS === 'android'
+          //   ? '10428894886-8td5vg45o4vnqk396ju99oveoa21a8ti.apps.googleusercontent.com'
+          //   : '10428894886-0m6qd5po00g8qv29eta001uo0nbhu21n.apps.googleusercontent.com',
+        });
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+        if (auth().currentUser) {
+          logout();
+        }
+      } else {
+        console.log('Google SigIN is OFF..');
+        if (auth().currentUser) {
+          logout();
+        }
+      }
+    } catch (error) {
+      console.log(
+        'Error in checking google signIn is activate or not: ',
+        error,
+      );
+    }
+  };
+
+  const logoutHandler = async () => {
+    try {
+      if (Platform.OS === 'ios') {
+        const isSigned = await GoogleSignin.isSignedIn();
+        if (isSigned) {
+          console.log('Platform is IOS and Google Sign In is true..', isSigned);
+          // await GoogleSignin.revokeAccess();
+          await GoogleSignin.signOut();
+        }
+        logout();
+      } else {
+        handleLogoutAccount();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleLogout = () => {
     try {
       Alert.alert('Logout', 'Are you sure to Logout!', [
         {
           text: 'Yes',
-          onPress: logout,
+          onPress: logoutHandler,
         },
         {
           text: 'No',
@@ -91,6 +121,23 @@ function CustomDrawer(props) {
     }
   };
 
+  const checkGoogleSignIn = async () => {
+    try {
+      const isSigned = await GoogleSignin.isSignedIn();
+      // if (isSigned) await GoogleSignin.signOut();
+      if (isSigned) {
+        console.log('Google SigIN is ON..');
+      } else {
+        console.log('Google SigIN is OFF..');
+      }
+    } catch (error) {
+      console.log(
+        'Error in checking google signIn is activate or not: ',
+        error,
+      );
+    }
+  };
+
   return (
     <>
       <DrawerContentScrollView
@@ -119,6 +166,7 @@ function CustomDrawer(props) {
           <DrawerItemListCompo
             image={require('../assets/nametag.png')}
             title="Nametag"
+            onPress={checkGoogleSignIn}
           />
           <DrawerItemListCompo
             image={require('../assets/save.png')}
@@ -150,9 +198,39 @@ function CustomDrawer(props) {
             }
           />
           <DrawerItemListCompo
+            image={require('../assets/favorite.png')}
+            title="Favourites"
+            onPress={() =>
+              navigation.navigate(navigationStrings.FAVOURITE_USERS_SCREEN)
+            }
+          />
+          <DrawerItemListCompo
             image={require('../assets/forward.png')}
             title="Set Fcm token"
             onPress={() => handleSetFcmToken()}
+          />
+          <DrawerItemListCompo
+            image={require('../assets/grid.png')}
+            title="Onboarding Screen"
+            onPress={() =>
+              navigation.navigate(navigationStrings.ONBOARDING_SCREEN)
+            }
+          />
+          <DrawerItemListCompo
+            image={require('../assets/IGTV.png')}
+            title="Shimmer effect"
+            onPress={() =>
+              navigation.navigate(navigationStrings.BOTTOM_SHEET_SCREEN)
+            }
+          />
+          <DrawerItemListCompo
+            image={require('../assets/about.png')}
+            title="About"
+            onPress={() =>
+              navigation.navigate(navigationStrings.ABOUT_ACCOUNT_SCREEN, {
+                userUid: auth().currentUser?.uid,
+              })
+            }
           />
         </View>
       </DrawerContentScrollView>

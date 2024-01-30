@@ -168,6 +168,53 @@ const ShowMessagesComponent = ({
     }
   };
 
+  const deleteMessageHandler = async () => {
+    try {
+      if (item?.chatID !== undefined) {
+        await firestore()
+          .collection('chats')
+          .doc(item?.chatID)
+          .collection('messages')
+          .doc(item?._id)
+          .delete();
+      } else if (item?.groupId !== undefined) {
+        await firestore()
+          .collection('chats')
+          .doc(item?.groupId)
+          .collection('messages')
+          .doc(item?._id)
+          .delete();
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log(
+        'Error while deleting message in Show Mwssages component: ',
+        error,
+      );
+    }
+  };
+
+  const handleDeleteMessage = () => {
+    try {
+      if (item?.senderID === auth().currentUser?.uid) {
+        Alert.alert('Warning', 'Are you sure to Delete this Message!', [
+          {
+            text: 'Yes',
+            onPress: deleteMessageHandler,
+          },
+          {
+            text: 'No',
+          },
+        ]);
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log('Error while deleting message in chat screen: ', error);
+    }
+  };
+
   return (
     <>
       <GestureHandlerRootView>
@@ -187,7 +234,10 @@ const ShowMessagesComponent = ({
               },
               useAmiStyle,
             ]}>
-            <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity
+              style={{flexDirection: 'row'}}
+              activeOpacity={0.8}
+              onLongPress={() => handleDeleteMessage()}>
               {item.senderID !== senderId &&
                 item.groupId !== undefined &&
                 item.groupId !== null &&
@@ -207,7 +257,9 @@ const ShowMessagesComponent = ({
                 )}
               {item.type == 'image' ? (
                 <>
-                  <TouchableOpacity onPress={() => setShowFullImage(true)}>
+                  <TouchableOpacity
+                    onPress={() => setShowFullImage(true)}
+                    onLongPress={() => handleDeleteMessage()}>
                     <FastImage
                       source={{uri: item.message}}
                       style={[styles.imageStyle]}
@@ -217,7 +269,9 @@ const ShowMessagesComponent = ({
               ) : null}
               {item.type == 'video' ? (
                 <>
-                  <TouchableOpacity onPress={() => setShowFullImage(true)}>
+                  <TouchableOpacity
+                    onPress={() => setShowFullImage(true)}
+                    onLongPress={() => handleDeleteMessage()}>
                     <Video
                       style={[styles.imageStyle]}
                       source={{uri: item.message}}
@@ -451,7 +505,7 @@ const ShowMessagesComponent = ({
                   ) : null}
                 </View>
               )}
-            </View>
+            </TouchableOpacity>
           </Animated.View>
         </FlingGestureHandler>
       </GestureHandlerRootView>

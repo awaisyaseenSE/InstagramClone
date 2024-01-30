@@ -16,33 +16,69 @@ export default function DiscoverPeopleScreen() {
   const currentUserId = auth().currentUser?.uid;
   const [allUsers, setAllUsers] = useState([]);
   const navigation = useNavigation();
+  var isMounted = false;
 
   useEffect(() => {
-    const unsubscribe = firestore()
-      .collection('users')
-      .onSnapshot(snapshot => {
-        const users = [];
-        snapshot.forEach(doc => {
-          const userData = doc.data();
-          const userId = doc.id;
+    // const unsubscribe = firestore()
+    //   .collection('users')
+    //   .onSnapshot(snapshot => {
+    //     const users = [];
+    //     snapshot.forEach(doc => {
+    //       const userData = doc.data();
+    //       const userId = doc.id;
 
-          // Skip the current user
-          if (userId !== currentUserId) {
-            // Check if the current user is not following this user
-            if (
-              !userData.followers ||
-              !userData.followers.includes(currentUserId)
-            ) {
-              users.push({...userData, id: userId});
-            }
-          }
-        });
+    //       // Skip the current user
+    //       if (userId !== currentUserId) {
+    //         // Check if the current user is not following this user
+    //         if (
+    //           !userData.followers ||
+    //           !userData.followers.includes(currentUserId)
+    //         ) {
+    //           users.push({...userData, id: userId});
+    //         }
+    //       }
+    //     });
 
-        setAllUsers(users);
-      });
+    //     setAllUsers(users);
+    //   });
 
-    return () => unsubscribe();
+    // return () => unsubscribe();
+    isMounted = true;
+    getUsersData();
+    return () => {
+      isMounted = false;
+    };
   }, []);
+
+  const getUsersData = () => {
+    try {
+      firestore()
+        .collection('users')
+        .onSnapshot(snapshot => {
+          const users = [];
+          snapshot.forEach(doc => {
+            const userData = doc.data();
+            const userId = doc.id;
+
+            // Skip the current user
+            if (userId !== currentUserId) {
+              // Check if the current user is not following this user
+              if (
+                !userData.followers ||
+                !userData.followers.includes(currentUserId)
+              ) {
+                users.push({...userData, id: userId});
+              }
+            }
+          });
+
+          setAllUsers(users);
+        });
+    } catch (error) {
+      console.log('Error in getting user data in discover screen: ', error);
+    }
+  };
+
   return (
     <>
       <ScreenComponent style={{backgroundColor: theme.background}}>
@@ -54,7 +90,11 @@ export default function DiscoverPeopleScreen() {
           <FlatList
             data={allUsers}
             renderItem={({item}) => (
-              <ShowFollowerFollowingCompo item={item.id} />
+              <ShowFollowerFollowingCompo
+                item={item.id}
+                screenName="discover"
+                getUsersData={getUsersData}
+              />
             )}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}

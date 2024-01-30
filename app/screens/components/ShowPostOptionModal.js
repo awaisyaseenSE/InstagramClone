@@ -38,6 +38,8 @@ const ShowPostOptionModal = ({
   postUserData,
   currentUserAlldata,
   handleSavePost,
+  allUrls,
+  preCaption,
 }) => {
   const {theme} = useTheme();
   const styles = CommentStyle(theme);
@@ -101,6 +103,86 @@ const ShowPostOptionModal = ({
   const handleFollow = async () => {
     await handleFollower();
     await handleFollowing();
+  };
+
+  const deletePost = async () => {
+    try {
+      await firestore().collection('posts').doc(postId).delete();
+      setShowOptionModal(!showOptionModal);
+    } catch (error) {
+      console.log(
+        'Error while Deleting the post in Show-Post-Option-Modal Component: ',
+        error,
+      );
+    }
+  };
+
+  const handleDeletePost = async () => {
+    try {
+      if (currenUserUid === postUserUid) {
+        Alert.alert('Warning', 'Are you sure to delete this post!', [
+          {
+            text: 'Yes',
+            onPress: deletePost,
+          },
+          {
+            text: 'No',
+          },
+        ]);
+      }
+    } catch (error) {
+      console.log(
+        'Error while Deleting the post in ALERT Modal Show-Post-Option-Modal Component: ',
+        error,
+      );
+    }
+  };
+
+  const handleEditPost = () => {
+    setShowOptionModal(!showOptionModal);
+    try {
+      if (currenUserUid === postUserUid) {
+        navigation.navigate(navigationStrings.CREATE_POST_SCREEN, {
+          allMedia: allUrls,
+          preCaption: preCaption,
+          screenTitle: 'Edit',
+          postId: postId,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAddToFavorite = async () => {
+    try {
+      const loggedUserId = auth().currentUser?.uid;
+      const userRef = firestore().collection('users').doc(loggedUserId);
+      const fuserRef = await userRef.get();
+      if (fuserRef.exists) {
+        const fuserData = fuserRef.data();
+
+        if (fuserData.hasOwnProperty('favourites')) {
+          let updatedFavouriteUsers = [...fuserData.favourites]; // Create a new array
+          if (fuserData.favourites.includes(postUserUid)) {
+            updatedFavouriteUsers = updatedFavouriteUsers.filter(
+              id => id !== postUserUid,
+            ); // Remove User id
+          } else {
+            updatedFavouriteUsers.push(postUserUid); // Add User id
+          }
+          await userRef.update({favourites: updatedFavouriteUsers}); // Update the User id
+        } else {
+          // If 'fcmToken' field doesn't exist, set it
+          await userRef.set({...fuserData, favourites: [postUserUid]});
+        }
+      }
+    } catch (error) {
+      console.log(
+        'Error in handleAddToFavorite function in ShowPostOption Modal compo: ',
+        error,
+      );
+    }
   };
 
   return (
@@ -177,15 +259,26 @@ const ShowPostOptionModal = ({
                       borderBottomColor: theme.lightText,
                     },
                   ]}>
-                  <TouchableOpacity style={mystyles.iconTextContainer}>
-                    <Image
-                      source={require('../../assets/favorite.png')}
-                      style={[mystyles.saveIcon, {tintColor: theme.text}]}
-                    />
-                    <Text style={[mystyles.textStyle, {color: theme.text}]}>
-                      Add to Favourites
-                    </Text>
-                  </TouchableOpacity>
+                  {postUserUid !== currenUserUid && (
+                    <TouchableOpacity
+                      style={mystyles.iconTextContainer}
+                      onPress={handleAddToFavorite}>
+                      <Image
+                        source={
+                          !currentUserAlldata?.favourites?.includes(postUserUid)
+                            ? require('../../assets/favorite.png')
+                            : require('../../assets/remove-star.png')
+                        }
+                        style={[mystyles.saveIcon, {tintColor: theme.text}]}
+                      />
+                      <Text style={[mystyles.textStyle, {color: theme.text}]}>
+                        {currentUserAlldata?.favourites?.includes(postUserUid)
+                          ? 'Remove from'
+                          : 'Add to'}{' '}
+                        Favourites
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                   {postUserUid !== currenUserUid &&
                     postUserData.followers.includes(currenUserUid) && (
                       <TouchableOpacity
@@ -249,6 +342,32 @@ const ShowPostOptionModal = ({
                       />
                       <Text style={[mystyles.textStyle, {color: theme.red}]}>
                         Report
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  {postUserUid === currenUserUid && (
+                    <TouchableOpacity
+                      style={[mystyles.iconTextContainer]}
+                      onPress={() => handleEditPost()}>
+                      <Image
+                        source={require('../../assets/edit.png')}
+                        style={[mystyles.saveIcon, {tintColor: theme.text}]}
+                      />
+                      <Text style={[mystyles.textStyle, {color: theme.text}]}>
+                        Edit
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  {postUserUid === currenUserUid && (
+                    <TouchableOpacity
+                      style={[mystyles.iconTextContainer, {marginVertical: 20}]}
+                      onPress={() => handleDeletePost()}>
+                      <Image
+                        source={require('../../assets/delete.png')}
+                        style={[mystyles.saveIcon, {tintColor: theme.red}]}
+                      />
+                      <Text style={[mystyles.textStyle, {color: theme.red}]}>
+                        Delete
                       </Text>
                     </TouchableOpacity>
                   )}

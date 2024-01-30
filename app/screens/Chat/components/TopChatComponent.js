@@ -48,12 +48,12 @@ const TopChatComponent = ({userData = null, chatID}) => {
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        <TouchableOpacity style={styles.rightIconsContainer}>
+        {/* <TouchableOpacity style={styles.rightIconsContainer}>
           <Image
             source={require('../../../assets/call.png')}
             style={[styles.rightIcons, {tintColor: theme.text}]}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={[styles.rightIconsContainer, {marginLeft: 12}]}
           onPress={() =>

@@ -81,6 +81,11 @@ const ShowPostStyle = theme => {
       paddingHorizontal: 14,
       paddingVertical: 12,
     },
+    starIcon: {
+      width: 16,
+      height: 16,
+      resizeMode: 'contain',
+    },
   });
   return styles;
 };

@@ -1,29 +1,24 @@
-import {
-  View,
-  Text,
-  Button,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-} from 'react-native';
+import {View, FlatList, StyleSheet, ScrollView, Modal} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ScreenComponent from '../components/ScreenComponent';
-import useAuth from '../auth/useAuth';
 import {useTheme} from '../themes/ThemeContext';
 import TopHomeCompo from './components/TopHomeCompo';
 import StoryComponent from './components/StoryComponent';
-import PostData from '../dummyData/PostData';
-import FastImage from 'react-native-fast-image';
 import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 import MyIndicator from '../components/MyIndicator';
 import ShowPostsCompo from './components/ShowPostsCompo';
+import BottomSheetComponent from '../components/BottomSheetComponent';
+import {getLocation} from '../utils/getUserLocation';
+import fontFamily from '../styles/fontFamily';
+import ShimmerEffectCompo from '../components/ShimmerEffectCompo';
 
 export default function Home({switchToScreen}) {
   const {theme} = useTheme();
   const [postData, setPostData] = useState([]);
   const [laoding, setLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [commentPostID, setCommentPostID] = useState('');
+  // const MemoShowPostsCompo = React.memo(ShowPostsCompo);
 
   useEffect(() => {
     setLoading(true);
@@ -43,6 +38,22 @@ export default function Home({switchToScreen}) {
     return () => unsubscribe();
   }, []);
 
+  const handleGetLocation = async () => {
+    try {
+      const position = await getLocation();
+
+      if (position !== undefined && position !== null) {
+        // console.log('Location of user is: ', position);
+      }
+    } catch (error) {
+      console.log('Error in handleGetLocation in Home screen: ', error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetLocation();
+  }, []);
+
   return (
     <>
       <ScreenComponent
@@ -52,36 +63,53 @@ export default function Home({switchToScreen}) {
           flex: 1,
         }}
         statusBarBg={theme.bottonTabBg}>
-        <TopHomeCompo />
-        <View style={{flex: 1, backgroundColor: theme.background}}>
-          <StoryComponent />
-          <View style={{flex: 1}}>
-            <FlatList
-              data={postData}
-              renderItem={({item}) => (
-                <ShowPostsCompo
-                  item={item}
-                  allUrls={item.medialUrls}
-                  switchToScreen={switchToScreen}
+        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+          <TopHomeCompo />
+          <View style={{flex: 1, backgroundColor: theme.background}}>
+            <StoryComponent />
+            <View style={{flex: 1}}>
+              {!laoding ? (
+                <FlatList
+                  data={postData}
+                  renderItem={({item}) => (
+                    <ShowPostsCompo
+                      item={item}
+                      allUrls={item.medialUrls}
+                      switchToScreen={switchToScreen}
+                      setOpenModal={setOpenModal}
+                      setCommentPostID={setCommentPostID}
+                    />
+                  )}
+                  showsVerticalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  scrollEnabled={false}
                 />
+              ) : (
+                <ShimmerEffectCompo />
               )}
-              showsVerticalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-            />
+            </View>
           </View>
-        </View>
+        </ScrollView>
+        <Modal visible={openModal} style={{flex: 1}} transparent>
+          <BottomSheetComponent
+            setOpenModal={setOpenModal}
+            showComment={openModal}
+            setShowComment={setOpenModal}
+            postId={commentPostID}
+            switchToScreen={switchToScreen}
+          />
+        </Modal>
       </ScreenComponent>
-      <MyIndicator
+      {/* <MyIndicator
         visible={laoding}
         backgroundColor={theme.loginBackground}
         size={'large'}
-      />
+      /> */}
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {},
   userDetailText: {
     fontSize: 11,
   },

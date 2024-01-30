@@ -125,6 +125,14 @@ export default function GetUserProfileImage({
           onPress={handleNextScreen}
           loading={loading}
         />
+        <ButtonComponent
+          title="Skip"
+          onPress={() => {
+            setSelectedIndex(selectedIndex + 1);
+          }}
+          loading={loading}
+          style={{marginTop: 20}}
+        />
       </View>
     </View>
   );
