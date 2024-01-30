@@ -130,6 +130,7 @@ const ShowPostsCompo = ({
   const profileNavigationHandler = () => {
     if (item.userUid == auth().currentUser.uid) {
       // switchToScreen(4);
+      navigation.navigate('MainTabRoutes');
     } else {
       navigation.navigate(navigationStrings.USER_PROFILE, {
         userUid: item.userUid,
@@ -239,7 +240,7 @@ const ShowPostsCompo = ({
               alignItems: 'center',
             }}>
             {!!currentUserAlldata &&
-              currentUserAlldata?.favourites.includes(postUserData.id) && (
+              currentUserAlldata?.favourites?.includes(postUserData.id) && (
                 <TouchableOpacity
                   style={{
                     paddingHorizontal: 8,

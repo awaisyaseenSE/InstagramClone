@@ -27,7 +27,8 @@ function MainNavigator(props) {
       <NavigationContainer
         ref={ref => NavigationService.setTopLevelNavigator(ref)}>
         {/* {user !== null ? <AppNavigator /> : <AuthNavigator />} */}
-        {auth().currentUser?.emailVerified ? (
+        {auth().currentUser?.emailVerified ||
+        auth()?.currentUser?.phoneNumber ? (
           <AppNavigator />
         ) : (
           <AuthNavigator />

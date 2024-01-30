@@ -84,7 +84,7 @@ const StoryComponent = () => {
               <FastImage
                 source={{
                   uri:
-                    auth().currentUser?.photoURL !== '' ||
+                    auth().currentUser?.photoURL !== '' &&
                     auth().currentUser?.photoURL !== null
                       ? auth().currentUser?.photoURL
                       : 'https://pbs.twimg.com/profile_images/1222140802475773952/61OmyINj.jpg',

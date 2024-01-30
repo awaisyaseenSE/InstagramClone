@@ -10,6 +10,7 @@ import navigationStrings from '../../../navigation/navigationStrings';
 import firestore from '@react-native-firebase/firestore';
 import AuthStyles from '../../../styles/AuthStyles';
 import {useTheme} from '../../../themes/ThemeContext';
+import GetOtpCodeCompo from './GetOtpCodeCompo';
 
 const GetUserEmailOrPhoneCompo = ({
   email = '',
@@ -35,6 +36,7 @@ const GetUserEmailOrPhoneCompo = ({
   const navigation = useNavigation();
   const {theme} = useTheme();
   const styles = AuthStyles(theme);
+  const [verificationId, setVerificationId] = useState('');
 
   const validateEmail = email => {
     let pattern =
@@ -78,6 +80,7 @@ const GetUserEmailOrPhoneCompo = ({
         dateOfJoin: new Date(),
         savedPosts: [],
         searchPeople: [],
+        phoneNumber: phoneNumber,
       });
       return true;
     } catch (error) {
@@ -140,14 +143,8 @@ const GetUserEmailOrPhoneCompo = ({
       setLoading(true);
       let response = await auth().signInWithPhoneNumber(phone);
       console.log(response);
-      // console.log('===============confirm=====================');
-      // console.log(response.verificationId);
-      // console.log('===============confirm=====================');
+      setVerificationId(response?.verificationId);
       setLoading(false);
-      // navigation.navigate('OtpVerify', {
-      //   response: response.verificationId,
-      // });
-      // props.navigation.navigate("OtpVerify", { phone: response })
     } catch (error) {
       setLoading(false);
       if (error.code === 'auth/invalid-phone-number') {
@@ -242,7 +239,7 @@ const GetUserEmailOrPhoneCompo = ({
     setEmailErrorText('');
     setIsEmailSignIn(!isEmailSignIn);
   };
-  return (
+  return verificationId === '' ? (
     <View>
       <Text style={styles.heading}>
         What's your {isEmailSignIn ? 'email address' : 'mobile number'}?
@@ -335,6 +332,12 @@ const GetUserEmailOrPhoneCompo = ({
         )}
       </View>
     </View>
+  ) : (
+    <GetOtpCodeCompo
+      verificationId={verificationId}
+      handleUploadUserData={handleUploadUserData}
+      phoneNumber={phoneNumber}
+    />
   );
 };
 
