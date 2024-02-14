@@ -156,7 +156,7 @@ export default function SearchPeopleScreen({route}) {
               style={[styles.addRemoveBtn, {backgroundColor: theme.gray2}]}>
               <Text style={{color: theme.text}}>
                 {!!currentUserData &&
-                currentUserData?.favourites.includes(item.id)
+                currentUserData?.favourites?.includes(item.id)
                   ? 'Remove'
                   : 'Add'}
               </Text>

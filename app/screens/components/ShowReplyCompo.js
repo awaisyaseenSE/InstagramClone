@@ -158,7 +158,7 @@ const ShowReplyCompo = ({
         <Text
           style={[styles.commentTextStyle, {fontSize: 11}]}
           numberOfLines={4}>
-          {data.text} hi everyone
+          {data.text}
         </Text>
       </View>
       <View

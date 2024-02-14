@@ -2,15 +2,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Modal,
   Image,
   TextInput,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  TouchableWithoutFeedback,
   FlatList,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';

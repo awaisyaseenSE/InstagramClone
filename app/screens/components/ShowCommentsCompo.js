@@ -93,7 +93,7 @@ const ShowCommentsCompo = ({
     getUserData();
     getReplyData();
     return () => (isMoundted = false);
-  }, []);
+  }, [item]);
 
   const getReplyData = () => {
     try {
@@ -187,7 +187,7 @@ const ShowCommentsCompo = ({
             </Text>
           </View>
           <Text style={[styles.commentTextStyle, {fontSize: 11}]}>
-            {item.text} hi i am from pakistan punjab where are you from
+            {item.text}
           </Text>
           <TouchableOpacity onPress={handleReplyComment}>
             <Text
