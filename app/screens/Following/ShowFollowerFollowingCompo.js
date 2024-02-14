@@ -108,7 +108,14 @@ const ShowFollowerFollowingCompo = ({item, screenName, getUsersData}) => {
       <TouchableOpacity
         style={styles.followerImageContainer}
         onPress={profileNavigationHandler}>
-        <FastImage source={{uri: userImageUrl}} style={styles.userImage} />
+        <FastImage
+          source={
+            userImageUrl == ''
+              ? require('../../assets/avatar.png')
+              : {uri: userImageUrl}
+          }
+          style={styles.userImage}
+        />
         <Text style={styles.followerUserNameText}>{userName}</Text>
       </TouchableOpacity>
       {auth().currentUser.uid !== item && (
