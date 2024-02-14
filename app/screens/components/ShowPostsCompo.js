@@ -23,13 +23,7 @@ import Video from 'react-native-video';
 import {shareLink} from '../../utils/deepLinking';
 import FavouriteModalCompo from '../../components/FavouriteModalCompo';
 
-const ShowPostsCompo = ({
-  item,
-  allUrls,
-  switchToScreen,
-  setOpenModal,
-  setCommentPostID,
-}) => {
+const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
   const {theme} = useTheme();
   const styles = ShowPostStyle(theme);
   const navigation = useNavigation();
@@ -203,11 +197,6 @@ const ShowPostsCompo = ({
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleCommentSheet = () => {
-    setCommentPostID(item.id);
-    setOpenModal(true);
   };
 
   return (
@@ -385,14 +374,6 @@ const ShowPostsCompo = ({
               onPress={handleDeepLinking}>
               <Image
                 source={require('../../assets/share.png')}
-                style={styles.postIconsStyle}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.postIconsContainer, {marginLeft: 8}]}
-              onPress={() => handleCommentSheet()}>
-              <Image
-                source={require('../../assets/IGTV.png')}
                 style={styles.postIconsStyle}
               />
             </TouchableOpacity>

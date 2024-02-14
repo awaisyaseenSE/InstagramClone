@@ -164,8 +164,10 @@ export default function EditProfileScreen({route}) {
       }
     }
     if (userNewImage == '') {
+      setShowGenderModal(false);
       UpdateWithOutImage();
     } else {
+      setShowGenderModal(false);
       UpdateWithImage();
     }
   };
@@ -335,7 +337,7 @@ export default function EditProfileScreen({route}) {
                     </View>
                   </View>
                 )}
-                <View>
+                {/* <View>
                   <Text style={{fontSize: 14, color: theme.text}}>
                     Fcm Token:{' '}
                   </Text>
@@ -344,7 +346,7 @@ export default function EditProfileScreen({route}) {
                       ? userData?.fcmToken
                       : 'No fcm token is found'}
                   </Text>
-                </View>
+                </View> */}
               </View>
             </View>
           </TouchableWithoutFeedback>

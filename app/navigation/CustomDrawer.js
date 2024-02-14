@@ -87,40 +87,6 @@ function CustomDrawer(props) {
     }
   };
 
-  const storeFcmTokenToFirestore = async fcmToken => {
-    try {
-      const userRef = firestore()
-        .collection('users')
-        .doc(auth().currentUser?.uid);
-      const userData = await userRef.get();
-
-      if (userData.exists) {
-        const userDataObj = userData.data(); // Access user data using data() method
-
-        if (userDataObj.hasOwnProperty('fcmToken')) {
-          // If 'fcmToken' field already exists, update it
-          await userRef.update({fcmToken: fcmToken});
-        } else {
-          // If 'fcmToken' field doesn't exist, set it
-          await userRef.set({...userDataObj, fcmToken: fcmToken});
-        }
-      }
-    } catch (error) {
-      console.log('Error while storing fcm to user collection: ', error);
-    }
-  };
-
-  const handleSetFcmToken = async () => {
-    try {
-      const token = await firebase.messaging().getToken();
-      if (token) {
-        await storeFcmTokenToFirestore(token);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const checkGoogleSignIn = async () => {
     try {
       const isSigned = await GoogleSignin.isSignedIn();
@@ -202,25 +168,6 @@ function CustomDrawer(props) {
             title="Favourites"
             onPress={() =>
               navigation.navigate(navigationStrings.FAVOURITE_USERS_SCREEN)
-            }
-          />
-          <DrawerItemListCompo
-            image={require('../assets/forward.png')}
-            title="Set Fcm token"
-            onPress={() => handleSetFcmToken()}
-          />
-          <DrawerItemListCompo
-            image={require('../assets/grid.png')}
-            title="Onboarding Screen"
-            onPress={() =>
-              navigation.navigate(navigationStrings.ONBOARDING_SCREEN)
-            }
-          />
-          <DrawerItemListCompo
-            image={require('../assets/IGTV.png')}
-            title="Shimmer effect"
-            onPress={() =>
-              navigation.navigate(navigationStrings.BOTTOM_SHEET_SCREEN)
             }
           />
           <DrawerItemListCompo
