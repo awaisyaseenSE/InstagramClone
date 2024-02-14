@@ -229,7 +229,7 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
               alignItems: 'center',
             }}>
             {!!currentUserAlldata &&
-              currentUserAlldata?.favourites?.includes(postUserData.id) && (
+              currentUserAlldata?.favourites?.includes(postUserData?.id) && (
                 <TouchableOpacity
                   style={{
                     paddingHorizontal: 8,
