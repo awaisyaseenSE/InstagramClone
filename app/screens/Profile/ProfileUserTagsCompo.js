@@ -15,9 +15,6 @@ const ProfileUserTagsCompo = ({userID}) => {
   };
   return (
     <View style={{alignItems: 'center'}}>
-      <Text style={{color: theme.text, fontSize: 14, marginTop: 12}}>
-        Profile User Tags Compo
-      </Text>
       <ButtonComponent
         title="Share Profile"
         style={{width: '60%', marginTop: 20}}

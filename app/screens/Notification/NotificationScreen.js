@@ -1,19 +1,10 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import {Text, FlatList, StyleSheet, ScrollView} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ScreenComponent from '../../components/ScreenComponent';
 import TopCompoWithHeading from '../../components/TopCompoWithHeading';
 import {useNavigation} from '@react-navigation/native';
-import navigationStrings from '../../navigation/navigationStrings';
 import {useTheme} from '../../themes/ThemeContext';
 import auth from '@react-native-firebase/auth';
-import colors from '../../styles/colors';
 import firestore from '@react-native-firebase/firestore';
 import MyIndicator from '../../components/MyIndicator';
 import ShowNotificationCompo from '../components/ShowNotificationCompo';
@@ -36,10 +27,6 @@ export default function NotificationScreen() {
         const filteredNotificationsData = allNotificationsData.filter(
           ele => ele.receiverID === auth().currentUser?.uid,
         );
-        // console.log(
-        //   'Total Notification is: ',
-        //   filteredNotificationsData.length,
-        // );
         let unReadArr = [];
         let readArr = [];
         filteredNotificationsData.forEach(ele => {

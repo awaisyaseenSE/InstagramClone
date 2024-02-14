@@ -1,81 +1,26 @@
 import {
   View,
   Text,
-  Button,
   FlatList,
   TouchableOpacity,
   Image,
   StyleSheet,
-  Dimensions,
-  SafeAreaView,
   ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ScreenComponent from '../components/ScreenComponent';
-import FastImage from 'react-native-fast-image';
 import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 import MyIndicator from '../components/MyIndicator';
 import {useTheme} from '../themes/ThemeContext';
 import {useNavigation} from '@react-navigation/native';
-import SearchStyle from './style/SearchStyle';
 import ShowSearchPostCompo from './components/ShowSearchPostCompo';
-import SearchComponent from './components/SearchComponent';
-import fontFamily from '../styles/fontFamily';
 import navigationStrings from '../navigation/navigationStrings';
-
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
 
 export default function SearchScreen() {
   const {theme} = useTheme();
-  // const styles = SearchStyle(theme);
   const [laoding, setLoading] = useState(false);
   const navigation = useNavigation();
   const [allPostsData, setAllPostsData] = useState();
-
-  const data = [
-    {
-      id: 0,
-      images: [
-        'https://images.pexels.com/photos/19341966/pexels-photo-19341966/free-photo-of-headquarter-of-deutsche-orientbank-in-berlin.jpeg?auto=compress&cs=tinysrgb&w=1200&lazy=load',
-        'https://images.pexels.com/photos/16157623/pexels-photo-16157623/free-photo-of-set-table-decorated-with-flowers.jpeg?auto=compress&cs=tinysrgb&w=1200&lazy=load',
-        'https://images.pexels.com/photos/17125142/pexels-photo-17125142/free-photo-of-cup-of-tea-with-chamomile-set-on-open-book.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      ],
-    },
-    {
-      id: 1,
-      images: [
-        'https://images.pexels.com/photos/17125142/pexels-photo-17125142/free-photo-of-cup-of-tea-with-chamomile-set-on-open-book.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/19341966/pexels-photo-19341966/free-photo-of-headquarter-of-deutsche-orientbank-in-berlin.jpeg?auto=compress&cs=tinysrgb&w=1200&lazy=load',
-        'https://images.pexels.com/photos/16157623/pexels-photo-16157623/free-photo-of-set-table-decorated-with-flowers.jpeg?auto=compress&cs=tinysrgb&w=1200&lazy=load',
-      ],
-    },
-    {
-      id: 2,
-      images: [
-        'https://images.pexels.com/photos/16157623/pexels-photo-16157623/free-photo-of-set-table-decorated-with-flowers.jpeg?auto=compress&cs=tinysrgb&w=1200&lazy=load',
-        'https://images.pexels.com/photos/19341966/pexels-photo-19341966/free-photo-of-headquarter-of-deutsche-orientbank-in-berlin.jpeg?auto=compress&cs=tinysrgb&w=1200&lazy=load',
-        'https://images.pexels.com/photos/17125142/pexels-photo-17125142/free-photo-of-cup-of-tea-with-chamomile-set-on-open-book.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      ],
-    },
-    {
-      id: 3,
-      images: [
-        'https://images.pexels.com/photos/18931202/pexels-photo-18931202/free-photo-of-a-white-building-with-trees-in-front-of-it.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/19341966/pexels-photo-19341966/free-photo-of-headquarter-of-deutsche-orientbank-in-berlin.jpeg?auto=compress&cs=tinysrgb&w=1200&lazy=load',
-        'https://images.pexels.com/photos/16157623/pexels-photo-16157623/free-photo-of-set-table-decorated-with-flowers.jpeg?auto=compress&cs=tinysrgb&w=1200&lazy=load',
-      ],
-    },
-    {
-      id: 4,
-      images: [
-        'https://images.pexels.com/photos/11163578/pexels-photo-11163578.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/19341966/pexels-photo-19341966/free-photo-of-headquarter-of-deutsche-orientbank-in-berlin.jpeg?auto=compress&cs=tinysrgb&w=1200&lazy=load',
-        'https://images.pexels.com/photos/17125142/pexels-photo-17125142/free-photo-of-cup-of-tea-with-chamomile-set-on-open-book.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      ],
-    },
-  ];
 
   useEffect(() => {
     setLoading(true);
