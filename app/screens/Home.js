@@ -6,7 +6,6 @@ import TopHomeCompo from './components/TopHomeCompo';
 import StoryComponent from './components/StoryComponent';
 import firestore from '@react-native-firebase/firestore';
 import ShowPostsCompo from './components/ShowPostsCompo';
-import BottomSheetComponent from '../components/BottomSheetComponent';
 import {getLocation} from '../utils/getUserLocation';
 import ShimmerEffectCompo from '../components/ShimmerEffectCompo';
 import auth, {firebase} from '@react-native-firebase/auth';
@@ -15,8 +14,6 @@ export default function Home({switchToScreen}) {
   const {theme} = useTheme();
   const [postData, setPostData] = useState([]);
   const [laoding, setLoading] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [commentPostID, setCommentPostID] = useState('');
 
   useEffect(() => {
     setLoading(true);
@@ -108,8 +105,6 @@ export default function Home({switchToScreen}) {
                       item={item}
                       allUrls={item.medialUrls}
                       switchToScreen={switchToScreen}
-                      setOpenModal={setOpenModal}
-                      setCommentPostID={setCommentPostID}
                     />
                   )}
                   showsVerticalScrollIndicator={false}
@@ -122,15 +117,6 @@ export default function Home({switchToScreen}) {
             </View>
           </View>
         </ScrollView>
-        <Modal visible={openModal} style={{flex: 1}} transparent>
-          <BottomSheetComponent
-            setOpenModal={setOpenModal}
-            showComment={openModal}
-            setShowComment={setOpenModal}
-            postId={commentPostID}
-            switchToScreen={switchToScreen}
-          />
-        </Modal>
       </ScreenComponent>
     </>
   );
