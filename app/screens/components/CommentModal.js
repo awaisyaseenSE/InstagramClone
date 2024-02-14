@@ -5,21 +5,15 @@ import {
   Modal,
   Image,
   TextInput,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  TouchableWithoutFeedback,
   FlatList,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
-import colors from '../../styles/colors';
 import CommentStyle from '../style/CommentStyle';
 import FastImage from 'react-native-fast-image';
-import PostData from '../../dummyData/PostData';
-import ScreenComponent from '../../components/ScreenComponent';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import ShowCommentsCompo from './ShowCommentsCompo';

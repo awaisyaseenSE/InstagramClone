@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  Alert,
-} from 'react-native';
+import {View, Text, TouchableOpacity, Image, FlatList} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useTheme} from '../../themes/ThemeContext';
 import CommentStyle from '../style/CommentStyle';

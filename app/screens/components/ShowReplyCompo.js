@@ -1,15 +1,6 @@
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import FastImage from 'react-native-fast-image';
-import MyIndicator from '../../components/MyIndicator';
 import fontFamily from '../../styles/fontFamily';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -64,7 +55,7 @@ const ShowReplyCompo = ({
     isMoundted = true;
     getUserData();
     return () => (isMoundted = false);
-  }, []);
+  }, [data.userId]);
 
   function formateTime() {
     const postTime = data.time;
