@@ -5,11 +5,9 @@ import {useTheme} from '../themes/ThemeContext';
 import TopHomeCompo from './components/TopHomeCompo';
 import StoryComponent from './components/StoryComponent';
 import firestore from '@react-native-firebase/firestore';
-import MyIndicator from '../components/MyIndicator';
 import ShowPostsCompo from './components/ShowPostsCompo';
 import BottomSheetComponent from '../components/BottomSheetComponent';
 import {getLocation} from '../utils/getUserLocation';
-import fontFamily from '../styles/fontFamily';
 import ShimmerEffectCompo from '../components/ShimmerEffectCompo';
 
 export default function Home({switchToScreen}) {
@@ -18,7 +16,6 @@ export default function Home({switchToScreen}) {
   const [laoding, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [commentPostID, setCommentPostID] = useState('');
-  // const MemoShowPostsCompo = React.memo(ShowPostsCompo);
 
   useEffect(() => {
     setLoading(true);
@@ -100,11 +97,6 @@ export default function Home({switchToScreen}) {
           />
         </Modal>
       </ScreenComponent>
-      {/* <MyIndicator
-        visible={laoding}
-        backgroundColor={theme.loginBackground}
-        size={'large'}
-      /> */}
     </>
   );
 }
