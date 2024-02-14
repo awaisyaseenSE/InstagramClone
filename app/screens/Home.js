@@ -121,9 +121,3 @@ export default function Home({switchToScreen}) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  userDetailText: {
-    fontSize: 11,
-  },
-});
