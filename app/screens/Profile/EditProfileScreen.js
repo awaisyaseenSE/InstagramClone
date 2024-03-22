@@ -24,6 +24,7 @@ import ScreenComponent from '../../components/ScreenComponent';
 import fontFamily from '../../styles/fontFamily';
 import colors from '../../styles/colors';
 import EditProfileTextInputCompo from '../CreateAccount/components/EditProfileTextInputCompo';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 export default function EditProfileScreen({route}) {
   const userData = route.params?.userData;
@@ -110,11 +111,39 @@ export default function EditProfileScreen({route}) {
       console.log('error while updating profile: ', error);
     }
   };
+
+  const uriToBlob = uri => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        // return the blob
+        resolve(xhr.response);
+      };
+      xhr.onerror = function () {
+        reject(new Error('uriToBlob failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+
+      xhr.send(null);
+    });
+  };
+
   const UpdateWithImage = async () => {
     try {
       setLoading(true);
-      const ref = await storage().refFromURL(userData?.imageUrl);
-      const task = await ref.putFile(userNewImage);
+
+      const isSigned = await GoogleSignin.isSignedIn();
+      let ref;
+      if (!isSigned) {
+        ref = storage().refFromURL(userData?.imageUrl);
+      } else {
+        const timestamp = Date.now();
+        const imageName = `profileImages/${timestamp}.jpg`;
+        ref = storage().ref(imageName);
+      }
+      let blobImg = await uriToBlob(userNewImage);
+      const task = await ref.put(blobImg);
       const downloadURL = await ref.getDownloadURL();
       await auth().currentUser?.updateProfile({
         displayName: userName,

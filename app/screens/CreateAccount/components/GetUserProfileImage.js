@@ -19,6 +19,23 @@ export default function GetUserProfileImage({
   const [image, setImage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const uriToBlob = uri => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        // return the blob
+        resolve(xhr.response);
+      };
+      xhr.onerror = function () {
+        reject(new Error('uriToBlob failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+
+      xhr.send(null);
+    });
+  };
+
   const uploadImage = async uri => {
     setLoading(true);
     const timestamp = Date.now();
@@ -26,7 +43,8 @@ export default function GetUserProfileImage({
     const reference = storage().ref(imageName);
 
     try {
-      const task = reference.putFile(uri);
+      let blobImg = await uriToBlob(uri);
+      const task = reference.put(blobImg);
       await task;
       const downloadURL = await reference.getDownloadURL();
       setUserProfilePicUrl(downloadURL);
@@ -130,7 +148,6 @@ export default function GetUserProfileImage({
           onPress={() => {
             setSelectedIndex(selectedIndex + 1);
           }}
-          loading={loading}
           style={{marginTop: 20}}
         />
       </View>

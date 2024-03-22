@@ -267,20 +267,22 @@ const ShowMessagesComponent = ({
                   </TouchableOpacity>
                 </>
               ) : null}
-              {item.type == 'video' ? (
+              {item.type == 'video' && item.message ? (
                 <>
                   <TouchableOpacity
                     onPress={() => setShowFullImage(true)}
                     onLongPress={() => handleDeleteMessage()}>
-                    <Video
-                      style={[styles.imageStyle]}
-                      source={{uri: item.message}}
-                      resizeMode="cover"
-                      poster="https://e1.pxfuel.com/desktop-wallpaper/802/816/desktop-wallpaper-black-iphone-7-posted-by-michelle-mercado-black-ios.jpg"
-                      posterResizeMode="cover"
-                      repeat
-                      paused={pauseVideo}
-                    />
+                    {!!item?.message && (
+                      <Video
+                        style={[styles.imageStyle]}
+                        source={{uri: item?.message}}
+                        resizeMode="cover"
+                        poster="https://e1.pxfuel.com/desktop-wallpaper/802/816/desktop-wallpaper-black-iphone-7-posted-by-michelle-mercado-black-ios.jpg"
+                        posterResizeMode="cover"
+                        repeat
+                        paused={pauseVideo}
+                      />
+                    )}
                     <View style={styles.videoPlayBtnWrapepr}>
                       <TouchableOpacity
                         style={styles.videoPlayBtnIconContainer}
@@ -534,7 +536,7 @@ const ShowMessagesComponent = ({
                 resizeMode="contain"
               />
             )}
-            {item.type == 'video' && (
+            {item.type == 'video' && item.message && (
               <TouchableOpacity
                 style={{
                   width: '100%',
@@ -548,7 +550,7 @@ const ShowMessagesComponent = ({
                     height: '100%',
                     backgroundColor: theme.loginBackground,
                   }}
-                  source={{uri: item.message}}
+                  source={{uri: item?.message}}
                   resizeMode="contain"
                   repeat
                   paused={pauseVideo}

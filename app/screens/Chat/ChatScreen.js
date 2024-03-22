@@ -327,7 +327,24 @@ export default function ChatScreen({route}) {
     setReplyUserUid('');
   };
 
-  const confirmAndSendMesssage = (filePath, extraText, ifAudio) => {
+  const uriToBlob = uri => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        // return the blob
+        resolve(xhr.response);
+      };
+      xhr.onerror = function () {
+        reject(new Error('uriToBlob failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+
+      xhr.send(null);
+    });
+  };
+
+  const confirmAndSendMesssage = async (filePath, extraText, ifAudio) => {
     setLoading(true);
     // const childPath = 'chatImages/' + Date.now() + '.png';
     let childPath = '';
@@ -343,30 +360,59 @@ export default function ChatScreen({route}) {
       mediaType = '';
     }
 
-    storage()
-      .ref(childPath)
-      .putFile(selectedMedia === '' ? filePath : selectedMedia)
-      .then(snapshot => {
-        storage()
-          .ref(childPath)
-          .getDownloadURL()
-          .then(url => {
-            if (ifAudio !== true) {
-              setSelectedMedia(url);
-            } else {
-              // console.log('uploaded file url is     ', url);
-            }
-            if (selectedMedia !== '') {
-              sendMessage(url, mediaType, extraText, false);
-            } else {
-              sendMessage(url, 'file', extraText, ifAudio);
-            }
-          });
-      })
-      .catch(e => {
-        console.log('uploading image error => ', e);
-        setLoading(false);
-      });
+    // storage()
+    //   .ref(childPath)
+    //   .putFile(selectedMedia === '' ? filePath : selectedMedia)
+    //   .then(snapshot => {
+    //     storage()
+    //       .ref(childPath)
+    //       .getDownloadURL()
+    //       .then(url => {
+    //         if (ifAudio !== true) {
+    //           setSelectedMedia(url);
+    //         } else {
+    //           // console.log('uploaded file url is     ', url);
+    //         }
+    //         if (selectedMedia !== '') {
+    //           sendMessage(url, mediaType, extraText, false);
+    //         } else {
+    //           sendMessage(url, 'file', extraText, ifAudio);
+    //         }
+    //       });
+    //   })
+    //   .catch(e => {
+    //     console.log('uploading image error => ', e);
+    //     setLoading(false);
+    //   });
+
+    try {
+      let bloabMedia;
+      if (selectedMedia !== '') {
+        let res = await uriToBlob(selectedMedia);
+        bloabMedia = res;
+      }
+
+      const snapshot = storage().ref(childPath);
+      selectedMedia === ''
+        ? await snapshot.putFile(filePath)
+        : await snapshot.put(bloabMedia);
+      const url = await storage().ref(childPath).getDownloadURL();
+
+      if (!ifAudio) {
+        setSelectedMedia(url);
+      } else {
+        // console.log('uploaded file url is     ', url);
+      }
+
+      if (selectedMedia !== '') {
+        sendMessage(url, mediaType, extraText, false);
+      } else {
+        sendMessage(url, 'file', extraText, ifAudio);
+      }
+    } catch (error) {
+      console.log('uploading image error => ', error);
+      setLoading(false);
+    }
   };
 
   const sendMessage = (txt, type, extraText, ifAudio) => {

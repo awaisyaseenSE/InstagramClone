@@ -211,7 +211,9 @@ const ShowPostsCompo = ({item, allUrls, switchToScreen}) => {
             <TouchableOpacity onPress={profileNavigationHandler}>
               <FastImage
                 source={{
-                  uri: postUserData?.imageUrl,
+                  uri: !!postUserData?.imageUrl
+                    ? postUserData?.imageUrl
+                    : 'https://is3-ssl.mzstatic.com/image/thumb/Purple127/v4/f5/ca/fd/f5cafd96-f3a4-8ec1-37b0-2e82f8bdea77/source/512x512bb.jpg',
                 }}
                 style={styles.UserimgStyle}
               />

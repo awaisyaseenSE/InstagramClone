@@ -73,6 +73,22 @@ export default function CreatePostScreen({route}) {
       console.log('error in handleUploadPost funtion: ', error);
     }
   };
+  const uriToBlob = uri => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        // return the blob
+        resolve(xhr.response);
+      };
+      xhr.onerror = function () {
+        reject(new Error('uriToBlob failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+
+      xhr.send(null);
+    });
+  };
 
   const uploadImages = async newImages => {
     setLoading(true);
@@ -80,10 +96,11 @@ export default function CreatePostScreen({route}) {
       let allUrls = [];
       await Promise.all(
         newImages.map(async image => {
+          let blobMedia = await uriToBlob(image);
           const timestamp = Date.now();
           const postId = `post_${timestamp}`;
           const imageRef = storage().ref(`postImages/${postId}.jpg`);
-          await imageRef.putFile(image);
+          await imageRef.put(blobMedia);
           const downloadURL = await imageRef.getDownloadURL();
           allUrls.push(downloadURL);
           setMediaUrls(prevData => [...prevData, downloadURL]);

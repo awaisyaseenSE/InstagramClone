@@ -163,6 +163,7 @@ const ShowReelVideoCompo = ({
             paused={pauseVideo || currentReelIndex !== index}
             onBuffer={onBuffer}
             onError={videoError}
+            // onLoad={() => console.log('onload')}
           />
         </TouchableOpacity>
         <View

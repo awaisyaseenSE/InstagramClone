@@ -53,13 +53,31 @@ export default function CreateReelScreen({route}) {
     }
   };
 
+  const uriToBlob = uri => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        // return the blob
+        resolve(xhr.response);
+      };
+      xhr.onerror = function () {
+        reject(new Error('uriToBlob failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+
+      xhr.send(null);
+    });
+  };
+
   const uploadVideo = async () => {
     setLoading(true);
     const timestamp = Date.now();
     const imageName = `ReelVideos/${timestamp}.mp4`;
     const reference = storage().ref(imageName);
     try {
-      const task = reference.putFile(videoPath);
+      let blobVideo = await uriToBlob(videoPath);
+      const task = reference.put(blobVideo);
       await task;
       const downloadURL = await reference.getDownloadURL();
       console.log('video downlaod url: ', downloadURL);
