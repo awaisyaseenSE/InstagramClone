@@ -135,13 +135,18 @@ export default function EditProfileScreen({route}) {
 
       const isSigned = await GoogleSignin.isSignedIn();
       let ref;
-      if (!isSigned) {
-        ref = storage().refFromURL(userData?.imageUrl);
-      } else {
-        const timestamp = Date.now();
-        const imageName = `profileImages/${timestamp}.jpg`;
-        ref = storage().ref(imageName);
-      }
+      // if (!isSigned) {
+      //   console.log('ddf');
+      //   console.log(userData?.imageName);
+      //   ref = storage().refFromURL(userData?.imageUrl);
+      // } else {
+      //   const timestamp = Date.now();
+      //   const imageName = `profileImages/${timestamp}.jpg`;
+      //   ref = storage().ref(imageName);
+      // }
+      const timestamp = Date.now();
+      const imageName = `profileImages/${timestamp}.jpg`;
+      ref = storage().ref(imageName);
       let blobImg = await uriToBlob(userNewImage);
       const task = await ref.put(blobImg);
       const downloadURL = await ref.getDownloadURL();

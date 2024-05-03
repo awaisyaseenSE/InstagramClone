@@ -17,16 +17,18 @@ const ShowReplyMessageCompo = ({senderId, messageSender, chatId, replyId}) => {
       .doc(replyId)
       .onSnapshot(snapShot => {
         var data = snapShot.data();
-        setReplyData(data);
-        firestore()
-          .collection('users')
-          .doc(data.senderID)
-          .get()
-          .then(snap => {
-            var userData = snap.data();
-            var name = userData.fullName;
-            setUserName(name);
-          });
+        if (data) {
+          setReplyData(data);
+          firestore()
+            .collection('users')
+            .doc(data?.senderID)
+            .get()
+            .then(snap => {
+              var userData = snap.data();
+              var name = userData.fullName;
+              setUserName(name);
+            });
+        }
       });
 
     return () => unsubscribe();
